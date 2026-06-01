@@ -1,0 +1,6 @@
+framework module BlackSpartan {
+  umbrella header "BlackSpartan-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,6 @@
+framework module Pods_UFC_Predict_Fights {
+  umbrella header "Pods-UFC Predict Fights-umbrella.h"
+
+  export *
+  module * { export * }
+}
