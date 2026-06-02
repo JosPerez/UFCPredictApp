@@ -7,13 +7,13 @@
 
 import Foundation
 
-final class BSPredictService: BSBaseFacade {
+final public class BSPredictService: BSBaseFacade {
     
     enum RequestName {
         static let predictFight   = "predcit"
     }
     
-    func predictFight(request: PredictionRequest) {
+    public func predictFight(request: PredictionRequest) {
         let uri = "/predict"
         do {
             let body = try JSONEncoder().encode(request)
@@ -36,7 +36,7 @@ final class BSPredictService: BSBaseFacade {
     }
 }
 extension BSPredictService: BSConnectionDelegate {
-    func recievedData(data: Data, requestName: String) {
+    public func recievedData(data: Data, requestName: String) {
         switch requestName {
         case RequestName.predictFight:
             decodeEntity(responseType: Prediction.self, data: data, requestName: requestName)

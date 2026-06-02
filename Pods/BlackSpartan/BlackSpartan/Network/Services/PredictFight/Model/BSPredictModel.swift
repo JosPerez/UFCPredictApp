@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PredictionRequest: Codable {
+public struct PredictionRequest: Codable {
     let fighterAId: Int
     let fighterBId: Int
 
@@ -15,18 +15,23 @@ struct PredictionRequest: Codable {
         case fighterAId = "fighter_a_id"
         case fighterBId = "fighter_b_id"
     }
+    
+    public init(fighterAId: Int, fighterBId: Int) {
+        self.fighterAId = fighterAId
+        self.fighterBId = fighterBId
+    }
 }
 
-struct Prediction: Codable {
-    let fighterAId: Int
-    let fighterBId: Int
-    let fighterAName: String
-    let fighterBName: String
-    let fighterAWinProb: Double
-    let fighterBWinProb: Double
-    let confidence: String
-    let topFactors: [PredictionFactor]
-    let warning: String?
+public struct Prediction: Codable {
+    public let fighterAId: Int
+    public let fighterBId: Int
+    public let fighterAName: String
+    public let fighterBName: String
+    public let fighterAWinProb: Double
+    public let fighterBWinProb: Double
+    public let confidence: String
+    public let topFactors: [PredictionFactor]
+    public let warning: String?
 
     enum CodingKeys: String, CodingKey {
         case fighterAId    = "fighter_a_id"
@@ -41,8 +46,8 @@ struct Prediction: Codable {
     }
 }
 
-struct PredictionFactor: Codable, Identifiable {
-    var id: String { feature }
-    let feature: String
-    let impact: Double
+public struct PredictionFactor: Codable, Identifiable {
+    public var id: String { feature }
+    public let feature: String
+    public let impact: Double
 }

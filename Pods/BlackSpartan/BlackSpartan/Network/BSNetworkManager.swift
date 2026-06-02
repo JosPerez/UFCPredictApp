@@ -30,6 +30,7 @@ final public class BSNetworkManager: NSObject {
     }
     /// Iniciar monitoreo de red
     public func start() {
+        print("🚀 Starting network monitoring")
         self.mainMonitor = NWPathMonitor()
         startMainMonitoring()
     }
@@ -37,6 +38,7 @@ final public class BSNetworkManager: NSObject {
     private func startMainMonitoring() {
         mainMonitor?.start(queue: queue)
         mainMonitor?.pathUpdateHandler = { path in
+            print("🚀 Update network monitoring")
             self.isInternetAvailable = path.status == .satisfied
             self.networkDelegate?.didNetworkChange(status: self.networkStatus())
         }

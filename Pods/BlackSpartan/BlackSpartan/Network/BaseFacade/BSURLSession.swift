@@ -74,7 +74,7 @@ final public class BSURLSession: NSObject {
                 case .failed(let code):
                     if let error = error {
                         self.delegate?.recievedError(error: error, code: code, requestName: requestName)
-                    } else if code == 404 {
+                    } else {
                         let error = BSErrorBase(message: "Servicio no encontrado", code: code)
                         self.delegate?.recievedError(error: error, code: code, requestName: requestName)
                     }

@@ -8,19 +8,34 @@
 import Foundation
 
 // Models/Fighter.swift
-struct Fighter: Codable, Identifiable {
-    let id: Int
-    let firstName: String
-    let lastName: String
-    let nickname: String?
-    let weightClass: String?
-    let gender: String?
-    let recordWin: Int
-    let recordLoss: Int
-    let recordDraw: Int
-    let isActive: Bool
+public struct BSFighter: Codable, Identifiable, Hashable {
+    public let id: Int
+    public let firstName: String
+    public let lastName: String
+    public let nickname: String?
+    public let weightClass: String?
+    public let gender: String?
+    public let recordWin: Int
+    public let recordLoss: Int
+    public let recordDraw: Int
+    public let isActive: Bool
+    public let imgThumb: String?
 
-    var fullName: String { "\(firstName) \(lastName)" }
+    public var fullName: String { "\(firstName) \(lastName)" }
+    public var record: String { "\(recordWin)W · \(recordLoss)L - \(recordDraw)D" }
+    
+    public var winRate: String {
+        let total = recordWin + recordLoss
+        guard total > 0 else { return "—" }
+        let rate = Double(recordWin) / Double(total) * 100
+        return "\(Int(rate))%"
+    }
+
+    public var initials: String {
+        let f = firstName.prefix(1)
+        let l = lastName.prefix(1)
+        return "\(f)\(l)"
+    }
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -33,29 +48,44 @@ struct Fighter: Codable, Identifiable {
         case recordLoss  = "record_loss"
         case recordDraw  = "record_draw"
         case isActive    = "is_active"
+        case imgThumb = "img_thumb"
     }
 }
 
 // Models/FighterDetail.swift
-struct FighterDetail: Codable, Identifiable {
-    let id: Int
-    let firstName: String
-    let lastName: String
-    let nickname: String?
-    let weightClass: String?
-    let gender: String?
-    let recordWin: Int
-    let recordLoss: Int
-    let recordDraw: Int
-    let isActive: Bool
-    let heightInches: Double?
-    let reachInches: Double?
-    let age: Int?
-    let sigStrikesLandedPm: Double?
-    let sigStrikeDefensePct: Double?
-    let fightingStyle: String?
+public struct BSFighterDetail: Codable, Identifiable {
+    public let id: Int
+    public let firstName: String
+    public let lastName: String
+    public let nickname: String?
+    public let weightClass: String?
+    public let gender: String?
+    public let recordWin: Int
+    public let recordLoss: Int
+    public let recordDraw: Int
+    public let isActive: Bool
+    public let heightInches: Double?
+    public let reachInches: Double?
+    public let age: Int?
+    public let sigStrikesLandedPm: Double?
+    public let sigStrikeDefensePct: Double?
+    public let fightingStyle: String?
+    public let imgThumb: String?
 
-    var fullName: String { "\(firstName) \(lastName)" }
+    public var fullName: String { "\(firstName) \(lastName)" }
+    public var record: String { "\(recordWin)W · \(recordLoss)L - \(recordDraw)D" }
+    
+    public var winRate: String {
+        let total = recordWin + recordLoss
+        guard total > 0 else { return "—" }
+        let rate = Double(recordWin) / Double(total) * 100
+        return "\(Int(rate))%"
+    }
+    public var initials: String {
+        let f = firstName.prefix(1)
+        let l = lastName.prefix(1)
+        return "\(f)\(l)"
+    }
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -74,5 +104,7 @@ struct FighterDetail: Codable, Identifiable {
         case sigStrikesLandedPm = "sig_strikes_landed_pm"
         case sigStrikeDefensePct = "sig_strike_defense_pct"
         case fightingStyle      = "fighting_style"
+        case imgThumb = "img_thumb"
     }
 }
+

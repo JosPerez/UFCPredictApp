@@ -11,18 +11,65 @@
 		072C52792FCCE45A00FEEACD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072C52782FCCE45A00FEEACD /* ContentView.swift */; };
 		072C527B2FCCE45A00FEEACD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 072C527A2FCCE45A00FEEACD /* Assets.xcassets */; };
 		072C527E2FCCE45A00FEEACD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 072C527D2FCCE45A00FEEACD /* Preview Assets.xcassets */; };
-		B97DDFB82C0A6825FE5CDA17 /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC8D5FFA2A33F97D61149C35 /* Pods_UFC_Predict_Fights.framework */; };
+		072C52CC2FCD731F00FEEACD /* FighterListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072C52CB2FCD731F00FEEACD /* FighterListViewModel.swift */; };
+		072C52CE2FCD74DF00FEEACD /* FightersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072C52CD2FCD74DF00FEEACD /* FightersListView.swift */; };
+		07841AED2FCD8297005EA7FD /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AEC2FCD8297005EA7FD /* Config.swift */; };
+		07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AEE2FCD87B6005EA7FD /* Constants.swift */; };
+		07841AF12FCD88B0005EA7FD /* FighterRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AF02FCD88B0005EA7FD /* FighterRow.swift */; };
+		07841AF32FCD88FB005EA7FD /* FigtherDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AF22FCD88FB005EA7FD /* FigtherDetailViewModel.swift */; };
+		07841AF52FCD8A88005EA7FD /* FighterDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AF42FCD8A88005EA7FD /* FighterDetailView.swift */; };
+		07841AF92FCD8AF1005EA7FD /* DivisionPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AF82FCD8AF1005EA7FD /* DivisionPill.swift */; };
+		07841AFB2FCD8B41005EA7FD /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AFA2FCD8B41005EA7FD /* Colors.swift */; };
+		07841B002FCEB5BB005EA7FD /* CachedFighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AFF2FCEB5BB005EA7FD /* CachedFighter.swift */; };
+		07841B032FCEB75F005EA7FD /* SwiftDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B022FCEB75F005EA7FD /* SwiftDataContainer.swift */; };
+		07841B062FCEB80D005EA7FD /* DatabaseErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B052FCEB80D005EA7FD /* DatabaseErrorView.swift */; };
+		07841B0A2FCEBA8B005EA7FD /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B092FCEBA8B005EA7FD /* SyncManager.swift */; };
+		07841B0C2FCEBBBE005EA7FD /* FighterRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B0B2FCEBBBE005EA7FD /* FighterRepository.swift */; };
+		07841B1A2FCEE3C5005EA7FD /* EventListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B192FCEE3C5005EA7FD /* EventListViewModel.swift */; };
+		07841B1D2FCEE41F005EA7FD /* EventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B1C2FCEE41F005EA7FD /* EventListView.swift */; };
+		07841B1F2FCEE43E005EA7FD /* EventDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B1E2FCEE43E005EA7FD /* EventDetailViewModel.swift */; };
+		07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B202FCEE465005EA7FD /* EventDetailView.swift */; };
+		07841B242FCEE9D0005EA7FD /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B232FCEE9D0005EA7FD /* CachedEvent.swift */; };
+		07841B262FCEEA83005EA7FD /* EventRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B252FCEEA83005EA7FD /* EventRepository.swift */; };
+		07841B2A2FCEFD1E005EA7FD /* FighterPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B292FCEFD1E005EA7FD /* FighterPickerView.swift */; };
+		07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */; };
+		07841B302FCEFD9E005EA7FD /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */; };
+		FC7DF36648200DA00A72ACE8 /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		05BE3F00AE6F6305DE19607D /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
 		072C52732FCCE45A00FEEACD /* UFC Predict Fights.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UFC Predict Fights.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		072C52762FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UFC_Predict_FightsApp.swift; sourceTree = "<group>"; };
 		072C52782FCCE45A00FEEACD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		072C527A2FCCE45A00FEEACD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		072C527D2FCCE45A00FEEACD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		1D747F057F1841544444695A /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
-		2964DA34633C7141FE68676C /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
-		FC8D5FFA2A33F97D61149C35 /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		072C52CB2FCD731F00FEEACD /* FighterListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterListViewModel.swift; sourceTree = "<group>"; };
+		072C52CD2FCD74DF00FEEACD /* FightersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FightersListView.swift; sourceTree = "<group>"; };
+		07841AEC2FCD8297005EA7FD /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		07841AEE2FCD87B6005EA7FD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		07841AF02FCD88B0005EA7FD /* FighterRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterRow.swift; sourceTree = "<group>"; };
+		07841AF22FCD88FB005EA7FD /* FigtherDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FigtherDetailViewModel.swift; sourceTree = "<group>"; };
+		07841AF42FCD8A88005EA7FD /* FighterDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterDetailView.swift; sourceTree = "<group>"; };
+		07841AF82FCD8AF1005EA7FD /* DivisionPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DivisionPill.swift; sourceTree = "<group>"; };
+		07841AFA2FCD8B41005EA7FD /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		07841AFF2FCEB5BB005EA7FD /* CachedFighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedFighter.swift; sourceTree = "<group>"; };
+		07841B022FCEB75F005EA7FD /* SwiftDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataContainer.swift; sourceTree = "<group>"; };
+		07841B052FCEB80D005EA7FD /* DatabaseErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseErrorView.swift; sourceTree = "<group>"; };
+		07841B092FCEBA8B005EA7FD /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
+		07841B0B2FCEBBBE005EA7FD /* FighterRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterRepository.swift; sourceTree = "<group>"; };
+		07841B0F2FCEC20A005EA7FD /* UFC-Predict-Fights-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "UFC-Predict-Fights-Info.plist"; sourceTree = SOURCE_ROOT; };
+		07841B192FCEE3C5005EA7FD /* EventListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListViewModel.swift; sourceTree = "<group>"; };
+		07841B1C2FCEE41F005EA7FD /* EventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListView.swift; sourceTree = "<group>"; };
+		07841B1E2FCEE43E005EA7FD /* EventDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewModel.swift; sourceTree = "<group>"; };
+		07841B202FCEE465005EA7FD /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
+		07841B232FCEE9D0005EA7FD /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
+		07841B252FCEEA83005EA7FD /* EventRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventRepository.swift; sourceTree = "<group>"; };
+		07841B292FCEFD1E005EA7FD /* FighterPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterPickerView.swift; sourceTree = "<group>"; };
+		07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionViewModel.swift; sourceTree = "<group>"; };
+		07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
+		4B9EBA53C175E848C5BA532C /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
+		F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B97DDFB82C0A6825FE5CDA17 /* Pods_UFC_Predict_Fights.framework in Frameworks */,
+				FC7DF36648200DA00A72ACE8 /* Pods_UFC_Predict_Fights.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,7 +90,7 @@
 				072C52752FCCE45A00FEEACD /* UFC Predict Fights */,
 				072C52742FCCE45A00FEEACD /* Products */,
 				36763802F7D1F014A868BFD9 /* Pods */,
-				D52FDDDFEABA21723BE0709D /* Frameworks */,
+				E07F3276AB6CED40F895BE4C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +105,10 @@
 		072C52752FCCE45A00FEEACD /* UFC Predict Fights */ = {
 			isa = PBXGroup;
 			children = (
+				07841B0F2FCEC20A005EA7FD /* UFC-Predict-Fights-Info.plist */,
+				07841AF62FCD8AAB005EA7FD /* DesingSystem */,
+				07841AEB2FCD827E005EA7FD /* Constant */,
+				072C52C52FCD721B00FEEACD /* Feature */,
 				072C52762FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift */,
 				072C52782FCCE45A00FEEACD /* ContentView.swift */,
 				072C527A2FCCE45A00FEEACD /* Assets.xcassets */,
@@ -74,20 +125,183 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		072C52C52FCD721B00FEEACD /* Feature */ = {
+			isa = PBXGroup;
+			children = (
+				07841B272FCEFCF5005EA7FD /* Predict */,
+				07841B172FCEE397005EA7FD /* Event */,
+				072C52C62FCD722B00FEEACD /* Fighters */,
+			);
+			path = Feature;
+			sourceTree = "<group>";
+		};
+		072C52C62FCD722B00FEEACD /* Fighters */ = {
+			isa = PBXGroup;
+			children = (
+				07841AFE2FCEB59F005EA7FD /* Repository */,
+				072C52C82FCD725A00FEEACD /* Model */,
+				072C52C72FCD725200FEEACD /* Views */,
+			);
+			path = Fighters;
+			sourceTree = "<group>";
+		};
+		072C52C72FCD725200FEEACD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				072C52CD2FCD74DF00FEEACD /* FightersListView.swift */,
+				07841AF02FCD88B0005EA7FD /* FighterRow.swift */,
+				07841AF42FCD8A88005EA7FD /* FighterDetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		072C52C82FCD725A00FEEACD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				072C52CB2FCD731F00FEEACD /* FighterListViewModel.swift */,
+				07841AF22FCD88FB005EA7FD /* FigtherDetailViewModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		07841AEB2FCD827E005EA7FD /* Constant */ = {
+			isa = PBXGroup;
+			children = (
+				07841AEC2FCD8297005EA7FD /* Config.swift */,
+				07841AEE2FCD87B6005EA7FD /* Constants.swift */,
+			);
+			path = Constant;
+			sourceTree = "<group>";
+		};
+		07841AF62FCD8AAB005EA7FD /* DesingSystem */ = {
+			isa = PBXGroup;
+			children = (
+				07841B072FCEBA74005EA7FD /* Managers */,
+				07841B012FCEB748005EA7FD /* Container */,
+				07841AF72FCD8ADB005EA7FD /* Components */,
+				07841AFA2FCD8B41005EA7FD /* Colors.swift */,
+			);
+			path = DesingSystem;
+			sourceTree = "<group>";
+		};
+		07841AF72FCD8ADB005EA7FD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				07841AF82FCD8AF1005EA7FD /* DivisionPill.swift */,
+				07841B052FCEB80D005EA7FD /* DatabaseErrorView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		07841AFE2FCEB59F005EA7FD /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				07841AFF2FCEB5BB005EA7FD /* CachedFighter.swift */,
+				07841B0B2FCEBBBE005EA7FD /* FighterRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		07841B012FCEB748005EA7FD /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				07841B022FCEB75F005EA7FD /* SwiftDataContainer.swift */,
+			);
+			path = Container;
+			sourceTree = "<group>";
+		};
+		07841B072FCEBA74005EA7FD /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				07841B082FCEBA7A005EA7FD /* SyncManager */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		07841B082FCEBA7A005EA7FD /* SyncManager */ = {
+			isa = PBXGroup;
+			children = (
+				07841B092FCEBA8B005EA7FD /* SyncManager.swift */,
+			);
+			path = SyncManager;
+			sourceTree = "<group>";
+		};
+		07841B172FCEE397005EA7FD /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				07841B222FCEE9B0005EA7FD /* Repository */,
+				07841B1B2FCEE40F005EA7FD /* View */,
+				07841B182FCEE3AF005EA7FD /* ViewModel */,
+			);
+			path = Event;
+			sourceTree = "<group>";
+		};
+		07841B182FCEE3AF005EA7FD /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				07841B192FCEE3C5005EA7FD /* EventListViewModel.swift */,
+				07841B1E2FCEE43E005EA7FD /* EventDetailViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		07841B1B2FCEE40F005EA7FD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				07841B1C2FCEE41F005EA7FD /* EventListView.swift */,
+				07841B202FCEE465005EA7FD /* EventDetailView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		07841B222FCEE9B0005EA7FD /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				07841B232FCEE9D0005EA7FD /* CachedEvent.swift */,
+				07841B252FCEEA83005EA7FD /* EventRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		07841B272FCEFCF5005EA7FD /* Predict */ = {
+			isa = PBXGroup;
+			children = (
+				07841B2C2FCEFD46005EA7FD /* ViewModel */,
+				07841B282FCEFD0F005EA7FD /* View */,
+			);
+			path = Predict;
+			sourceTree = "<group>";
+		};
+		07841B282FCEFD0F005EA7FD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				07841B292FCEFD1E005EA7FD /* FighterPickerView.swift */,
+				07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		07841B2C2FCEFD46005EA7FD /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		36763802F7D1F014A868BFD9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				1D747F057F1841544444695A /* Pods-UFC Predict Fights.debug.xcconfig */,
-				2964DA34633C7141FE68676C /* Pods-UFC Predict Fights.release.xcconfig */,
+				4B9EBA53C175E848C5BA532C /* Pods-UFC Predict Fights.debug.xcconfig */,
+				05BE3F00AE6F6305DE19607D /* Pods-UFC Predict Fights.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		D52FDDDFEABA21723BE0709D /* Frameworks */ = {
+		E07F3276AB6CED40F895BE4C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FC8D5FFA2A33F97D61149C35 /* Pods_UFC_Predict_Fights.framework */,
+				F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -99,11 +313,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 072C52812FCCE45A00FEEACD /* Build configuration list for PBXNativeTarget "UFC Predict Fights" */;
 			buildPhases = (
-				1B935C8051ECEB657530939A /* [CP] Check Pods Manifest.lock */,
+				93A5C206106B3CA12C9AFF5B /* [CP] Check Pods Manifest.lock */,
 				072C526F2FCCE45900FEEACD /* Sources */,
 				072C52702FCCE45900FEEACD /* Frameworks */,
 				072C52712FCCE45900FEEACD /* Resources */,
-				2123565E64D24276D2CFBFD5 /* [CP] Embed Pods Frameworks */,
+				CE86CC38846F2D9EB385B2F0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -160,7 +374,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1B935C8051ECEB657530939A /* [CP] Check Pods Manifest.lock */ = {
+		93A5C206106B3CA12C9AFF5B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -182,7 +396,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2123565E64D24276D2CFBFD5 /* [CP] Embed Pods Frameworks */ = {
+		CE86CC38846F2D9EB385B2F0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -206,8 +420,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07841B062FCEB80D005EA7FD /* DatabaseErrorView.swift in Sources */,
+				07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */,
+				07841B1D2FCEE41F005EA7FD /* EventListView.swift in Sources */,
+				07841B262FCEEA83005EA7FD /* EventRepository.swift in Sources */,
 				072C52792FCCE45A00FEEACD /* ContentView.swift in Sources */,
+				07841B242FCEE9D0005EA7FD /* CachedEvent.swift in Sources */,
+				07841AFB2FCD8B41005EA7FD /* Colors.swift in Sources */,
+				07841AF12FCD88B0005EA7FD /* FighterRow.swift in Sources */,
+				07841B002FCEB5BB005EA7FD /* CachedFighter.swift in Sources */,
+				07841AF52FCD8A88005EA7FD /* FighterDetailView.swift in Sources */,
+				07841B302FCEFD9E005EA7FD /* PredictionView.swift in Sources */,
+				07841B0A2FCEBA8B005EA7FD /* SyncManager.swift in Sources */,
+				07841B1F2FCEE43E005EA7FD /* EventDetailViewModel.swift in Sources */,
+				07841B2A2FCEFD1E005EA7FD /* FighterPickerView.swift in Sources */,
 				072C52772FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift in Sources */,
+				072C52CC2FCD731F00FEEACD /* FighterListViewModel.swift in Sources */,
+				072C52CE2FCD74DF00FEEACD /* FightersListView.swift in Sources */,
+				07841AED2FCD8297005EA7FD /* Config.swift in Sources */,
+				07841B0C2FCEBBBE005EA7FD /* FighterRepository.swift in Sources */,
+				07841B1A2FCEE3C5005EA7FD /* EventListViewModel.swift in Sources */,
+				07841AF92FCD8AF1005EA7FD /* DivisionPill.swift in Sources */,
+				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
+				07841B032FCEB75F005EA7FD /* SwiftDataContainer.swift in Sources */,
+				07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */,
+				07841AF32FCD88FB005EA7FD /* FigtherDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +488,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -314,7 +551,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -335,21 +572,23 @@
 		};
 		072C52822FCCE45A00FEEACD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D747F057F1841544444695A /* Pods-UFC Predict Fights.debug.xcconfig */;
+			baseConfigurationReference = 4B9EBA53C175E848C5BA532C /* Pods-UFC Predict Fights.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"UFC Predict Fights/Preview Content\"";
+				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,21 +604,23 @@
 		};
 		072C52832FCCE45A00FEEACD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2964DA34633C7141FE68676C /* Pods-UFC Predict Fights.release.xcconfig */;
+			baseConfigurationReference = 05BE3F00AE6F6305DE19607D /* Pods-UFC Predict Fights.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"UFC Predict Fights/Preview Content\"";
+				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

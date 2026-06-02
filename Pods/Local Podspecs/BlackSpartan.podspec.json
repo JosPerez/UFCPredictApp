@@ -1,6 +1,6 @@
 {
   "name": "BlackSpartan",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "summary": "Framework para iOS",
   "description": "Framework reutilizable para aplicaciones iOS.",
   "homepage": "https://github.com/JosPerez/BlackSpartan",
@@ -12,11 +12,11 @@
     "Jose Perez": "jos.perez.mtz@gmail.com"
   },
   "platforms": {
-    "ios": "16.0"
+    "ios": "17.0"
   },
   "source": {
     "git": "https://github.com/JosPerez/BlackSpartan.git",
-    "tag": "0.1.0"
+    "tag": "1.0.0"
   },
   "source_files": "BlackSpartan/**/*.{swift}",
   "swift_versions": "5.9",

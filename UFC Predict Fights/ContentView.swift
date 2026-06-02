@@ -8,17 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        let syncManager = SyncManager(modelContext: modelContext)
+        let fighterRepo = FighterRepository(modelContext: modelContext, syncManager: syncManager)
+        let eventRepo   = EventRepository(modelContext: modelContext, syncManager: syncManager)
+
+        TabView {
+            //
+            FighterListView(repository: fighterRepo)
+                .tabItem {
+                    Image(systemName: "figure.mixed.cardio")
+                    Text("Fighters")
+                }
+            //
+            EventListView(repository: eventRepo)
+                .tabItem {
+                    Image(systemName: "calendar")
+                    Text("Events")
+                }
+            //
+            PredictionView()
+                .tabItem {
+                    Image(systemName: "bolt.fill")
+                    Text("Predict")
+                }
         }
-        .padding()
+        .tint(Color(hex: "FF3B30"))
     }
 }
-
 #Preview {
     ContentView()
 }
