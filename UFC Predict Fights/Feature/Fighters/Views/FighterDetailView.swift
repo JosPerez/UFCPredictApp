@@ -11,6 +11,7 @@ import BlackSpartan
 struct FighterDetailView: View {
     let fighterId: Int
     @State private var viewModel: FighterDetailViewModel
+    @Environment(AppCoordinator.self) private var coordinator
 
     init(fighterId: Int) {
         self.fighterId = fighterId
@@ -265,12 +266,11 @@ struct FighterDetailView: View {
     }
 
     // MARK: - Predict Button
-
+    @MainActor
     @ViewBuilder
     private func predictButton(_ p: BSFighterProfile) -> some View {
-        NavigationLink {
-            // TODO: conectar con PredictionView
-            Text("Predict with \(p.firstName)")
+        Button {
+            coordinator.predictWithFighter(id: p.id)
         } label: {
             HStack {
                 Image(systemName: "bolt.fill")

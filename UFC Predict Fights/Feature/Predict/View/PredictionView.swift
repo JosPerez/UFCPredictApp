@@ -10,7 +10,7 @@ import BlackSpartan
 
 @MainActor
 struct PredictionView: View {
-    @State private var viewModel = PredictionViewModel()
+    @Bindable var viewModel: PredictionViewModel
     @State private var showPickerA = false
     @State private var showPickerB = false
 
@@ -174,93 +174,114 @@ struct PredictionView: View {
 
     @ViewBuilder
     private func resultSection(_ prediction: Prediction) -> some View {
-        VStack(spacing: 16) {
-            // Fighters face-off
-            HStack(spacing: 0) {
-                fighterResult(
-                    name: prediction.fighterAName,
-                    prob: prediction.fighterAWinProb,
-                    isWinner: prediction.fighterAWinProb > prediction.fighterBWinProb
-                )
-
-                VStack(spacing: 2) {
-                    Text("VS")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
-                }
-                .frame(width: 30)
-
-                fighterResult(
-                    name: prediction.fighterBName,
-                    prob: prediction.fighterBWinProb,
-                    isWinner: prediction.fighterBWinProb > prediction.fighterAWinProb
-                )
-            }
-            .padding(.horizontal, 16)
-
-            // Probability bar
-            VStack(spacing: 6) {
-                HStack {
-                    Text("\(Int(prediction.fighterAWinProb * 100))%")
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
-                    Spacer()
-                    Text("\(Int(prediction.fighterBWinProb * 100))%")
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(Color(hex: "555555"))
-                }
-                GeometryReader { geo in
-                    HStack(spacing: 2) {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color(hex: "FF3B30"))
-                            .frame(width: geo.size.width * prediction.fighterAWinProb)
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color(hex: "333333"))
+        VStack(spacing: 12) {
+            // Fighter face-off card
+            VStack(spacing: 0) {
+                // Fighters
+                HStack(spacing: 0) {
+                    // Red corner
+                    VStack(spacing: 4) {
+                        ZStack {
+                            Circle()
+                                .fill(Color(hex: "FF3B30").opacity(0.15))
+                                .frame(width: 52, height: 52)
+                            Image(systemName: "hand.raised.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color(hex: "FF3B30"))
+                        }
+                        Text(lastName(prediction.fighterAName))
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.white)
+                        Text("Red corner")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(Color(hex: "FF3B30"))
                     }
+                    .frame(maxWidth: .infinity)
+                    
+                    // VS
+                    ZStack {
+                        Circle()
+                            .fill(Color(hex: "252525"))
+                            .frame(width: 32, height: 32)
+                        Text("VS")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(Color(hex: "555555"))
+                    }
+                    
+                    // Blue corner
+                    VStack(spacing: 4) {
+                        ZStack {
+                            Circle()
+                                .fill(Color(hex: "3B82F6").opacity(0.15))
+                                .frame(width: 52, height: 52)
+                            Image(systemName: "hand.raised.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color(hex: "3B82F6"))
+                        }
+                        Text(lastName(prediction.fighterBName))
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.white)
+                        Text("Blue corner")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(Color(hex: "3B82F6"))
+                    }
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(height: 10)
-
-                HStack {
-                    Text(lastName(prediction.fighterAName))
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(Color(hex: "FF3B30"))
+                
+                // Probability bar
+                VStack(spacing: 4) {
+                    HStack {
+                        Text("\(Int(prediction.fighterAWinProb * 100))%")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(Color(hex: "FF3B30"))
+                        Spacer()
+                        Text("\(Int(prediction.fighterBWinProb * 100))%")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(Color(hex: "3B82F6"))
+                    }
+                    
+                    GeometryReader { geo in
+                        HStack(spacing: 2) {
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(Color(hex: "FF3B30"))
+                                .frame(width: geo.size.width * prediction.fighterAWinProb)
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(Color(hex: "3B82F6"))
+                        }
+                    }
+                    .frame(height: 12)
+                }
+                .padding(.top, 16)
+                
+                // Confidence
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(prediction.confidence == "HIGH"
+                              ? Color(hex: "34C759")
+                              : Color(hex: "888888"))
+                        .frame(width: 8, height: 8)
+                    Text(prediction.confidence == "HIGH" ? "High confidence" : "Low confidence")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(prediction.confidence == "HIGH"
+                                         ? Color(hex: "34C759")
+                                         : Color(hex: "888888"))
                     Spacer()
-                    Text(lastName(prediction.fighterBName))
-                        .font(.system(size: 11))
-                        .foregroundColor(Color(hex: "555555"))
                 }
+                .padding(.top, 12)
             }
+            .padding(16)
+            .background(Color(hex: "1C1C1E"))
+            .cornerRadius(14)
             .padding(.horizontal, 16)
-
-            // Confidence
-            HStack {
-                Text(prediction.confidence)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(
-                        prediction.confidence == "HIGH"
-                            ? Color(hex: "FF3B30")
-                            : Color(hex: "888888")
-                    )
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(
-                        prediction.confidence == "HIGH"
-                            ? Color(hex: "FF3B30").opacity(0.12)
-                            : Color(hex: "333333")
-                    )
-                    .cornerRadius(6)
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-
-            // Top factors
-            VStack(alignment: .leading, spacing: 8) {
+            
+            // Key factors card
+            VStack(alignment: .leading, spacing: 10) {
                 Text("Key factors")
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(Color(hex: "3a3a3a"))
+                    .foregroundColor(Color(hex: "555555"))
                     .textCase(.uppercase)
                     .kerning(1)
-
+                
                 ForEach(prediction.topFactors) { factor in
                     FactorRow(
                         factor: factor,
@@ -269,8 +290,11 @@ struct PredictionView: View {
                     )
                 }
             }
+            .padding(16)
+            .background(Color(hex: "1C1C1E"))
+            .cornerRadius(14)
             .padding(.horizontal, 16)
-
+            
             // New prediction button
             Button {
                 viewModel.reset()
@@ -285,12 +309,13 @@ struct PredictionView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background(Color(hex: "1C1C1E"))
-                .cornerRadius(10)
+                .cornerRadius(12)
             }
             .padding(.horizontal, 16)
-            .padding(.top, 8)
+            .padding(.top, 4)
         }
     }
+    
 
     // MARK: - Components
 
@@ -394,24 +419,6 @@ struct PredictionView: View {
     }
 
     @ViewBuilder
-    private func fighterResult(name: String, prob: Double, isWinner: Bool) -> some View {
-        VStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(isWinner ? Color(hex: "FF3B30").opacity(0.15) : Color(hex: "252525"))
-                    .frame(width: 44, height: 44)
-                Text(initials(name))
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(isWinner ? Color(hex: "FF3B30") : Color(hex: "555555"))
-            }
-            Text(lastName(name))
-                .font(.system(size: 13, weight: isWinner ? .bold : .regular))
-                .foregroundColor(isWinner ? Color(hex: "FF3B30") : Color(hex: "888888"))
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    @ViewBuilder
     private func warningBanner(_ warning: String) -> some View {
         HStack(spacing: 8) {
             Image(systemName: "exclamationmark.triangle.fill")
@@ -453,42 +460,61 @@ struct PredictionView: View {
     }
 }
 
-// MARK: - Factor Row
-
 struct FactorRow: View {
     let factor: PredictionFactor
     let fighterAName: String
     let fighterBName: String
 
-    var body: some View {
-        HStack(spacing: 8) {
-            Text(formatFeature(factor.feature))
-                .font(.system(size: 12))
-                .foregroundColor(Color(hex: "777777"))
-                .frame(maxWidth: .infinity, alignment: .leading)
+    private var favorsRed: Bool { factor.impact > 0 }
+    private var isNeutral: Bool { abs(factor.impact) < 0.01 }
 
-            HStack(spacing: 6) {
-                // Bar
-                GeometryReader { geo in
-                    let width = min(abs(factor.impact) / 1.0, 1.0) * geo.size.width
-                    ZStack(alignment: factor.impact >= 0 ? .leading : .trailing) {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(Color(hex: "1C1C1E"))
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(factor.impact >= 0 ? Color(hex: "FF3B30") : Color(hex: "444444"))
-                            .frame(width: max(width, 4))
+    var body: some View {
+        VStack(spacing: 4) {
+            // Label + direction
+            HStack {
+                Text(formatFeature(factor.feature))
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(hex: "BBBBBB"))
+                Spacer()
+                if isNeutral {
+                    Text("Neutral")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(Color(hex: "555555"))
+                } else {
+                    Text("Favors \(favorsRed ? "red" : "blue")")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(favorsRed
+                            ? Color(hex: "FF3B30")
+                            : Color(hex: "3B82F6"))
+                }
+            }
+
+            // Bar
+            GeometryReader { geo in
+                let barWidth = min(abs(factor.impact) / 1.0, 1.0) * (geo.size.width / 2)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color(hex: "252525"))
+                        .frame(height: 4)
+
+                    if !isNeutral {
+                        HStack(spacing: 0) {
+                            if favorsRed {
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(Color(hex: "FF3B30"))
+                                    .frame(width: max(barWidth, 4), height: 4)
+                                Spacer()
+                            } else {
+                                Spacer()
+                                RoundedRectangle(cornerRadius: 2)
+                                    .fill(Color(hex: "3B82F6"))
+                                    .frame(width: max(barWidth, 4), height: 4)
+                            }
+                        }
                     }
                 }
-                .frame(width: 60, height: 4)
-
-                // Value
-                Text(String(format: "%+.2f", factor.impact))
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(
-                        factor.impact >= 0 ? Color(hex: "FF3B30") : Color(hex: "555555")
-                    )
-                    .frame(width: 40, alignment: .trailing)
             }
+            .frame(height: 4)
         }
     }
 

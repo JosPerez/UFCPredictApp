@@ -34,6 +34,7 @@
 		07841B2A2FCEFD1E005EA7FD /* FighterPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B292FCEFD1E005EA7FD /* FighterPickerView.swift */; };
 		07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */; };
 		07841B302FCEFD9E005EA7FD /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */; };
+		07841B332FCFA796005EA7FD /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B322FCFA796005EA7FD /* AppCoordinator.swift */; };
 		FC7DF36648200DA00A72ACE8 /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		07841B292FCEFD1E005EA7FD /* FighterPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterPickerView.swift; sourceTree = "<group>"; };
 		07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionViewModel.swift; sourceTree = "<group>"; };
 		07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
+		07841B322FCFA796005EA7FD /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4B9EBA53C175E848C5BA532C /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
 		F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -176,6 +178,7 @@
 		07841AF62FCD8AAB005EA7FD /* DesingSystem */ = {
 			isa = PBXGroup;
 			children = (
+				07841B312FCFA785005EA7FD /* Coordinator */,
 				07841B072FCEBA74005EA7FD /* Managers */,
 				07841B012FCEB748005EA7FD /* Container */,
 				07841AF72FCD8ADB005EA7FD /* Components */,
@@ -287,6 +290,14 @@
 				07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		07841B312FCFA785005EA7FD /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				07841B322FCFA796005EA7FD /* AppCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		36763802F7D1F014A868BFD9 /* Pods */ = {
@@ -422,6 +433,7 @@
 			files = (
 				07841B062FCEB80D005EA7FD /* DatabaseErrorView.swift in Sources */,
 				07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */,
+				07841B332FCFA796005EA7FD /* AppCoordinator.swift in Sources */,
 				07841B1D2FCEE41F005EA7FD /* EventListView.swift in Sources */,
 				07841B262FCEEA83005EA7FD /* EventRepository.swift in Sources */,
 				072C52792FCCE45A00FEEACD /* ContentView.swift in Sources */,

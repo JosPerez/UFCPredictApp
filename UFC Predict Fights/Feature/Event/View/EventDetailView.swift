@@ -12,6 +12,7 @@ import BlackSpartan
 struct EventDetailView: View {
     let eventId: Int
     @State private var viewModel: EventDetailViewModel
+    @Environment(AppCoordinator.self) private var coordinator
 
     init(eventId: Int) {
         self.eventId = eventId
@@ -85,7 +86,7 @@ struct EventDetailView: View {
                 .kerning(1)
 
             ForEach(event.fights.reversed()) { fight in
-                EventFightCard(fight: fight)
+                EventFightCard(fight: fight, coordinator: coordinator)
             }
         }
     }
@@ -95,73 +96,73 @@ struct EventDetailView: View {
 
 struct EventFightCard: View {
     let fight: BSEventFight
+    let coordinator: AppCoordinator
     @State private var isExpanded: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
-            // Collapsed: tap to expand
-            Button {
+            // Header: tap to expand
+            HStack(spacing: 8) {
+                // Winner avatar
+                ZStack {
+                    Circle()
+                        .fill(Color(hex: "FF3B30").opacity(0.15))
+                        .frame(width: 28, height: 28)
+                    Text(initials(fight.winnerName ?? fight.fighterRName))
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(Color(hex: "FF3B30"))
+                }
+
+                // Names
+                HStack(spacing: 4) {
+                    Text(lastName(fight.winnerName ?? fight.fighterRName))
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(Color(hex: "FF3B30"))
+                    Text("vs")
+                        .font(.system(size: 10))
+                        .foregroundColor(Color(hex: "3a3a3a"))
+                    Text(lastName(fight.loserName ?? fight.fighterBName))
+                        .font(.system(size: 13))
+                        .foregroundColor(Color(hex: "888888"))
+                }
+
+                Spacer()
+
+                // Method badge
+                if let method = fight.method {
+                    Text(methodAbbr(method, round: fight.round))
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundColor(
+                            isFinish(method) ? Color(hex: "FF3B30") : Color(hex: "888888")
+                        )
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(
+                            isFinish(method)
+                                ? Color(hex: "FF3B30").opacity(0.12)
+                                : Color(hex: "252525")
+                        )
+                        .cornerRadius(4)
+                }
+
+                if fight.isTitleFight {
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(Color(hex: "FFD700"))
+                }
+
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 10))
+                    .foregroundColor(Color(hex: "3a3a3a"))
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .contentShape(Rectangle())
+            .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     isExpanded.toggle()
                 }
-            } label: {
-                HStack(spacing: 8) {
-                    // Winner avatar
-                    ZStack {
-                        Circle()
-                            .fill(Color(hex: "FF3B30").opacity(0.15))
-                            .frame(width: 28, height: 28)
-                        Text(initials(fight.winnerName ?? fight.fighterRName))
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundColor(Color(hex: "FF3B30"))
-                    }
-
-                    // Names
-                    HStack(spacing: 4) {
-                        Text(lastName(fight.winnerName ?? fight.fighterRName))
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(hex: "FF3B30"))
-                        Text("vs")
-                            .font(.system(size: 10))
-                            .foregroundColor(Color(hex: "3a3a3a"))
-                        Text(lastName(fight.loserName ?? fight.fighterBName))
-                            .font(.system(size: 13))
-                            .foregroundColor(Color(hex: "888888"))
-                    }
-
-                    Spacer()
-
-                    // Method badge + chevron
-                    if let method = fight.method {
-                        Text(methodAbbr(method, round: fight.round))
-                            .font(.system(size: 9, weight: .semibold))
-                            .foregroundColor(
-                                isFinish(method) ? Color(hex: "FF3B30") : Color(hex: "888888")
-                            )
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 3)
-                            .background(
-                                isFinish(method)
-                                    ? Color(hex: "FF3B30").opacity(0.12)
-                                    : Color(hex: "252525")
-                            )
-                            .cornerRadius(4)
-                    }
-
-                    if fight.isTitleFight {
-                        Image(systemName: "trophy.fill")
-                            .font(.system(size: 10))
-                            .foregroundColor(Color(hex: "FFD700"))
-                    }
-
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .font(.system(size: 10))
-                        .foregroundColor(Color(hex: "3a3a3a"))
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
             }
-            .buttonStyle(.plain)
 
             // Expanded content
             if isExpanded {
@@ -191,8 +192,7 @@ struct EventFightCard: View {
                             name: fight.fighterRName,
                             img: fight.fighterRImg,
                             isWinner: fight.fighterRWinner == true,
-                            kd: fight.fighterRKd,
-                            corner: "RED"
+                            kd: fight.fighterRKd
                         )
 
                         Text("VS")
@@ -204,14 +204,16 @@ struct EventFightCard: View {
                             name: fight.fighterBName,
                             img: fight.fighterBImg,
                             isWinner: fight.fighterBWinner == true,
-                            kd: fight.fighterBKd,
-                            corner: "BLUE"
+                            kd: fight.fighterBKd
                         )
                     }
 
                     // Predict rematch button
                     Button {
-                        // TODO: conectar con PredictionView
+                        coordinator.predictRematch(
+                            fighterAId: fight.fighterRId,
+                            fighterBId: fight.fighterBId
+                        )
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: "bolt.fill")
@@ -244,7 +246,7 @@ struct EventFightCard: View {
     // MARK: - Fighter column
 
     @ViewBuilder
-    private func fighterColumn(name: String, img: String?, isWinner: Bool, kd: Int, corner: String) -> some View {
+    private func fighterColumn(name: String, img: String?, isWinner: Bool, kd: Int) -> some View {
         VStack(spacing: 4) {
             ZStack {
                 Circle()
