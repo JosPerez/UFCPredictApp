@@ -12,22 +12,22 @@ struct DatabaseErrorView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "0A0A0A").ignoresSafeArea()
+            BSColors.background.ignoresSafeArea()
             VStack(spacing: 16) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 40))
                     .foregroundColor(Color(hex: "FF3B30"))
                 Text("Unable to start")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                 Text(message)
                     .font(.system(size: 13))
-                    .foregroundColor(Color(hex: "555555"))
+                    .foregroundColor(BSColors.textTertiary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
                 Text("Try restarting the app. If the problem persists, reinstall.")
                     .font(.system(size: 11))
-                    .foregroundColor(Color(hex: "3a3a3a"))
+                    .foregroundColor(BSColors.textHint)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }

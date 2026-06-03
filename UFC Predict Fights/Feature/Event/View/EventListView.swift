@@ -17,7 +17,7 @@ struct EventListView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack(alignment: .top) {
-                Color(hex: "0A0A0A").ignoresSafeArea()
+                BSColors.background.ignoresSafeArea()
 
                 if let viewModel {
                     content(viewModel)
@@ -43,7 +43,7 @@ struct EventListView: View {
             HStack {
                 Text("Events")
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                 Spacer()
                 if vm.isSyncing {
                     HStack(spacing: 4) {
@@ -53,7 +53,7 @@ struct EventListView: View {
                         if let progress = vm.syncProgress {
                             Text(progress)
                                 .font(.system(size: 9))
-                                .foregroundColor(Color(hex: "555555"))
+                                .foregroundColor(BSColors.textTertiary)
                         }
                     }
                 }
@@ -64,26 +64,26 @@ struct EventListView: View {
             // SearchBar
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(Color(hex: "444444"))
+                    .foregroundColor(BSColors.textHint)
                     .font(.system(size: 16))
                 TextField("", text: Bindable(vm).searchText)
                     .placeholder(when: vm.searchText.isEmpty) {
-                        Text("Search event...").foregroundColor(Color(hex: "444444"))
+                        Text("Search event...").foregroundColor(BSColors.textHint)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .font(.system(size: 14))
                 if !vm.searchText.isEmpty {
                     Button {
                         vm.searchText = ""
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(Color(hex: "444444"))
+                            .foregroundColor(BSColors.textHint)
                     }
                 }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .background(Color(hex: "1C1C1E"))
+            .background(BSColors.surface)
             .cornerRadius(10)
             .padding(.horizontal, 16)
             .padding(.top, 10)
@@ -115,14 +115,14 @@ struct EventListView: View {
                 if vm.searchText.isEmpty && vm.selectedYear == nil {
                     Text("\(vm.eventCount) events")
                         .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(Color(hex: "3a3a3a"))
+                        .foregroundColor(BSColors.textHint)
                         .textCase(.uppercase)
                         .kerning(1)
                 } else {
                     HStack(spacing: 6) {
                         Text("\(vm.eventCount) results")
                             .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(Color(hex: "3a3a3a"))
+                            .foregroundColor(BSColors.textHint)
                             .textCase(.uppercase)
                             .kerning(1)
                         if vm.selectedYear != nil || !vm.searchText.isEmpty {
@@ -163,7 +163,7 @@ struct EventListView: View {
                         NavigationLink(value: event.eventId) {
                             EventRow(event: event)
                         }
-                        .listRowBackground(Color(hex: "0A0A0A"))
+                        .listRowBackground(BSColors.background)
                         .listRowSeparator(.hidden)          // ← quitar separador
                         .listRowInsets(EdgeInsets(           // ← padding custom
                             top: 4, leading: 16, bottom: 4, trailing: 16
@@ -194,7 +194,7 @@ struct EventRow: View {
             HStack(alignment: .top, spacing: 8) {
                 Text(event.name)
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
                 
@@ -203,7 +203,7 @@ struct EventRow: View {
                 if isPPV {
                     Text("PPV")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(BSColors.textPrimary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
                         .background(Color(hex: "FF3B30"))
@@ -216,7 +216,7 @@ struct EventRow: View {
                 HStack(spacing: 4) {
                     Image(systemName: "calendar")
                         .font(.system(size: 12))
-                        .foregroundColor(Color(hex: "555555"))
+                        .foregroundColor(BSColors.textTertiary)
                     Text(event.eventDate)
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "888888"))
@@ -227,7 +227,7 @@ struct EventRow: View {
                         .foregroundColor(Color(hex: "FF3B30"))
                     Text("fights")
                         .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "555555"))
+                        .foregroundColor(BSColors.textTertiary)
                 }
                 if event.titleFights > 0 {
                     HStack(spacing: 4) {
@@ -236,14 +236,14 @@ struct EventRow: View {
                             .foregroundColor(Color(hex: "FFD700"))
                         Text(event.titleFights == 1 ? "title" : "titles")
                             .font(.system(size: 13))
-                            .foregroundColor(Color(hex: "555555"))
+                            .foregroundColor(BSColors.textTertiary)
                     }
                 }
             }
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(12)
         .overlay(alignment: .leading) {
             if accentColor != .clear {
@@ -267,7 +267,7 @@ struct EventRow: View {
             return Color(hex: "FF3B30")
         }
         if event.name.contains("Fight Night") {
-            return Color(hex: "444444")
+            return BSColors.textHint
         }
         return .clear
     }

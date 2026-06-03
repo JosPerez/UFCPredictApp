@@ -14,6 +14,7 @@ struct SwiftDataContainer {
     private static let models: [any PersistentModel.Type] = [
         CachedFighter.self,
         CachedEvent.self,
+        CachedPrediction.self,
         // CachedFight.self,
     ]
     

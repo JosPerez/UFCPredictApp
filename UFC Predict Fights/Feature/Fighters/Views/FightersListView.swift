@@ -14,11 +14,13 @@ struct FighterListView: View {
     let repository: FighterRepository
     @State private var viewModel: FighterListViewModel?
     @State private var path = NavigationPath()
+    @State private var showSettings = false
+    @Environment(ThemeManager.self) private var themeManager
 
     var body: some View {
         NavigationStack(path: $path) {
             ZStack(alignment: .top) {
-                Color(hex: "0A0A0A").ignoresSafeArea()
+                BSColors.background.ignoresSafeArea()
 
                 if let viewModel {
                     content(viewModel)
@@ -44,8 +46,15 @@ struct FighterListView: View {
             HStack {
                 Text("Fighters")
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                 Spacer()
+                Button {
+                    showSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 18))
+                        .foregroundColor(BSColors.textTertiary)
+                }
                 // Sync indicator
                 if vm.isSyncing {
                     HStack(spacing: 4) {
@@ -55,7 +64,7 @@ struct FighterListView: View {
                         if let progress = vm.syncProgress {
                             Text(progress)
                                 .font(.system(size: 9))
-                                .foregroundColor(Color(hex: "555555"))
+                                .foregroundColor(BSColors.textTertiary)
                         }
                     }
                 }
@@ -66,26 +75,26 @@ struct FighterListView: View {
             // Search bar
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(Color(hex: "444444"))
+                    .foregroundColor(BSColors.textHint)
                     .font(.system(size: 16))
                 TextField("", text: Bindable(vm).searchText)
                     .placeholder(when: vm.searchText.isEmpty) {
-                        Text("Search fighter...").foregroundColor(Color(hex: "444444"))
+                        Text("Search fighter...").foregroundColor(BSColors.textHint)
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .font(.system(size: 14))
                 if !vm.searchText.isEmpty {
                     Button {
                         vm.searchText = ""
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(Color(hex: "444444"))
+                            .foregroundColor(BSColors.textHint)
                     }
                 }
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .background(Color(hex: "1C1C1E"))
+            .background(BSColors.surface)
             .cornerRadius(10)
             .padding(.horizontal, 16)
             .padding(.top, 10)
@@ -116,7 +125,7 @@ struct FighterListView: View {
             HStack {
                 Text("\(vm.fighterCount) fighters")
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(Color(hex: "3a3a3a"))
+                    .foregroundColor(BSColors.textHint)
                     .textCase(.uppercase)
                     .kerning(1)
                 Spacer()
@@ -142,7 +151,7 @@ struct FighterListView: View {
                         NavigationLink(value: fighter.fighterId) {
                             FighterRow(fighter: fighter)
                         }
-                        .listRowBackground(Color(hex: "0A0A0A"))
+                        .listRowBackground(BSColors.background)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(
                             top: 3, leading: 16, bottom: 3, trailing: 16
@@ -157,13 +166,16 @@ struct FighterListView: View {
                             ProgressView().tint(Color(hex: "FF3B30"))
                             Spacer()
                         }
-                        .listRowBackground(Color(hex: "0A0A0A"))
+                        .listRowBackground(BSColors.background)
                     }
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .refreshable {
                     await vm.refresh()
+                }
+                .sheet(isPresented: $showSettings) {
+                    SettingsSheet()
                 }
             }
         }

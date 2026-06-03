@@ -21,7 +21,7 @@ struct EventDetailView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "0A0A0A").ignoresSafeArea()
+            BSColors.background.ignoresSafeArea()
 
             if viewModel.isLoading {
                 ProgressView().tint(Color(hex: "FF3B30"))
@@ -34,7 +34,7 @@ struct EventDetailView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         headerSection(event)
                         statsSection(event)
-                        Divider().background(Color(hex: "1C1C1E")).padding(.vertical, 12)
+                        Divider().background(BSColors.surface).padding(.vertical, 12)
                         fightsSection(event)
                     }
                     .padding(.horizontal, 16)
@@ -43,7 +43,7 @@ struct EventDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Color(hex: "0A0A0A"), for: .navigationBar)
+        .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
     }
 
@@ -54,10 +54,10 @@ struct EventDetailView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(event.name)
                 .font(.system(size: 22, weight: .bold))
-                .foregroundColor(.white)
+                .foregroundColor(BSColors.textPrimary)
             Text(event.eventDate)
                 .font(.system(size: 13))
-                .foregroundColor(Color(hex: "555555"))
+                .foregroundColor(BSColors.textTertiary)
         }
         .padding(.top, 16)
         .padding(.bottom, 12)
@@ -81,7 +81,7 @@ struct EventDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Fight card")
                 .font(.system(size: 11, weight: .medium))
-                .foregroundColor(Color(hex: "3a3a3a"))
+                .foregroundColor(BSColors.textHint)
                 .textCase(.uppercase)
                 .kerning(1)
 
@@ -120,7 +120,7 @@ struct EventFightCard: View {
                         .foregroundColor(Color(hex: "FF3B30"))
                     Text("vs")
                         .font(.system(size: 10))
-                        .foregroundColor(Color(hex: "3a3a3a"))
+                        .foregroundColor(BSColors.textHint)
                     Text(lastName(fight.loserName ?? fight.fighterBName))
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "888888"))
@@ -140,7 +140,7 @@ struct EventFightCard: View {
                         .background(
                             isFinish(method)
                                 ? Color(hex: "FF3B30").opacity(0.12)
-                                : Color(hex: "252525")
+                                : BSColors.surfaceSecondary
                         )
                         .cornerRadius(4)
                 }
@@ -153,7 +153,7 @@ struct EventFightCard: View {
 
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                     .font(.system(size: 10))
-                    .foregroundColor(Color(hex: "3a3a3a"))
+                    .foregroundColor(BSColors.textHint)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
@@ -166,7 +166,7 @@ struct EventFightCard: View {
 
             // Expanded content
             if isExpanded {
-                Divider().background(Color(hex: "252525"))
+                Divider().background(BSColors.surfaceSecondary)
 
                 VStack(spacing: 10) {
                     // Method + weight class
@@ -182,7 +182,7 @@ struct EventFightCard: View {
                         if let wc = fight.weightClass {
                             Text(wc)
                                 .font(.system(size: 10))
-                                .foregroundColor(Color(hex: "555555"))
+                                .foregroundColor(BSColors.textTertiary)
                         }
                     }
 
@@ -197,7 +197,7 @@ struct EventFightCard: View {
 
                         Text("VS")
                             .font(.system(size: 9, weight: .bold))
-                            .foregroundColor(Color(hex: "3a3a3a"))
+                            .foregroundColor(BSColors.textHint)
                             .frame(width: 30)
 
                         fighterColumn(
@@ -221,7 +221,7 @@ struct EventFightCard: View {
                             Text("Predict rematch")
                                 .font(.system(size: 11, weight: .bold))
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(BSColors.textPrimary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
                         .background(Color(hex: "FF3B30"))
@@ -232,7 +232,7 @@ struct EventFightCard: View {
                 .padding(.vertical, 10)
             }
         }
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
@@ -250,7 +250,7 @@ struct EventFightCard: View {
         VStack(spacing: 4) {
             ZStack {
                 Circle()
-                    .fill(isWinner ? Color(hex: "FF3B30").opacity(0.15) : Color(hex: "252525"))
+                    .fill(isWinner ? Color(hex: "FF3B30").opacity(0.15) : BSColors.surfaceSecondary)
                     .frame(width: 36, height: 36)
                 if let url = img, let imageUrl = URL(string: url) {
                     AsyncImage(url: imageUrl) { image in
@@ -258,14 +258,14 @@ struct EventFightCard: View {
                     } placeholder: {
                         Text(initials(name))
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(isWinner ? Color(hex: "FF3B30") : Color(hex: "444444"))
+                            .foregroundColor(isWinner ? Color(hex: "FF3B30") : BSColors.textHint)
                     }
                     .frame(width: 36, height: 36)
                     .clipShape(Circle())
                 } else {
                     Text(initials(name))
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(isWinner ? Color(hex: "FF3B30") : Color(hex: "444444"))
+                        .foregroundColor(isWinner ? Color(hex: "FF3B30") : BSColors.textHint)
                 }
             }
 

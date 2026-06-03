@@ -23,11 +23,11 @@ struct FighterRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(fighter.fullName)
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(BSColors.textPrimary)
                         .lineLimit(1)
                     Text(fighter.weightClass ?? "—")
                         .font(.system(size: 12))
-                        .foregroundColor(Color(hex: "AAAAAA"))
+                        .foregroundColor(BSColors.textSecondary)
                 }
 
                 Spacer()
@@ -38,7 +38,7 @@ struct FighterRow: View {
                         .foregroundColor(Color(hex: "FF3B30"))
                     Text("win rate")
                             .font(.system(size: 11))
-                            .foregroundColor(Color(hex: "666666"))
+                            .foregroundColor(BSColors.textTertiary)
                 }
             }
 
@@ -51,7 +51,7 @@ struct FighterRow: View {
             .padding(.top, 8)
         }
         .padding(14)
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(12)
     }
 
@@ -63,7 +63,7 @@ struct FighterRow: View {
                 .foregroundColor(color)
             Text(label)
                 .font(.system(size: 12))
-                .foregroundColor(Color(hex: "666666"))
+                .foregroundColor(BSColors.textTertiary)
         }
     }
 

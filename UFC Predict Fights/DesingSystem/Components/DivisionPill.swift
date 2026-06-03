@@ -17,10 +17,10 @@ struct DivisionPill: View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(isSelected ? .white : Color(hex: "555555"))
+                .foregroundColor(isSelected ? BSColors.textPrimary : BSColors.textTertiary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 5)
-                .background(isSelected ? Color(hex: "FF3B30") : Color(hex: "1C1C1E"))
+                .background(isSelected ? Color(hex: "FF3B30") : BSColors.surface)
                 .cornerRadius(20)
         }
     }
@@ -36,14 +36,14 @@ struct StatCard: View {
         VStack(spacing: 3) {
             Text(value)
                 .font(.system(size: 20, weight: .bold))
-                .foregroundColor(accent ? Color(hex: "FF3B30") : .white)
+                .foregroundColor(accent ? Color(hex: "FF3B30") : BSColors.textPrimary)
             Text(label)
                 .font(.system(size: 10))
-                .foregroundColor(Color(hex: "444444"))
+                .foregroundColor(BSColors.textHint)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(8)
     }
 }
@@ -67,7 +67,7 @@ struct StatBar: View {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 2)
-                            .fill(Color(hex: "1C1C1E"))
+                            .fill(BSColors.surface)
                         RoundedRectangle(cornerRadius: 2)
                             .fill(Color(hex: "FF3B30"))
                             .frame(width: geo.size.width * min(value / max, 1.0))
@@ -77,7 +77,7 @@ struct StatBar: View {
 
                 Text(displayValue)
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .frame(width: 40, alignment: .trailing)
             }
         }
@@ -100,10 +100,10 @@ struct ErrorStateView: View {
             Spacer()
             Image(systemName: "wifi.exclamationmark")
                 .font(.system(size: 36))
-                .foregroundColor(Color(hex: "3a3a3a"))
+                .foregroundColor(BSColors.textHint)
             Text(message)
                 .font(.system(size: 13))
-                .foregroundColor(Color(hex: "555555"))
+                .foregroundColor(BSColors.textTertiary)
                 .multilineTextAlignment(.center)
             Button("Retry", action: retry)
                 .font(.system(size: 13, weight: .semibold))
@@ -129,7 +129,7 @@ struct EmptyStateView: View {
                 .font(.system(size: 36))
             Text(message)
                 .font(.system(size: 13))
-                .foregroundColor(Color(hex: "555555"))
+                .foregroundColor(BSColors.textTertiary)
             Spacer()
         }
     }

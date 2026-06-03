@@ -21,19 +21,19 @@ struct FighterPickerView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(hex: "0A0A0A").ignoresSafeArea()
+                BSColors.background.ignoresSafeArea()
 
                 VStack(spacing: 0) {
                     // Search bar
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass")
-                            .foregroundColor(Color(hex: "444444"))
+                            .foregroundColor(BSColors.textHint)
                             .font(.system(size: 16))
                         TextField("", text: $searchText)
                             .placeholder(when: searchText.isEmpty) {
-                                Text("Search fighter...").foregroundColor(Color(hex: "444444"))
+                                Text("Search fighter...").foregroundColor(BSColors.textHint)
                             }
-                            .foregroundColor(.white)
+                            .foregroundColor(BSColors.textPrimary)
                             .font(.system(size: 14))
                             .onChange(of: searchText) { _, _ in
                                 search()
@@ -43,13 +43,13 @@ struct FighterPickerView: View {
                                 searchText = ""
                             } label: {
                                 Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(Color(hex: "444444"))
+                                    .foregroundColor(BSColors.textHint)
                             }
                         }
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(Color(hex: "1C1C1E"))
+                    .background(BSColors.surface)
                     .cornerRadius(10)
                     .padding(.horizontal, 16)
                     .padding(.top, 10)
@@ -58,17 +58,17 @@ struct FighterPickerView: View {
                         Spacer()
                         Text("No fighters found")
                             .font(.system(size: 13))
-                            .foregroundColor(Color(hex: "555555"))
+                            .foregroundColor(BSColors.textTertiary)
                         Spacer()
                     } else if results.isEmpty {
                         Spacer()
                         VStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
                                 .font(.system(size: 28))
-                                .foregroundColor(Color(hex: "3a3a3a"))
+                                .foregroundColor(BSColors.textHint)
                             Text("Type to search fighters")
                                 .font(.system(size: 13))
-                                .foregroundColor(Color(hex: "555555"))
+                                .foregroundColor(BSColors.textTertiary)
                         }
                         Spacer()
                     } else {
@@ -80,8 +80,8 @@ struct FighterPickerView: View {
                                 } label: {
                                     FighterRow(fighter: fighter)
                                 }
-                                .listRowBackground(Color(hex: "0A0A0A"))
-                                .listRowSeparatorTint(Color(hex: "1a1a1a"))
+                                .listRowBackground(BSColors.background)
+                                .listRowSeparatorTint(BSColors.border)
                             }
                         }
                         .listStyle(.plain)
@@ -91,7 +91,7 @@ struct FighterPickerView: View {
             }
             .navigationTitle("Select fighter")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color(hex: "0A0A0A"), for: .navigationBar)
+            .toolbarBackground(BSColors.background, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

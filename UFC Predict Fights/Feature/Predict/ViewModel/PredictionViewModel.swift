@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 import BlackSpartan
+import SwiftData
 
 @MainActor
 @Observable
@@ -15,6 +16,7 @@ final class PredictionViewModel {
 
     // MARK: - State
 
+    private var modelContext: ModelContext?
     var fighterA: CachedFighter? = nil
     var fighterB: CachedFighter? = nil
     var prediction: Prediction? = nil
@@ -29,7 +31,8 @@ final class PredictionViewModel {
 
     private let service = BSPredictService(url: Config.baseURL)
 
-    init() {
+    init(modelContext: ModelContext? = nil) {
+        self.modelContext = modelContext
         setupService()
     }
 
@@ -141,11 +144,29 @@ extension PredictionViewModel: BSResponseDelegate {
             if let response = entity as? Prediction {
                 self.prediction = response
                 self.isLoading = false
+                savePrediction(response)
             } else if let error = entity as? BSErrorBase {
                 self.errorMessage = error.message
                 self.isLoading = false
             }
         default: break
         }
+    }
+    
+    private func savePrediction(_ prediction: Prediction) {
+        guard let context = modelContext else { return }
+        let cached = CachedPrediction(
+            fighterAId:    prediction.fighterAId,
+            fighterBId:    prediction.fighterBId,
+            fighterAName:  prediction.fighterAName,
+            fighterBName:  prediction.fighterBName,
+            fighterAImg:   fighterA?.imgThumb,
+            fighterBImg:   fighterB?.imgThumb,
+            fighterAProb:  prediction.fighterAWinProb,
+            fighterBProb:  prediction.fighterBWinProb,
+            confidence:    prediction.confidence
+        )
+        context.insert(cached)
+        try? context.save()
     }
 }

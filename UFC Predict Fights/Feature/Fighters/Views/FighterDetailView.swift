@@ -20,7 +20,7 @@ struct FighterDetailView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "0A0A0A").ignoresSafeArea()
+            BSColors.background.ignoresSafeArea()
 
             if viewModel.isLoading {
                 ProgressView().tint(Color(hex: "FF3B30"))
@@ -33,15 +33,15 @@ struct FighterDetailView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         headerSection(profile)
                         recordSection(profile)
-                        Divider().background(Color(hex: "1C1C1E")).padding(.vertical, 12)
+                        Divider().background(BSColors.surface).padding(.vertical, 12)
                         winMethodsSection(profile)
-                        Divider().background(Color(hex: "1C1C1E")).padding(.vertical, 12)
+                        Divider().background(BSColors.surface).padding(.vertical, 12)
                         winRoundsSection(profile)
-                        Divider().background(Color(hex: "1C1C1E")).padding(.vertical, 12)
+                        Divider().background(BSColors.surface).padding(.vertical, 12)
                         performanceSection(profile)
-                        Divider().background(Color(hex: "1C1C1E")).padding(.vertical, 12)
+                        Divider().background(BSColors.surface).padding(.vertical, 12)
                         physicalSection(profile)
-                        Divider().background(Color(hex: "1C1C1E")).padding(.vertical, 12)
+                        Divider().background(BSColors.surface).padding(.vertical, 12)
                         recentFightsSection(profile)
                         predictButton(profile)
                     }
@@ -51,7 +51,7 @@ struct FighterDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Color(hex: "0A0A0A"), for: .navigationBar)
+        .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
     }
 
@@ -70,12 +70,12 @@ struct FighterDetailView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(p.fullName)
                     .font(.system(size: 22, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                 HStack(spacing: 6) {
                     if let wc = p.weightClass {
                         Text(wc)
                             .font(.system(size: 12))
-                            .foregroundColor(Color(hex: "555555"))
+                            .foregroundColor(BSColors.textTertiary)
                     }
                     if p.isActive {
                         Text("Active")
@@ -108,12 +108,12 @@ struct FighterDetailView: View {
                     if let style = p.fightingStyle {
                         Label(style, systemImage: "figure.martial.arts")
                             .font(.system(size: 10))
-                            .foregroundColor(Color(hex: "444444"))
+                            .foregroundColor(BSColors.textHint)
                     }
                     if let gym = p.trainsAt {
                         Label(gym, systemImage: "building.2")
                             .font(.system(size: 10))
-                            .foregroundColor(Color(hex: "444444"))
+                            .foregroundColor(BSColors.textHint)
                     }
                 }
             }
@@ -168,13 +168,13 @@ struct FighterDetailView: View {
                     VStack(spacing: 4) {
                         Text("\(value)")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(value > 0 ? Color(hex: "FF3B30") : Color(hex: "3a3a3a"))
+                            .foregroundColor(value > 0 ? Color(hex: "FF3B30") : BSColors.textHint)
                         RoundedRectangle(cornerRadius: 3)
-                            .fill(value > 0 ? Color(hex: "FF3B30") : Color(hex: "1C1C1E"))
+                            .fill(value > 0 ? Color(hex: "FF3B30") : BSColors.surface)
                             .frame(height: max(CGFloat(Double(value) / maxVal) * 50, 4))
                         Text(label)
                             .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(Color(hex: "555555"))
+                            .foregroundColor(BSColors.textTertiary)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -262,7 +262,7 @@ struct FighterDetailView: View {
                 Text("Predict with this fighter")
                     .font(.system(size: 14, weight: .bold))
             }
-            .foregroundColor(.white)
+            .foregroundColor(BSColors.textPrimary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
             .background(Color(hex: "FF3B30"))
@@ -276,7 +276,7 @@ struct FighterDetailView: View {
     private func sectionTitle(_ text: String) -> some View {
         Text(text)
             .font(.system(size: 11, weight: .medium))
-            .foregroundColor(Color(hex: "3a3a3a"))
+            .foregroundColor(BSColors.textHint)
             .textCase(.uppercase)
             .kerning(1)
     }
@@ -304,7 +304,7 @@ struct MethodBar: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(Color(hex: "1C1C1E"))
+                        .fill(BSColors.surface)
                     RoundedRectangle(cornerRadius: 3)
                         .fill(Color(hex: "FF3B30"))
                         .frame(width: geo.size.width * max(pct, 0.02))
@@ -317,7 +317,7 @@ struct MethodBar: View {
                 .frame(width: 24, alignment: .trailing)
             Text("\(Int(pct * 100))%")
                 .font(.system(size: 10))
-                .foregroundColor(Color(hex: "555555"))
+                .foregroundColor(BSColors.textTertiary)
                 .frame(width: 30, alignment: .trailing)
         }
     }
@@ -331,14 +331,14 @@ struct PhysicalCard: View {
         VStack(spacing: 3) {
             Text(value)
                 .font(.system(size: 16, weight: .bold))
-                .foregroundColor(.white)
+                .foregroundColor(BSColors.textPrimary)
             Text(label)
                 .font(.system(size: 9))
-                .foregroundColor(Color(hex: "444444"))
+                .foregroundColor(BSColors.textHint)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(8)
     }
 }
@@ -353,14 +353,14 @@ struct RecentFightRow: View {
                 // Result badge
                 Text(fight.result == "WIN" ? "W" : fight.result == "LOSS" ? "L" : "D")
                     .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .frame(width: 28, height: 28)
                     .background(
                         fight.result == "WIN"
                             ? Color(hex: "34C759")
                             : fight.result == "LOSS"
                                 ? Color(hex: "FF3B30")
-                                : Color(hex: "555555")
+                                : BSColors.textTertiary
                     )
                     .cornerRadius(6)
 
@@ -374,7 +374,7 @@ struct RecentFightRow: View {
                         .background(
                             isFinish(method)
                                 ? Color(hex: "FF3B30").opacity(0.12)
-                                : Color(hex: "252525")
+                                : BSColors.surfaceSecondary
                         )
                         .cornerRadius(5)
                 }
@@ -395,7 +395,7 @@ struct RecentFightRow: View {
             // Opponent name
             Text(fight.opponentName)
                 .font(.system(size: 16, weight: .bold))
-                .foregroundColor(.white)
+                .foregroundColor(BSColors.textPrimary)
 
             // Event + date
             Text(fight.eventName)
@@ -415,7 +415,7 @@ struct RecentFightRow: View {
             }
         }
         .padding(14)
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(12)
     }
 
@@ -438,14 +438,14 @@ struct StatChip: View {
         HStack(spacing: 4) {
             Text(label)
                 .font(.system(size: 10))
-                .foregroundColor(Color(hex: "555555"))
+                .foregroundColor(BSColors.textTertiary)
             Text(value)
                 .font(.system(size: 12, weight: .bold))
-                .foregroundColor(accent ? Color(hex: "FF3B30") : Color(hex: "AAAAAA"))
+                .foregroundColor(accent ? Color(hex: "FF3B30") : BSColors.textSecondary)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
-        .background(Color(hex: "252525"))
+        .background(BSColors.surfaceSecondary)
         .cornerRadius(6)
     }
 }

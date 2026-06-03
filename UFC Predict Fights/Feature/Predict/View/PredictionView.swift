@@ -13,30 +13,39 @@ struct PredictionView: View {
     @Bindable var viewModel: PredictionViewModel
     @State private var showPickerA = false
     @State private var showPickerB = false
+    @Environment(ThemeManager.self) private var themeManager
+
 
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(hex: "0A0A0A").ignoresSafeArea()
-
+                BSColors.background.ignoresSafeArea()
+                
                 ScrollView {
                     VStack(spacing: 0) {
                         // Title
                         HStack {
                             Text("Predict")
                                 .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(.white)
+                                .foregroundColor(BSColors.textPrimary)
                             Spacer()
+                            NavigationLink {
+                                PredictionHistoryView()
+                            } label: {
+                                Image(systemName: "clock.arrow.circlepath")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(Color(hex: "FF3B30"))
+                            }
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
                         .padding(.bottom, 16)
-
+                        
                         // Warning banner
                         if let warning = viewModel.prediction?.warning {
                             warningBanner(warning)
                         }
-
+                        
                         if let prediction = viewModel.prediction {
                             resultSection(prediction)
                         } else {
@@ -51,6 +60,7 @@ struct PredictionView: View {
             FighterPickerView { fighter in
                 viewModel.selectFighterA(fighter)
             }
+            .preferredColorScheme(themeManager.current.colorScheme)
         }
         .sheet(isPresented: $showPickerB) {
             FighterPickerView(
@@ -59,6 +69,7 @@ struct PredictionView: View {
                 },
                 allowedWeightClasses: viewModel.allowedWeightClasses
             )
+            .preferredColorScheme(themeManager.current.colorScheme)
         }
     }
 
@@ -81,7 +92,7 @@ struct PredictionView: View {
             // VS + Swap
             HStack {
                 Rectangle()
-                    .fill(Color(hex: "1C1C1E"))
+                    .fill(BSColors.surface)
                     .frame(height: 0.5)
                 Button {
                     viewModel.swapFighters()
@@ -92,14 +103,14 @@ struct PredictionView: View {
                         Text("VS")
                             .font(.system(size: 12, weight: .bold))
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
                     .background(Color(hex: "FF3B30"))
                     .cornerRadius(6)
                 }
                 Rectangle()
-                    .fill(Color(hex: "1C1C1E"))
+                    .fill(BSColors.surface)
                     .frame(height: 0.5)
             }
             .padding(.horizontal, 16)
@@ -125,7 +136,7 @@ struct PredictionView: View {
                     HStack(spacing: 6) {
                         if viewModel.isLoading {
                             ProgressView()
-                                .tint(.white)
+                                .tint(BSColors.textPrimary)
                                 .scaleEffect(0.8)
                         } else {
                             Image(systemName: "bolt.fill")
@@ -134,7 +145,7 @@ struct PredictionView: View {
                         Text("Predict fight")
                             .font(.system(size: 16, weight: .bold))
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(Color(hex: "FF3B30"))
@@ -189,7 +200,7 @@ struct PredictionView: View {
                         )
                         Text(lastName(prediction.fighterAName))
                             .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(.white)
+                            .foregroundColor(BSColors.textPrimary)
                         Text("Red corner")
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundColor(Color(hex: "FF3B30"))
@@ -199,11 +210,11 @@ struct PredictionView: View {
                     // VS
                     ZStack {
                         Circle()
-                            .fill(Color(hex: "252525"))
+                            .fill(BSColors.surfaceSecondary)
                             .frame(width: 32, height: 32)
                         Text("VS")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(Color(hex: "555555"))
+                            .foregroundColor(BSColors.textTertiary)
                     }
                     
                     // Blue corner
@@ -216,7 +227,7 @@ struct PredictionView: View {
                         )
                         Text(lastName(prediction.fighterBName))
                             .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(.white)
+                            .foregroundColor(BSColors.textPrimary)
                         Text("Blue corner")
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundColor(Color(hex: "3B82F6"))
@@ -266,7 +277,7 @@ struct PredictionView: View {
                 .padding(.top, 12)
             }
             .padding(16)
-            .background(Color(hex: "1C1C1E"))
+            .background(BSColors.surface)
             .cornerRadius(14)
             .padding(.horizontal, 16)
             
@@ -274,7 +285,7 @@ struct PredictionView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Key factors")
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(Color(hex: "555555"))
+                    .foregroundColor(BSColors.textTertiary)
                     .textCase(.uppercase)
                     .kerning(1)
                 
@@ -287,7 +298,7 @@ struct PredictionView: View {
                 }
             }
             .padding(16)
-            .background(Color(hex: "1C1C1E"))
+            .background(BSColors.surface)
             .cornerRadius(14)
             .padding(.horizontal, 16)
             
@@ -304,7 +315,7 @@ struct PredictionView: View {
                 .foregroundColor(Color(hex: "FF3B30"))
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
-                .background(Color(hex: "1C1C1E"))
+                .background(BSColors.surface)
                 .cornerRadius(12)
             }
             .padding(.horizontal, 16)
@@ -319,7 +330,7 @@ struct PredictionView: View {
         HStack {
             Text(text)
                 .font(.system(size: 11, weight: .medium))
-                .foregroundColor(Color(hex: "3a3a3a"))
+                .foregroundColor(BSColors.textHint)
                 .textCase(.uppercase)
                 .kerning(1)
             Spacer()
@@ -362,10 +373,10 @@ struct PredictionView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(fighter.fullName)
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(BSColors.textPrimary)
                 Text("\(fighter.recordWin)W · \(fighter.recordLoss)L · \(fighter.weightClass ?? "—")")
                     .font(.system(size: 11))
-                    .foregroundColor(Color(hex: "555555"))
+                    .foregroundColor(BSColors.textTertiary)
             }
             Spacer()
             Button(action: onClear) {
@@ -375,7 +386,7 @@ struct PredictionView: View {
             }
         }
         .padding(12)
-        .background(Color(hex: "1C1C1E"))
+        .background(BSColors.surface)
         .cornerRadius(12)
         .overlay(alignment: .leading) {
             Rectangle()
@@ -386,12 +397,12 @@ struct PredictionView: View {
         .padding(.horizontal, 16)
     }
 
-    private func emptyCard(onTap: @escaping () -> Void, color: Color = Color(hex: "1C1C1E")) -> some View {
+    private func emptyCard(onTap: @escaping () -> Void, color: Color = BSColors.surface) -> some View {
         Button(action: onTap) {
             HStack(spacing: 10) {
                 ZStack {
                     Circle()
-                        .fill(Color(hex: "1C1C1E"))
+                        .fill(BSColors.surface)
                         .frame(width: 36, height: 36)
                     Image(systemName: "plus")
                         .font(.system(size: 14))
@@ -399,11 +410,11 @@ struct PredictionView: View {
                 }
                 Text("Tap to select fighter")
                     .font(.system(size: 13))
-                    .foregroundColor(Color(hex: "3a3a3a"))
+                    .foregroundColor(BSColors.textHint)
                 Spacer()
             }
             .padding(12)
-            .background(Color(hex: "1C1C1E"))
+            .background(BSColors.surface)
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
@@ -474,7 +485,7 @@ struct FactorRow: View {
                 if isNeutral {
                     Text("Neutral")
                         .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(Color(hex: "555555"))
+                        .foregroundColor(BSColors.textTertiary)
                 } else {
                     Text("Favors \(favorsRed ? "red" : "blue")")
                         .font(.system(size: 10, weight: .semibold))
@@ -489,7 +500,7 @@ struct FactorRow: View {
                 let barWidth = min(abs(factor.impact) / 1.0, 1.0) * (geo.size.width / 2)
                 ZStack {
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(Color(hex: "252525"))
+                        .fill(BSColors.surfaceSecondary)
                         .frame(height: 4)
 
                     if !isNeutral {

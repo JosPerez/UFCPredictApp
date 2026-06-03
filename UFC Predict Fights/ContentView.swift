@@ -11,8 +11,10 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var coordinator = AppCoordinator()
-    @State private var predictionViewModel = PredictionViewModel()
+    @State private var predictionViewModel: PredictionViewModel?
+    @State private var themeManager = ThemeManager()
     @State private var showLaunch = true
+    @State private var showSettings = false
 
     var body: some View {
         ZStack {
@@ -41,27 +43,39 @@ struct ContentView: View {
                     }
                     .tag(1)
 
-                PredictionView(viewModel: predictionViewModel)
-                    .tabItem {
-                        Image(systemName: "bolt.fill")
-                        Text("Predict")
-                    }
-                    .tag(2)
+                if let vm = predictionViewModel {
+                    PredictionView(viewModel: vm)
+                        .tabItem {
+                            Image(systemName: "bolt.fill")
+                            Text("Predict")
+                        }
+                        .tag(2)
+                }
             }
-            .tint(Color(hex: "FF3B30"))
+            .tint(BSColors.accent)
             .environment(coordinator)
+            .environment(themeManager)
             .opacity(showLaunch ? 0 : 1)
         }
+        .preferredColorScheme(themeManager.current.colorScheme)
         .onAppear {
+            if predictionViewModel == nil {
+                predictionViewModel = PredictionViewModel(modelContext: modelContext)
+            }
             coordinator.configure(
                 modelContext: modelContext,
-                predictionViewModel: predictionViewModel
+                predictionViewModel: predictionViewModel!
             )
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.1) {
                 withAnimation(.easeInOut(duration: 0.4)) {
                     showLaunch = false
                 }
             }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsSheet()
+                .environment(themeManager)
+                .preferredColorScheme(themeManager.current.colorScheme)
         }
     }
 }

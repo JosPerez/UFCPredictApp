@@ -14,7 +14,7 @@ struct LaunchView: View {
 
     var body: some View {
         ZStack {
-            Color(hex: "0A0A0A").ignoresSafeArea()
+            BSColors.background.ignoresSafeArea()
 
             VStack(spacing: 20) {
                 // App icon
@@ -30,7 +30,7 @@ struct LaunchView: View {
                 VStack(spacing: 4) {
                     Text("OctAIQ")
                         .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(BSColors.textPrimary)
                     Text("MMA Fight Predictor")
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "888888"))
