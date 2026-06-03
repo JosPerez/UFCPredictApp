@@ -12,41 +12,56 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var coordinator = AppCoordinator()
     @State private var predictionViewModel = PredictionViewModel()
+    @State private var showLaunch = true
 
     var body: some View {
-        let syncManager = SyncManager(modelContext: modelContext)
-        let fighterRepo = FighterRepository(modelContext: modelContext, syncManager: syncManager)
-        let eventRepo   = EventRepository(modelContext: modelContext, syncManager: syncManager)
+        ZStack {
+            if showLaunch {
+                LaunchView()
+                    .transition(.opacity)
+                    .zIndex(1)
+            }
 
-        TabView(selection: $coordinator.selectedTab) {
-            FighterListView(repository: fighterRepo)
-                .tabItem {
-                    Image(systemName: "figure.mixed.cardio")
-                    Text("Fighters")
-                }
-                .tag(0)
+            let syncManager = SyncManager(modelContext: modelContext)
+            let fighterRepo = FighterRepository(modelContext: modelContext, syncManager: syncManager)
+            let eventRepo   = EventRepository(modelContext: modelContext, syncManager: syncManager)
 
-            EventListView(repository: eventRepo)
-                .tabItem {
-                    Image(systemName: "calendar")
-                    Text("Events")
-                }
-                .tag(1)
+            TabView(selection: $coordinator.selectedTab) {
+                FighterListView(repository: fighterRepo)
+                    .tabItem {
+                        Image(systemName: "figure.mixed.cardio")
+                        Text("Fighters")
+                    }
+                    .tag(0)
 
-            PredictionView(viewModel: predictionViewModel)
-                .tabItem {
-                    Image(systemName: "bolt.fill")
-                    Text("Predict")
-                }
-                .tag(2)
+                EventListView(repository: eventRepo)
+                    .tabItem {
+                        Image(systemName: "calendar")
+                        Text("Events")
+                    }
+                    .tag(1)
+
+                PredictionView(viewModel: predictionViewModel)
+                    .tabItem {
+                        Image(systemName: "bolt.fill")
+                        Text("Predict")
+                    }
+                    .tag(2)
+            }
+            .tint(Color(hex: "FF3B30"))
+            .environment(coordinator)
+            .opacity(showLaunch ? 0 : 1)
         }
-        .tint(Color(hex: "FF3B30"))
-        .environment(coordinator)
         .onAppear {
             coordinator.configure(
                 modelContext: modelContext,
                 predictionViewModel: predictionViewModel
             )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.1) {
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    showLaunch = false
+                }
+            }
         }
     }
 }

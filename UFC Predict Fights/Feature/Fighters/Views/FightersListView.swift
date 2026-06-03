@@ -143,7 +143,10 @@ struct FighterListView: View {
                             FighterRow(fighter: fighter)
                         }
                         .listRowBackground(Color(hex: "0A0A0A"))
-                        .listRowSeparatorTint(Color(hex: "1a1a1a"))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(
+                            top: 3, leading: 16, bottom: 3, trailing: 16
+                        ))
                         .onAppear {
                             vm.loadMore(currentItem: fighter)
                         }

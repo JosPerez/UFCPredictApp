@@ -181,14 +181,12 @@ struct PredictionView: View {
                 HStack(spacing: 0) {
                     // Red corner
                     VStack(spacing: 4) {
-                        ZStack {
-                            Circle()
-                                .fill(Color(hex: "FF3B30").opacity(0.15))
-                                .frame(width: 52, height: 52)
-                            Image(systemName: "hand.raised.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color(hex: "FF3B30"))
-                        }
+                        FighterAvatar(
+                            imageUrl: viewModel.fighterA?.imgThumb,
+                            initials: initials(prediction.fighterAName),
+                            size: 52,
+                            accentColor: Color(hex: "FF3B30")
+                        )
                         Text(lastName(prediction.fighterAName))
                             .font(.system(size: 15, weight: .bold))
                             .foregroundColor(.white)
@@ -210,14 +208,12 @@ struct PredictionView: View {
                     
                     // Blue corner
                     VStack(spacing: 4) {
-                        ZStack {
-                            Circle()
-                                .fill(Color(hex: "3B82F6").opacity(0.15))
-                                .frame(width: 52, height: 52)
-                            Image(systemName: "hand.raised.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(Color(hex: "3B82F6"))
-                        }
+                        FighterAvatar(
+                            imageUrl: viewModel.fighterB?.imgThumb,
+                            initials: initials(prediction.fighterBName),
+                            size: 52,
+                            accentColor: Color(hex: "3B82F6")
+                        )
                         Text(lastName(prediction.fighterBName))
                             .font(.system(size: 15, weight: .bold))
                             .foregroundColor(.white)
@@ -356,14 +352,13 @@ struct PredictionView: View {
 
     private func selectedCard(fighter: CachedFighter, accentColor: Color = Color(hex: "FF3B30"), onClear: @escaping () -> Void) -> some View {
         HStack(spacing: 10) {
-            ZStack {
-                Circle()
-                    .fill(accentColor.opacity(0.15))
-                    .frame(width: 36, height: 36)
-                Image(systemName: "hand.raised.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(accentColor)
-            }
+            FighterAvatar(
+                imageUrl: fighter.imgThumb,
+                initials: fighter.initials,
+                size: 36,
+                accentColor: accentColor
+            )
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(fighter.fullName)
                     .font(.system(size: 14, weight: .semibold))

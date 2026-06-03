@@ -60,6 +60,33 @@ struct EventListView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 8)
+            
+            // SearchBar
+            HStack(spacing: 8) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(Color(hex: "444444"))
+                    .font(.system(size: 16))
+                TextField("", text: Bindable(vm).searchText)
+                    .placeholder(when: vm.searchText.isEmpty) {
+                        Text("Search event...").foregroundColor(Color(hex: "444444"))
+                    }
+                    .foregroundColor(.white)
+                    .font(.system(size: 14))
+                if !vm.searchText.isEmpty {
+                    Button {
+                        vm.searchText = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(Color(hex: "444444"))
+                    }
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(Color(hex: "1C1C1E"))
+            .cornerRadius(10)
+            .padding(.horizontal, 16)
+            .padding(.top, 10)
 
             // Year pills
             ScrollView(.horizontal, showsIndicators: false) {
@@ -85,11 +112,35 @@ struct EventListView: View {
 
             // Count
             HStack {
-                Text("\(vm.eventCount) events")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(Color(hex: "3a3a3a"))
-                    .textCase(.uppercase)
-                    .kerning(1)
+                if vm.searchText.isEmpty && vm.selectedYear == nil {
+                    Text("\(vm.eventCount) events")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(Color(hex: "3a3a3a"))
+                        .textCase(.uppercase)
+                        .kerning(1)
+                } else {
+                    HStack(spacing: 6) {
+                        Text("\(vm.eventCount) results")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundColor(Color(hex: "3a3a3a"))
+                            .textCase(.uppercase)
+                            .kerning(1)
+                        if vm.selectedYear != nil || !vm.searchText.isEmpty {
+                            Button {
+                                vm.searchText = ""
+                                vm.selectYear(nil)
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 8, weight: .bold))
+                                    Text("Clear filters")
+                                        .font(.system(size: 10, weight: .semibold))
+                                }
+                                .foregroundColor(Color(hex: "FF3B30"))
+                            }
+                        }
+                    }
+                }
                 Spacer()
             }
             .padding(.horizontal, 16)

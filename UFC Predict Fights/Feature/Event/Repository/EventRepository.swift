@@ -33,17 +33,27 @@ final class EventRepository {
 
     // MARK: - Local queries
 
-    func getEvents(year: Int? = nil, limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
+    func getEvents(year: Int? = nil, query: String? = nil, limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
         var descriptor = FetchDescriptor<CachedEvent>(
             sortBy: [SortDescriptor(\.eventDate, order: .reverse)]
         )
         descriptor.fetchLimit = limit
         descriptor.fetchOffset = offset
 
-        if let y = year {
+        if let y = year, let q = query, !q.isEmpty {
+            let prefix = "\(y)-"
+            descriptor.predicate = #Predicate {
+                $0.eventDate.starts(with: prefix) &&
+                $0.name.localizedStandardContains(q)
+            }
+        } else if let y = year {
             let prefix = "\(y)-"
             descriptor.predicate = #Predicate {
                 $0.eventDate.starts(with: prefix)
+            }
+        } else if let q = query, !q.isEmpty {
+            descriptor.predicate = #Predicate {
+                $0.name.localizedStandardContains(q)
             }
         }
 

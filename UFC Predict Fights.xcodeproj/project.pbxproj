@@ -35,6 +35,8 @@
 		07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */; };
 		07841B302FCEFD9E005EA7FD /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */; };
 		07841B332FCFA796005EA7FD /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B322FCFA796005EA7FD /* AppCoordinator.swift */; };
+		07841B372FD0198B005EA7FD /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B362FD0198B005EA7FD /* LaunchView.swift */; };
+		07841B392FD01A8E005EA7FD /* FighterAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B382FD01A8E005EA7FD /* FighterAvatar.swift */; };
 		FC7DF36648200DA00A72ACE8 /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +72,8 @@
 		07841B2D2FCEFD5A005EA7FD /* PredictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionViewModel.swift; sourceTree = "<group>"; };
 		07841B2F2FCEFD9E005EA7FD /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
 		07841B322FCFA796005EA7FD /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		07841B362FD0198B005EA7FD /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
+		07841B382FD01A8E005EA7FD /* FighterAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterAvatar.swift; sourceTree = "<group>"; };
 		4B9EBA53C175E848C5BA532C /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
 		F34DFAD96BE37A05D1096BCF /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -130,6 +134,7 @@
 		072C52C52FCD721B00FEEACD /* Feature */ = {
 			isa = PBXGroup;
 			children = (
+				07841B342FD0195E005EA7FD /* Launch */,
 				07841B272FCEFCF5005EA7FD /* Predict */,
 				07841B172FCEE397005EA7FD /* Event */,
 				072C52C62FCD722B00FEEACD /* Fighters */,
@@ -192,6 +197,7 @@
 			children = (
 				07841AF82FCD8AF1005EA7FD /* DivisionPill.swift */,
 				07841B052FCEB80D005EA7FD /* DatabaseErrorView.swift */,
+				07841B382FD01A8E005EA7FD /* FighterAvatar.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -298,6 +304,14 @@
 				07841B322FCFA796005EA7FD /* AppCoordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		07841B342FD0195E005EA7FD /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				07841B362FD0198B005EA7FD /* LaunchView.swift */,
+			);
+			path = Launch;
 			sourceTree = "<group>";
 		};
 		36763802F7D1F014A868BFD9 /* Pods */ = {
@@ -449,6 +463,7 @@
 				072C52772FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift in Sources */,
 				072C52CC2FCD731F00FEEACD /* FighterListViewModel.swift in Sources */,
 				072C52CE2FCD74DF00FEEACD /* FightersListView.swift in Sources */,
+				07841B392FD01A8E005EA7FD /* FighterAvatar.swift in Sources */,
 				07841AED2FCD8297005EA7FD /* Config.swift in Sources */,
 				07841B0C2FCEBBBE005EA7FD /* FighterRepository.swift in Sources */,
 				07841B1A2FCEE3C5005EA7FD /* EventListViewModel.swift in Sources */,
@@ -456,6 +471,7 @@
 				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
 				07841B032FCEB75F005EA7FD /* SwiftDataContainer.swift in Sources */,
 				07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */,
+				07841B372FD0198B005EA7FD /* LaunchView.swift in Sources */,
 				07841AF32FCD88FB005EA7FD /* FigtherDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -595,6 +611,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = OctAIQ;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -627,6 +644,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = OctAIQ;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

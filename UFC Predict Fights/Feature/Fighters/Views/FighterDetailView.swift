@@ -61,27 +61,12 @@ struct FighterDetailView: View {
     private func headerSection(_ p: BSFighterProfile) -> some View {
         HStack(spacing: 14) {
             // Avatar con imagen o iniciales
-            ZStack {
-                Circle()
-                    .fill(Color(hex: "1C1C1E"))
-                    .frame(width: 60, height: 60)
-                if let url = p.imgThumb, let imageUrl = URL(string: url) {
-                    AsyncImage(url: imageUrl) { image in
-                        image.resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        Text(p.initials)
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(Color(hex: "FF3B30"))
-                    }
-                    .frame(width: 60, height: 60)
-                    .clipShape(Circle())
-                } else {
-                    Text(p.initials)
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
-                }
-            }
+            FighterAvatar(
+                imageUrl: p.imgThumb,
+                initials: p.initials,
+                size: 60
+            )
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(p.fullName)
                     .font(.system(size: 22, weight: .bold))

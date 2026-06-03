@@ -32,8 +32,14 @@ final class EventListViewModel {
 
     let years: [Int] = {
         let current = Calendar.current.component(.year, from: .now)
-        return Array((current - 5)...current).reversed()
+        return Array((current - 8)...current).reversed()
     }()
+    
+    var searchText: String = "" {
+        didSet { debounceSearch() }
+    }
+
+    private var searchTask: Task<Void, Never>?
 
     init(repository: EventRepository) {
         self.repository = repository
@@ -70,6 +76,7 @@ final class EventListViewModel {
     func loadFromCache() {
         let results = repository.getEvents(
             year: selectedYear,
+            query: searchText.isEmpty ? nil : searchText,
             limit: pageSize,
             offset: currentOffset
         )
@@ -107,5 +114,14 @@ final class EventListViewModel {
 
     func selectYear(_ year: Int?) {
         selectedYear = year
+    }
+    
+    private func debounceSearch() {
+        searchTask?.cancel()
+        searchTask = Task {
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            guard !Task.isCancelled else { return }
+            await MainActor.run { reload() }
+        }
     }
 }
