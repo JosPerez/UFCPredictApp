@@ -13,13 +13,15 @@ public struct BSEvent: Codable, Identifiable {
     public let eventDate: String
     public let fightCount: Int
     public let titleFights: Int
+    public let isUpcoming: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
         case name
-        case eventDate  = "event_date"
-        case fightCount = "fight_count"
+        case eventDate   = "event_date"
+        case fightCount  = "fight_count"
         case titleFights = "title_fights"
+        case isUpcoming  = "is_upcoming"
     }
 }
 
@@ -30,6 +32,7 @@ public struct BSEventDetail: Codable, Identifiable {
     public let fightCount: Int
     public let titleFights: Int
     public let finishes: Int
+    public let isUpcoming: Bool
     public let fights: [BSEventFight]
 
     enum CodingKeys: String, CodingKey {
@@ -39,6 +42,7 @@ public struct BSEventDetail: Codable, Identifiable {
         case fightCount  = "fight_count"
         case titleFights = "title_fights"
         case finishes
+        case isUpcoming  = "is_upcoming"
         case fights
     }
 }
@@ -66,8 +70,14 @@ public struct BSEventFight: Codable, Identifiable {
     public let fighterBWinner: Bool?
     public let fighterBKd: Int
     public let fighterBSigStr: Int
+    // Odds
+    public let oddsFighterRProb: Double?
+    public let oddsFighterBProb: Double?
+    public let oddsNumSources: Int?
 
     public var id: Int { fightId }
+
+    public var isUpcoming: Bool { outcome == "UPCOMING" }
 
     public var winnerName: String? {
         if fighterRWinner == true { return fighterRName }
@@ -82,25 +92,28 @@ public struct BSEventFight: Codable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case fightId       = "fight_id"
+        case fightId        = "fight_id"
         case method
-        case methodDetail  = "method_detail"
+        case methodDetail   = "method_detail"
         case round
-        case timeSecs      = "time_secs"
-        case isTitleFight  = "is_title_fight"
+        case timeSecs       = "time_secs"
+        case isTitleFight   = "is_title_fight"
         case outcome
-        case weightClass   = "weight_class"
-        case fighterRId    = "fighter_r_id"
-        case fighterRName  = "fighter_r_name"
-        case fighterRImg   = "fighter_r_img"
+        case weightClass    = "weight_class"
+        case fighterRId     = "fighter_r_id"
+        case fighterRName   = "fighter_r_name"
+        case fighterRImg    = "fighter_r_img"
         case fighterRWinner = "fighter_r_winner"
-        case fighterRKd    = "fighter_r_kd"
+        case fighterRKd     = "fighter_r_kd"
         case fighterRSigStr = "fighter_r_sig_str"
-        case fighterBId    = "fighter_b_id"
-        case fighterBName  = "fighter_b_name"
-        case fighterBImg   = "fighter_b_img"
+        case fighterBId     = "fighter_b_id"
+        case fighterBName   = "fighter_b_name"
+        case fighterBImg    = "fighter_b_img"
         case fighterBWinner = "fighter_b_winner"
-        case fighterBKd    = "fighter_b_kd"
+        case fighterBKd     = "fighter_b_kd"
         case fighterBSigStr = "fighter_b_sig_str"
+        case oddsFighterRProb = "odds_fighter_r_prob"
+        case oddsFighterBProb = "odds_fighter_b_prob"
+        case oddsNumSources   = "odds_num_sources"
     }
 }

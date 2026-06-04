@@ -13,18 +13,18 @@ struct EventDetailView: View {
     let eventId: Int
     @State private var viewModel: EventDetailViewModel
     @Environment(AppCoordinator.self) private var coordinator
-
+    
     init(eventId: Int) {
         self.eventId = eventId
         _viewModel = State(initialValue: EventDetailViewModel(eventId: eventId))
     }
-
+    
     var body: some View {
         ZStack {
             BSColors.background.ignoresSafeArea()
-
+            
             if viewModel.isLoading {
-                ProgressView().tint(Color(hex: "FF3B30"))
+                ProgressView().tint(BSColors.accent)
             } else if let error = viewModel.errorMessage {
                 ErrorStateView(message: error) {
                     viewModel.retry(eventId: eventId)
@@ -46,9 +46,9 @@ struct EventDetailView: View {
         .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
     }
-
+    
     // MARK: - Header
-
+    
     @ViewBuilder
     private func headerSection(_ event: BSEventDetail) -> some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -62,9 +62,9 @@ struct EventDetailView: View {
         .padding(.top, 16)
         .padding(.bottom, 12)
     }
-
+    
     // MARK: - Stats
-
+    
     @ViewBuilder
     private func statsSection(_ event: BSEventDetail) -> some View {
         HStack(spacing: 8) {
@@ -73,9 +73,9 @@ struct EventDetailView: View {
             StatCard(value: "\(event.titleFights)", label: "Title bouts", accent: event.titleFights > 0)
         }
     }
-
+    
     // MARK: - Fights
-
+    
     @ViewBuilder
     private func fightsSection(_ event: BSEventDetail) -> some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -84,7 +84,7 @@ struct EventDetailView: View {
                 .foregroundColor(BSColors.textHint)
                 .textCase(.uppercase)
                 .kerning(1)
-
+            
             ForEach(event.fights.reversed()) { fight in
                 EventFightCard(fight: fight, coordinator: coordinator)
             }
@@ -98,7 +98,7 @@ struct EventFightCard: View {
     let fight: BSEventFight
     let coordinator: AppCoordinator
     @State private var isExpanded: Bool = false
-
+    
     var body: some View {
         VStack(spacing: 0) {
             // Header: tap to expand
@@ -106,51 +106,61 @@ struct EventFightCard: View {
                 // Winner avatar
                 ZStack {
                     Circle()
-                        .fill(Color(hex: "FF3B30").opacity(0.15))
+                        .fill(BSColors.accent.opacity(0.15))
                         .frame(width: 28, height: 28)
                     Text(initials(fight.winnerName ?? fight.fighterRName))
                         .font(.system(size: 9, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
+                        .foregroundColor(BSColors.accent)
                 }
-
+                
                 // Names
                 HStack(spacing: 4) {
-                    Text(lastName(fight.winnerName ?? fight.fighterRName))
+                    Text(lastName(fight.isUpcoming ? fight.fighterRName : (fight.winnerName ?? fight.fighterRName)))
                         .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
+                        .foregroundColor(fight.isUpcoming ? BSColors.textPrimary : BSColors.accent)
                     Text("vs")
                         .font(.system(size: 10))
                         .foregroundColor(BSColors.textHint)
-                    Text(lastName(fight.loserName ?? fight.fighterBName))
-                        .font(.system(size: 13))
-                        .foregroundColor(Color(hex: "888888"))
+                    Text(lastName(fight.isUpcoming ? fight.fighterBName : (fight.loserName ?? fight.fighterBName)))
+                        .font(.system(size: 13, weight: fight.isUpcoming ? .bold : .regular))
+                        .foregroundColor(fight.isUpcoming ? BSColors.textPrimary : Color(hex: "888888"))
                 }
-
+                
                 Spacer()
-
+                
                 // Method badge
-                if let method = fight.method {
+                if fight.isUpcoming {
+                    if let wc = fight.weightClass {
+                        Text(wc)
+                            .font(.system(size: 9, weight: .semibold))
+                            .foregroundColor(BSColors.textTertiary)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
+                            .background(BSColors.surfaceSecondary)
+                            .cornerRadius(4)
+                    }
+                } else if let method = fight.method {
                     Text(methodAbbr(method, round: fight.round))
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundColor(
-                            isFinish(method) ? Color(hex: "FF3B30") : Color(hex: "888888")
+                            isFinish(method) ? BSColors.accent : Color(hex: "888888")
                         )
                         .padding(.horizontal, 6)
                         .padding(.vertical, 3)
                         .background(
                             isFinish(method)
-                                ? Color(hex: "FF3B30").opacity(0.12)
+                                ? BSColors.accent.opacity(0.12)
                                 : BSColors.surfaceSecondary
                         )
                         .cornerRadius(4)
                 }
-
+                
                 if fight.isTitleFight {
                     Image(systemName: "trophy.fill")
                         .font(.system(size: 10))
                         .foregroundColor(Color(hex: "FFD700"))
                 }
-
+                
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                     .font(.system(size: 10))
                     .foregroundColor(BSColors.textHint)
@@ -163,73 +173,165 @@ struct EventFightCard: View {
                     isExpanded.toggle()
                 }
             }
-
+            
             // Expanded content
+            // Después de la sección expanded actual, reemplaza todo el bloque "if isExpanded"
+            
             if isExpanded {
                 Divider().background(BSColors.surfaceSecondary)
-
-                VStack(spacing: 10) {
-                    // Method + weight class
-                    HStack {
-                        if let method = fight.method {
-                            Text(methodLabel(method, round: fight.round, time: fight.timeSecs))
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundColor(
-                                    isFinish(method) ? Color(hex: "FF3B30") : Color(hex: "888888")
-                                )
-                        }
-                        Spacer()
+                
+                if fight.isUpcoming {
+                    // ── Upcoming: odds + predict ──
+                    VStack(spacing: 10) {
+                        // Weight class
                         if let wc = fight.weightClass {
-                            Text(wc)
+                            HStack {
+                                Text(wc)
+                                    .font(.system(size: 11))
+                                    .foregroundColor(BSColors.textSecondary)
+                                Spacer()
+                            }
+                        }
+                        
+                        // Fighters side by side
+                        HStack(spacing: 0) {
+                            fighterColumn(
+                                name: fight.fighterRName,
+                                img: fight.fighterRImg,
+                                isWinner: false,
+                                kd: 0
+                            )
+                            Text("VS")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundColor(BSColors.textHint)
+                                .frame(width: 30)
+                            fighterColumn(
+                                name: fight.fighterBName,
+                                img: fight.fighterBImg,
+                                isWinner: false,
+                                kd: 0
+                            )
+                        }
+                        
+                        // Odds bar (si disponibles)
+                        if let probR = fight.oddsFighterRProb,
+                           let probB = fight.oddsFighterBProb {
+                            VStack(spacing: 4) {
+                                HStack {
+                                    Text("\(Int(probR * 100))%")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundColor(BSColors.accent)
+                                    Spacer()
+                                    Text("Market odds")
+                                        .font(.system(size: 9))
+                                        .foregroundColor(BSColors.textTertiary)
+                                    Spacer()
+                                    Text("\(Int(probB * 100))%")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundColor(BSColors.accentBlue)
+                                }
+                                GeometryReader { geo in
+                                    HStack(spacing: 2) {
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .fill(BSColors.accent)
+                                            .frame(width: geo.size.width * probR)
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .fill(BSColors.accentBlue)
+                                    }
+                                }
+                                .frame(height: 6)
+                            }
+                        } else {
+                            Text("No odds available")
                                 .font(.system(size: 10))
                                 .foregroundColor(BSColors.textTertiary)
                         }
-                    }
-
-                    // Fighters side by side
-                    HStack(spacing: 0) {
-                        fighterColumn(
-                            name: fight.fighterRName,
-                            img: fight.fighterRImg,
-                            isWinner: fight.fighterRWinner == true,
-                            kd: fight.fighterRKd
-                        )
-
-                        Text("VS")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundColor(BSColors.textHint)
-                            .frame(width: 30)
-
-                        fighterColumn(
-                            name: fight.fighterBName,
-                            img: fight.fighterBImg,
-                            isWinner: fight.fighterBWinner == true,
-                            kd: fight.fighterBKd
-                        )
-                    }
-
-                    // Predict rematch button
-                    Button {
-                        coordinator.predictRematch(
-                            fighterAId: fight.fighterRId,
-                            fighterBId: fight.fighterBId
-                        )
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "bolt.fill")
-                                .font(.system(size: 10))
-                            Text("Predict rematch")
-                                .font(.system(size: 11, weight: .bold))
+                        
+                        // Predict button
+                        Button {
+                            coordinator.predictRematch(
+                                fighterAId: fight.fighterRId,
+                                fighterBId: fight.fighterBId
+                            )
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "bolt.fill")
+                                    .font(.system(size: 10))
+                                Text("Predict this fight")
+                                    .font(.system(size: 11, weight: .bold))
+                            }
+                            .foregroundColor(BSColors.textPrimary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .background(BSColors.accent)
+                            .cornerRadius(8)
                         }
-                        .foregroundColor(BSColors.textPrimary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .background(Color(hex: "FF3B30"))
-                        .cornerRadius(8)
                     }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                } else {
+                    // ── Completed: resultado actual (código existente) ──
+                    VStack(spacing: 10) {
+                        // Method + weight class
+                        HStack {
+                            if let method = fight.method {
+                                Text(methodLabel(method, round: fight.round, time: fight.timeSecs))
+                                    .font(.system(size: 11, weight: .semibold))
+                                    .foregroundColor(
+                                        isFinish(method) ? BSColors.accent : Color(hex: "888888")
+                                    )
+                            }
+                            Spacer()
+                            if let wc = fight.weightClass {
+                                Text(wc)
+                                    .font(.system(size: 10))
+                                    .foregroundColor(BSColors.textTertiary)
+                            }
+                        }
+                        
+                        // Fighters side by side
+                        HStack(spacing: 0) {
+                            fighterColumn(
+                                name: fight.fighterRName,
+                                img: fight.fighterRImg,
+                                isWinner: fight.fighterRWinner == true,
+                                kd: fight.fighterRKd
+                            )
+                            Text("VS")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundColor(BSColors.textHint)
+                                .frame(width: 30)
+                            fighterColumn(
+                                name: fight.fighterBName,
+                                img: fight.fighterBImg,
+                                isWinner: fight.fighterBWinner == true,
+                                kd: fight.fighterBKd
+                            )
+                        }
+                        
+                        // Predict rematch button
+                        Button {
+                            coordinator.predictRematch(
+                                fighterAId: fight.fighterRId,
+                                fighterBId: fight.fighterBId
+                            )
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "bolt.fill")
+                                    .font(.system(size: 10))
+                                Text("Predict rematch")
+                                    .font(.system(size: 11, weight: .bold))
+                            }
+                            .foregroundColor(BSColors.textPrimary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .background(BSColors.accent)
+                            .cornerRadius(8)
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
             }
         }
         .background(BSColors.surface)
@@ -250,7 +352,7 @@ struct EventFightCard: View {
         VStack(spacing: 4) {
             ZStack {
                 Circle()
-                    .fill(isWinner ? Color(hex: "FF3B30").opacity(0.15) : BSColors.surfaceSecondary)
+                    .fill(isWinner ? BSColors.accent.opacity(0.15) : BSColors.surfaceSecondary)
                     .frame(width: 36, height: 36)
                 if let url = img, let imageUrl = URL(string: url) {
                     AsyncImage(url: imageUrl) { image in
@@ -258,20 +360,20 @@ struct EventFightCard: View {
                     } placeholder: {
                         Text(initials(name))
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(isWinner ? Color(hex: "FF3B30") : BSColors.textHint)
+                            .foregroundColor(isWinner ? BSColors.accent : BSColors.textHint)
                     }
                     .frame(width: 36, height: 36)
                     .clipShape(Circle())
                 } else {
                     Text(initials(name))
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(isWinner ? Color(hex: "FF3B30") : BSColors.textHint)
+                        .foregroundColor(isWinner ? BSColors.accent : BSColors.textHint)
                 }
             }
 
             Text(lastName(name))
                 .font(.system(size: 12, weight: isWinner ? .bold : .regular))
-                .foregroundColor(isWinner ? Color(hex: "FF3B30") : Color(hex: "888888"))
+                .foregroundColor(isWinner ? BSColors.accent : Color(hex: "888888"))
 
             if isWinner {
                 Text("Winner")
@@ -282,10 +384,10 @@ struct EventFightCard: View {
             if kd > 0 {
                 Text("\(kd) KD")
                     .font(.system(size: 9, weight: .semibold))
-                    .foregroundColor(Color(hex: "FF3B30"))
+                    .foregroundColor(BSColors.accent)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(Color(hex: "FF3B30").opacity(0.12))
+                    .background(BSColors.accent.opacity(0.12))
                     .cornerRadius(4)
             }
         }

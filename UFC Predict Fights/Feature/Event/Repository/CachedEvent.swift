@@ -17,6 +17,7 @@ final class CachedEvent {
     var eventDate: String
     var fightCount: Int
     var titleFights: Int
+    var isUpcoming: Bool
     var cachedAt: Date
 
     // Computed: extraer año del date string para filtros
@@ -30,7 +31,8 @@ final class CachedEvent {
         name: String,
         eventDate: String,
         fightCount: Int,
-        titleFights: Int,
+        titleFights: Int = 0,
+        isUpcoming: Bool = false,
         cachedAt: Date = .now
     ) {
         self.eventId = eventId
@@ -38,23 +40,27 @@ final class CachedEvent {
         self.eventDate = eventDate
         self.fightCount = fightCount
         self.titleFights = titleFights
+        self.isUpcoming = isUpcoming
         self.cachedAt = cachedAt
     }
 
     convenience init(from remote: BSEvent) {
         self.init(
-            eventId:    remote.id,
-            name:       remote.name,
-            eventDate:  remote.eventDate,
-            fightCount: remote.fightCount,
-            titleFights: remote.titleFights
+            eventId:     remote.id,
+            name:        remote.name,
+            eventDate:   remote.eventDate,
+            fightCount:  remote.fightCount,
+            titleFights: remote.titleFights,
+            isUpcoming:  remote.isUpcoming
         )
     }
 
     func update(from remote: BSEvent) {
-        self.name       = remote.name
-        self.eventDate  = remote.eventDate
-        self.fightCount = remote.fightCount
-        self.cachedAt   = .now
+        self.name        = remote.name
+        self.eventDate   = remote.eventDate
+        self.fightCount  = remote.fightCount
+        self.titleFights = remote.titleFights
+        self.isUpcoming  = remote.isUpcoming
+        self.cachedAt    = .now
     }
 }

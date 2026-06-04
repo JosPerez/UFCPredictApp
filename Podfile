@@ -5,5 +5,5 @@ target 'UFC Predict Fights' do
 
   pod 'BlackSpartan',
       :git => 'https://github.com/JosPerez/BlackSpartan.git',
-      :tag => '1.0.0'
+      :tag => '1.1.1'
 end

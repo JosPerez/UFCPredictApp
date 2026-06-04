@@ -22,7 +22,7 @@ struct EventListView: View {
                 if let viewModel {
                     content(viewModel)
                 } else {
-                    ProgressView().tint(Color(hex: "FF3B30"))
+                    ProgressView().tint(BSColors.accent)
                 }
             }
             .navigationDestination(for: Int.self) { eventId in
@@ -48,7 +48,7 @@ struct EventListView: View {
                 if vm.isSyncing {
                     HStack(spacing: 4) {
                         ProgressView()
-                            .tint(Color(hex: "FF3B30"))
+                            .tint(BSColors.accent)
                             .scaleEffect(0.7)
                         if let progress = vm.syncProgress {
                             Text(progress)
@@ -92,17 +92,23 @@ struct EventListView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     DivisionPill(
-                        title: "All",
-                        isSelected: vm.selectedYear == nil
+                        title: "Upcoming",
+                        isSelected: vm.selectedFilter == .upcoming
                     ) {
-                        vm.selectYear(nil)
+                        vm.selectFilter(.upcoming)
+                    }
+                    DivisionPill(
+                        title: "All",
+                        isSelected: vm.selectedFilter == .all
+                    ) {
+                        vm.selectFilter(.all)
                     }
                     ForEach(vm.years, id: \.self) { year in
                         DivisionPill(
                             title: "\(year)",
-                            isSelected: vm.selectedYear == year
+                            isSelected: vm.selectedFilter == .year(year)
                         ) {
-                            vm.selectYear(year)
+                            vm.selectFilter(.year(year))
                         }
                     }
                 }
@@ -112,7 +118,7 @@ struct EventListView: View {
 
             // Count
             HStack {
-                if vm.searchText.isEmpty && vm.selectedYear == nil {
+                if vm.searchText.isEmpty && vm.selectedFilter == .all {
                     Text("\(vm.eventCount) events")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(BSColors.textHint)
@@ -125,10 +131,10 @@ struct EventListView: View {
                             .foregroundColor(BSColors.textHint)
                             .textCase(.uppercase)
                             .kerning(1)
-                        if vm.selectedYear != nil || !vm.searchText.isEmpty {
+                        if vm.selectedFilter != .all || !vm.searchText.isEmpty {
                             Button {
                                 vm.searchText = ""
-                                vm.selectYear(nil)
+                                vm.selectFilter(.all)
                             } label: {
                                 HStack(spacing: 3) {
                                     Image(systemName: "xmark")
@@ -136,7 +142,7 @@ struct EventListView: View {
                                     Text("Clear filters")
                                         .font(.system(size: 10, weight: .semibold))
                                 }
-                                .foregroundColor(Color(hex: "FF3B30"))
+                                .foregroundColor(BSColors.accent)
                             }
                         }
                     }
@@ -149,7 +155,7 @@ struct EventListView: View {
             // List
             if vm.isLoading && vm.events.isEmpty {
                 Spacer()
-                ProgressView().tint(Color(hex: "FF3B30"))
+                ProgressView().tint(BSColors.accent)
                 Spacer()
             } else if let error = vm.errorMessage {
                 ErrorStateView(message: error) {
@@ -206,7 +212,7 @@ struct EventRow: View {
                         .foregroundColor(BSColors.textPrimary)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(Color(hex: "FF3B30"))
+                        .background(BSColors.accent)
                         .cornerRadius(4)
                 }
             }
@@ -224,7 +230,7 @@ struct EventRow: View {
                 HStack(spacing: 4) {
                     Text("\(event.fightCount)")
                         .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
+                        .foregroundColor(BSColors.accent)
                     Text("fights")
                         .font(.system(size: 13))
                         .foregroundColor(BSColors.textTertiary)
@@ -264,7 +270,7 @@ struct EventRow: View {
             return Color(hex: "FFD700")
         }
         if isPPV {
-            return Color(hex: "FF3B30")
+            return BSColors.accent
         }
         if event.name.contains("Fight Night") {
             return BSColors.textHint

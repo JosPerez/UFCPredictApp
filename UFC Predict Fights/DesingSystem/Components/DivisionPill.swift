@@ -20,7 +20,7 @@ struct DivisionPill: View {
                 .foregroundColor(isSelected ? BSColors.textPrimary : BSColors.textTertiary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 5)
-                .background(isSelected ? Color(hex: "FF3B30") : BSColors.surface)
+                .background(isSelected ? BSColors.accent : BSColors.surface)
                 .cornerRadius(20)
         }
     }
@@ -36,7 +36,7 @@ struct StatCard: View {
         VStack(spacing: 3) {
             Text(value)
                 .font(.system(size: 20, weight: .bold))
-                .foregroundColor(accent ? Color(hex: "FF3B30") : BSColors.textPrimary)
+                .foregroundColor(accent ? BSColors.accent : BSColors.textPrimary)
             Text(label)
                 .font(.system(size: 10))
                 .foregroundColor(BSColors.textHint)
@@ -69,7 +69,7 @@ struct StatBar: View {
                         RoundedRectangle(cornerRadius: 2)
                             .fill(BSColors.surface)
                         RoundedRectangle(cornerRadius: 2)
-                            .fill(Color(hex: "FF3B30"))
+                            .fill(BSColors.accent)
                             .frame(width: geo.size.width * min(value / max, 1.0))
                     }
                 }
@@ -107,10 +107,10 @@ struct ErrorStateView: View {
                 .multilineTextAlignment(.center)
             Button("Retry", action: retry)
                 .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(Color(hex: "FF3B30"))
+                .foregroundColor(BSColors.accent)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 8)
-                .background(Color(hex: "FF3B30").opacity(0.15))
+                .background(BSColors.accent.opacity(0.15))
                 .cornerRadius(8)
             Spacer()
         }

@@ -79,6 +79,36 @@ final class EventRepository {
             return 0
         }
     }
+    
+    // Agregar nuevo método
+    func getUpcomingEvents(limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
+        var descriptor = FetchDescriptor<CachedEvent>(
+            sortBy: [SortDescriptor(\.eventDate)]  // ascendente — próximo primero
+        )
+        descriptor.fetchLimit = limit
+        descriptor.fetchOffset = offset
+        descriptor.predicate = #Predicate {
+            $0.isUpcoming == true
+        }
+
+        do {
+            return try modelContext.fetch(descriptor)
+        } catch {
+            print("[EventRepository] upcoming fetch error: \(error)")
+            return []
+        }
+    }
+
+    func upcomingCount() -> Int {
+        var descriptor = FetchDescriptor<CachedEvent>(
+            predicate: #Predicate { $0.isUpcoming == true }
+        )
+        do {
+            return try modelContext.fetchCount(descriptor)
+        } catch {
+            return 0
+        }
+    }
 
     var hasCachedData: Bool {
         eventCount() > 0

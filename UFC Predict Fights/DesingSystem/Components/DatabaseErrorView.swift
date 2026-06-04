@@ -16,7 +16,7 @@ struct DatabaseErrorView: View {
             VStack(spacing: 16) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 40))
-                    .foregroundColor(Color(hex: "FF3B30"))
+                    .foregroundColor(BSColors.accent)
                 Text("Unable to start")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)

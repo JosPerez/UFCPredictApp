@@ -35,7 +35,7 @@ struct FighterRow: View {
                 VStack(spacing: 16) {
                     Text(winRateText)
                         .font(.system(size: 22, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
+                        .foregroundColor(BSColors.accent)
                     Text("win rate")
                             .font(.system(size: 11))
                             .foregroundColor(BSColors.textTertiary)
@@ -45,7 +45,7 @@ struct FighterRow: View {
             // Bottom: record
             HStack(spacing: 16) {
                 recordItem(value: fighter.recordWin, label: "W", color: Color(hex: "34C759"))
-                recordItem(value: fighter.recordLoss, label: "L", color: Color(hex: "FF3B30"))
+                recordItem(value: fighter.recordLoss, label: "L", color: BSColors.accent)
                 recordItem(value: fighter.recordDraw, label: "D", color: Color(hex: "888888"))
             }
             .padding(.top, 8)

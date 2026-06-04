@@ -23,7 +23,7 @@ struct FighterDetailView: View {
             BSColors.background.ignoresSafeArea()
 
             if viewModel.isLoading {
-                ProgressView().tint(Color(hex: "FF3B30"))
+                ProgressView().tint(BSColors.accent)
             } else if let error = viewModel.errorMessage {
                 ErrorStateView(message: error) {
                     viewModel.retry(fighterId: fighterId)
@@ -80,10 +80,10 @@ struct FighterDetailView: View {
                     if p.isActive {
                         Text("Active")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(Color(hex: "FF3B30"))
+                            .foregroundColor(BSColors.accent)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color(hex: "FF3B30").opacity(0.15))
+                            .background(BSColors.accent.opacity(0.15))
                             .cornerRadius(4)
                     }
                     if p.currentStreak > 0 {
@@ -97,10 +97,10 @@ struct FighterDetailView: View {
                     } else if p.currentStreak < 0 {
                         Text("\(abs(p.currentStreak))L streak")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(Color(hex: "FF3B30"))
+                            .foregroundColor(BSColors.accent)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color(hex: "FF3B30").opacity(0.15))
+                            .background(BSColors.accent.opacity(0.15))
                             .cornerRadius(4)
                     }
                 }
@@ -168,9 +168,9 @@ struct FighterDetailView: View {
                     VStack(spacing: 4) {
                         Text("\(value)")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(value > 0 ? Color(hex: "FF3B30") : BSColors.textHint)
+                            .foregroundColor(value > 0 ? BSColors.accent : BSColors.textHint)
                         RoundedRectangle(cornerRadius: 3)
-                            .fill(value > 0 ? Color(hex: "FF3B30") : BSColors.surface)
+                            .fill(value > 0 ? BSColors.accent : BSColors.surface)
                             .frame(height: max(CGFloat(Double(value) / maxVal) * 50, 4))
                         Text(label)
                             .font(.system(size: 9, weight: .medium))
@@ -265,7 +265,7 @@ struct FighterDetailView: View {
             .foregroundColor(BSColors.textPrimary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(Color(hex: "FF3B30"))
+            .background(BSColors.accent)
             .cornerRadius(10)
         }
         .padding(.top, 24)
@@ -306,14 +306,14 @@ struct MethodBar: View {
                     RoundedRectangle(cornerRadius: 3)
                         .fill(BSColors.surface)
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(Color(hex: "FF3B30"))
+                        .fill(BSColors.accent)
                         .frame(width: geo.size.width * max(pct, 0.02))
                 }
             }
             .frame(height: 6)
             Text("\(count)")
                 .font(.system(size: 12, weight: .bold))
-                .foregroundColor(Color(hex: "FF3B30"))
+                .foregroundColor(BSColors.accent)
                 .frame(width: 24, alignment: .trailing)
             Text("\(Int(pct * 100))%")
                 .font(.system(size: 10))
@@ -359,7 +359,7 @@ struct RecentFightRow: View {
                         fight.result == "WIN"
                             ? Color(hex: "34C759")
                             : fight.result == "LOSS"
-                                ? Color(hex: "FF3B30")
+                                ? BSColors.accent
                                 : BSColors.textTertiary
                     )
                     .cornerRadius(6)
@@ -368,12 +368,12 @@ struct RecentFightRow: View {
                 if let method = fight.method {
                     Text(methodAbbr(method, round: fight.round))
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(isFinish(method) ? Color(hex: "FF3B30") : Color(hex: "888888"))
+                        .foregroundColor(isFinish(method) ? BSColors.accent : Color(hex: "888888"))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(
                             isFinish(method)
-                                ? Color(hex: "FF3B30").opacity(0.12)
+                                ? BSColors.accent.opacity(0.12)
                                 : BSColors.surfaceSecondary
                         )
                         .cornerRadius(5)
@@ -441,7 +441,7 @@ struct StatChip: View {
                 .foregroundColor(BSColors.textTertiary)
             Text(value)
                 .font(.system(size: 12, weight: .bold))
-                .foregroundColor(accent ? Color(hex: "FF3B30") : BSColors.textSecondary)
+                .foregroundColor(accent ? BSColors.accent : BSColors.textSecondary)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)

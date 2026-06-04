@@ -1,22 +1,22 @@
 PODS:
-  - BlackSpartan (1.0.0)
+  - BlackSpartan (1.1.1)
 
 DEPENDENCIES:
-  - BlackSpartan (from `https://github.com/JosPerez/BlackSpartan.git`, tag `1.0.0`)
+  - BlackSpartan (from `https://github.com/JosPerez/BlackSpartan.git`, tag `1.1.1`)
 
 EXTERNAL SOURCES:
   BlackSpartan:
     :git: https://github.com/JosPerez/BlackSpartan.git
-    :tag: 1.0.0
+    :tag: 1.1.1
 
 CHECKOUT OPTIONS:
   BlackSpartan:
     :git: https://github.com/JosPerez/BlackSpartan.git
-    :tag: 1.0.0
+    :tag: 1.1.1
 
 SPEC CHECKSUMS:
-  BlackSpartan: 5ffe24fd7876f2c3262ecc8ed91c1e5d9aeffa43
+  BlackSpartan: 81513e90a02aaa8a294d10432f1aef6e8eb029dc
 
-PODFILE CHECKSUM: 7bae438a2e3a177b88df975a57374524cd3e51e3
+PODFILE CHECKSUM: ac1c8485b63878b914cd03d99ec944fd67c24a5b
 
 COCOAPODS: 1.16.2

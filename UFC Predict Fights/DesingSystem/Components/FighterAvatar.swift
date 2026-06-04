@@ -11,7 +11,7 @@ struct FighterAvatar: View {
     let imageUrl: String?
     let initials: String
     var size: CGFloat = 44
-    var accentColor: Color = Color(hex: "FF3B30")
+    var accentColor: Color = BSColors.accent
 
     private var resolvedUrl: URL? {
         guard let raw = imageUrl, !raw.isEmpty else { return nil }

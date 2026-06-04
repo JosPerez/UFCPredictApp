@@ -96,7 +96,7 @@ struct FighterPickerView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundColor(Color(hex: "FF3B30"))
+                        .foregroundColor(BSColors.accent)
                 }
             }
         }

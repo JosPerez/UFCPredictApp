@@ -25,7 +25,7 @@ struct FighterListView: View {
                 if let viewModel {
                     content(viewModel)
                 } else {
-                    ProgressView().tint(Color(hex: "FF3B30"))
+                    ProgressView().tint(BSColors.accent)
                 }
             }
             .navigationDestination(for: Int.self) { fighterId in
@@ -59,7 +59,7 @@ struct FighterListView: View {
                 if vm.isSyncing {
                     HStack(spacing: 4) {
                         ProgressView()
-                            .tint(Color(hex: "FF3B30"))
+                            .tint(BSColors.accent)
                             .scaleEffect(0.7)
                         if let progress = vm.syncProgress {
                             Text(progress)
@@ -137,7 +137,7 @@ struct FighterListView: View {
             if vm.isLoading && vm.fighters.isEmpty {
                 Spacer()
                 ProgressView()
-                    .tint(Color(hex: "FF3B30"))
+                    .tint(BSColors.accent)
                 Spacer()
             } else if let error = vm.errorMessage {
                 ErrorStateView(message: error) {
@@ -163,7 +163,7 @@ struct FighterListView: View {
                     if vm.isLoading {
                         HStack {
                             Spacer()
-                            ProgressView().tint(Color(hex: "FF3B30"))
+                            ProgressView().tint(BSColors.accent)
                             Spacer()
                         }
                         .listRowBackground(BSColors.background)

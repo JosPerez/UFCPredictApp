@@ -14,9 +14,10 @@ final public class BSEventService: BSBaseFacade {
         static let detail = "getEventDetail"
     }
 
-    public func getEvents(year: Int? = nil, limit: Int = 20, offset: Int = 0) {
+    public func getEvents(status: String? = nil, year: Int? = nil, limit: Int = 20, offset: Int = 0) {
         var uri = "/events/?limit=\(limit)&offset=\(offset)"
-        if let y = year { uri += "&year=\(y)" }
+        if let s = status { uri += "&status=\(s)" }
+        if let y = year   { uri += "&year=\(y)" }
         do {
             let request = try getRequest(uri: uri)
             connection.delegate = self

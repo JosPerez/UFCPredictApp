@@ -70,13 +70,13 @@ struct PredictionHistoryRow: View {
                         imageUrl: prediction.fighterAImg,
                         initials: initials(prediction.fighterAName),
                         size: 36,
-                        accentColor: Color(hex: "FF3B30")
+                        accentColor: BSColors.accent
                     )
                     Text(lastName(prediction.fighterAName))
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             prediction.fighterAProb > prediction.fighterBProb
-                                ? Color(hex: "FF3B30") : BSColors.textPrimary
+                                ? BSColors.accent : BSColors.textPrimary
                         )
                 }
                 .frame(maxWidth: .infinity)
@@ -85,13 +85,13 @@ struct PredictionHistoryRow: View {
                 HStack(spacing: 4) {
                     Text("\(Int(prediction.fighterAProb * 100))%")
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Color(hex: "FF3B30"))
+                        .foregroundColor(BSColors.accent)
                     Text("-")
                         .font(.system(size: 12))
                         .foregroundColor(BSColors.textHint)
                     Text("\(Int(prediction.fighterBProb * 100))%")
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Color(hex: "3B82F6"))
+                        .foregroundColor(BSColors.accentBlue)
                 }
 
                 // Blue corner
@@ -100,13 +100,13 @@ struct PredictionHistoryRow: View {
                         imageUrl: prediction.fighterBImg,
                         initials: initials(prediction.fighterBName),
                         size: 36,
-                        accentColor: Color(hex: "3B82F6")
+                        accentColor: BSColors.accentBlue
                     )
                     Text(lastName(prediction.fighterBName))
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             prediction.fighterBProb > prediction.fighterAProb
-                                ? Color(hex: "3B82F6") : BSColors.textPrimary
+                                ? BSColors.accentBlue : BSColors.textPrimary
                         )
                 }
                 .frame(maxWidth: .infinity)

@@ -34,7 +34,7 @@ struct PredictionView: View {
                             } label: {
                                 Image(systemName: "clock.arrow.circlepath")
                                     .font(.system(size: 18))
-                                    .foregroundColor(Color(hex: "FF3B30"))
+                                    .foregroundColor(BSColors.accent)
                             }
                         }
                         .padding(.horizontal, 16)
@@ -78,15 +78,15 @@ struct PredictionView: View {
     private var selectionSection: some View {
         VStack(spacing: 0) {
             // Fighter A
-            cornerLabel(text: "Red corner", color: Color(hex: "FF3B30"), systemIcon: "hand.raised.fill")
+            cornerLabel(text: "Red corner", color: BSColors.accent, systemIcon: "hand.raised.fill")
             if let fighter = viewModel.fighterA {
-                selectedCard(fighter: fighter, accentColor: Color(hex: "FF3B30")) {
+                selectedCard(fighter: fighter, accentColor: BSColors.accent) {
                     viewModel.clearFighterA()
                 }
             } else {
                 emptyCard(onTap: {
                     showPickerA = true
-                },color: Color(hex: "FF3B30"))
+                },color: BSColors.accent)
             }
 
             // VS + Swap
@@ -106,7 +106,7 @@ struct PredictionView: View {
                     .foregroundColor(BSColors.textPrimary)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(Color(hex: "FF3B30"))
+                    .background(BSColors.accent)
                     .cornerRadius(6)
                 }
                 Rectangle()
@@ -117,15 +117,15 @@ struct PredictionView: View {
             .padding(.vertical, 12)
 
             // Fighter B
-            cornerLabel(text: "Blue corner", color: Color(hex: "3B82F6"), systemIcon: "hand.raised.fill")
+            cornerLabel(text: "Blue corner", color: BSColors.accentBlue, systemIcon: "hand.raised.fill")
             if let fighter = viewModel.fighterB {
-                selectedCard(fighter: fighter, accentColor: Color(hex: "3B82F6")) {
+                selectedCard(fighter: fighter, accentColor: BSColors.accentBlue) {
                     viewModel.clearFighterB()
                 }
             } else {
                 emptyCard(onTap: {
                     showPickerB = true
-                }, color: Color(hex: "3B82F6"))
+                }, color: BSColors.accentBlue)
             }
 
             // Predict button
@@ -148,7 +148,7 @@ struct PredictionView: View {
                     .foregroundColor(BSColors.textPrimary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Color(hex: "FF3B30"))
+                    .background(BSColors.accent)
                     .cornerRadius(12)
                 }
                 .disabled(viewModel.isLoading)
@@ -157,14 +157,14 @@ struct PredictionView: View {
             } else {
                 Text("Select both fighters to predict")
                     .font(.system(size: 12))
-                    .foregroundColor(Color(hex: "FF3B30").opacity(0.5))
+                    .foregroundColor(BSColors.accent.opacity(0.5))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Color(hex: "FF3B30").opacity(0.08))
+                    .background(BSColors.accent.opacity(0.08))
                     .cornerRadius(12)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color(hex: "FF3B30").opacity(0.2), style: StrokeStyle(lineWidth: 1, dash: [6]))
+                            .stroke(BSColors.accent.opacity(0.2), style: StrokeStyle(lineWidth: 1, dash: [6]))
                     )
                     .padding(.horizontal, 16)
                     .padding(.top, 24)
@@ -174,7 +174,7 @@ struct PredictionView: View {
             if let error = viewModel.errorMessage {
                 Text(error)
                     .font(.system(size: 12))
-                    .foregroundColor(Color(hex: "FF3B30"))
+                    .foregroundColor(BSColors.accent)
                     .padding(.top, 12)
                     .padding(.horizontal, 16)
             }
@@ -196,14 +196,14 @@ struct PredictionView: View {
                             imageUrl: viewModel.fighterA?.imgThumb,
                             initials: initials(prediction.fighterAName),
                             size: 52,
-                            accentColor: Color(hex: "FF3B30")
+                            accentColor: BSColors.accent
                         )
                         Text(lastName(prediction.fighterAName))
                             .font(.system(size: 15, weight: .bold))
                             .foregroundColor(BSColors.textPrimary)
                         Text("Red corner")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(Color(hex: "FF3B30"))
+                            .foregroundColor(BSColors.accent)
                     }
                     .frame(maxWidth: .infinity)
                     
@@ -223,14 +223,14 @@ struct PredictionView: View {
                             imageUrl: viewModel.fighterB?.imgThumb,
                             initials: initials(prediction.fighterBName),
                             size: 52,
-                            accentColor: Color(hex: "3B82F6")
+                            accentColor: BSColors.accentBlue
                         )
                         Text(lastName(prediction.fighterBName))
                             .font(.system(size: 15, weight: .bold))
                             .foregroundColor(BSColors.textPrimary)
                         Text("Blue corner")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(Color(hex: "3B82F6"))
+                            .foregroundColor(BSColors.accentBlue)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -240,20 +240,20 @@ struct PredictionView: View {
                     HStack {
                         Text("\(Int(prediction.fighterAWinProb * 100))%")
                             .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(Color(hex: "FF3B30"))
+                            .foregroundColor(BSColors.accent)
                         Spacer()
                         Text("\(Int(prediction.fighterBWinProb * 100))%")
                             .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(Color(hex: "3B82F6"))
+                            .foregroundColor(BSColors.accentBlue)
                     }
                     
                     GeometryReader { geo in
                         HStack(spacing: 2) {
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(Color(hex: "FF3B30"))
+                                .fill(BSColors.accent)
                                 .frame(width: geo.size.width * prediction.fighterAWinProb)
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(Color(hex: "3B82F6"))
+                                .fill(BSColors.accentBlue)
                         }
                     }
                     .frame(height: 12)
@@ -312,7 +312,7 @@ struct PredictionView: View {
                     Text("New prediction")
                         .font(.system(size: 14, weight: .semibold))
                 }
-                .foregroundColor(Color(hex: "FF3B30"))
+                .foregroundColor(BSColors.accent)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background(BSColors.surface)
@@ -361,7 +361,7 @@ struct PredictionView: View {
         .padding(.bottom, 6)
     }
 
-    private func selectedCard(fighter: CachedFighter, accentColor: Color = Color(hex: "FF3B30"), onClear: @escaping () -> Void) -> some View {
+    private func selectedCard(fighter: CachedFighter, accentColor: Color = BSColors.accent, onClear: @escaping () -> Void) -> some View {
         HStack(spacing: 10) {
             FighterAvatar(
                 imageUrl: fighter.imgThumb,
@@ -429,23 +429,23 @@ struct PredictionView: View {
         HStack(spacing: 8) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 14))
-                .foregroundColor(Color(hex: "FF3B30"))
+                .foregroundColor(BSColors.accent)
             VStack(alignment: .leading, spacing: 1) {
                 Text("Low confidence")
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundColor(Color(hex: "FF3B30"))
+                    .foregroundColor(BSColors.accent)
                 Text(warning.replacingOccurrences(of: "_", with: " "))
                     .font(.system(size: 10))
-                    .foregroundColor(Color(hex: "FF3B30").opacity(0.7))
+                    .foregroundColor(BSColors.accent.opacity(0.7))
             }
             Spacer()
         }
         .padding(12)
-        .background(Color(hex: "FF3B30").opacity(0.08))
+        .background(BSColors.accent.opacity(0.08))
         .cornerRadius(10)
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color(hex: "FF3B30").opacity(0.2), lineWidth: 0.5)
+                .stroke(BSColors.accent.opacity(0.2), lineWidth: 0.5)
         )
         .padding(.horizontal, 16)
         .padding(.bottom, 12)
@@ -490,8 +490,8 @@ struct FactorRow: View {
                     Text("Favors \(favorsRed ? "red" : "blue")")
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(favorsRed
-                            ? Color(hex: "FF3B30")
-                            : Color(hex: "3B82F6"))
+                            ? BSColors.accent
+                            : BSColors.accentBlue)
                 }
             }
 
@@ -507,13 +507,13 @@ struct FactorRow: View {
                         HStack(spacing: 0) {
                             if favorsRed {
                                 RoundedRectangle(cornerRadius: 2)
-                                    .fill(Color(hex: "FF3B30"))
+                                    .fill(BSColors.accent)
                                     .frame(width: max(barWidth, 4), height: 4)
                                 Spacer()
                             } else {
                                 Spacer()
                                 RoundedRectangle(cornerRadius: 2)
-                                    .fill(Color(hex: "3B82F6"))
+                                    .fill(BSColors.accentBlue)
                                     .frame(width: max(barWidth, 4), height: 4)
                             }
                         }
