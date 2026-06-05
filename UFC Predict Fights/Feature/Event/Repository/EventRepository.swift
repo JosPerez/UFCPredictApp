@@ -33,9 +33,9 @@ final class EventRepository {
 
     // MARK: - Local queries
 
-    func getEvents(year: Int? = nil, query: String? = nil, limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
+    func getEvents(year: Int? = nil, query: String? = nil, ascending: Bool = false, limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
         var descriptor = FetchDescriptor<CachedEvent>(
-            sortBy: [SortDescriptor(\.eventDate, order: .reverse)]
+            sortBy: [SortDescriptor(\.eventDate, order: ascending ? .forward : .reverse)]
         )
         descriptor.fetchLimit = limit
         descriptor.fetchOffset = offset
@@ -81,9 +81,9 @@ final class EventRepository {
     }
     
     // Agregar nuevo método
-    func getUpcomingEvents(limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
+    func getUpcomingEvents(ascending: Bool = true, limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
         var descriptor = FetchDescriptor<CachedEvent>(
-            sortBy: [SortDescriptor(\.eventDate)]  // ascendente — próximo primero
+            sortBy: [SortDescriptor(\.eventDate, order: ascending ? .forward : .reverse)]
         )
         descriptor.fetchLimit = limit
         descriptor.fetchOffset = offset

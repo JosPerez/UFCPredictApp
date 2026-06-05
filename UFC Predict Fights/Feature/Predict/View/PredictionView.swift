@@ -13,6 +13,7 @@ struct PredictionView: View {
     @Bindable var viewModel: PredictionViewModel
     @State private var showPickerA = false
     @State private var showPickerB = false
+    @State private var animateBar = false
     @Environment(ThemeManager.self) private var themeManager
 
 
@@ -251,12 +252,18 @@ struct PredictionView: View {
                         HStack(spacing: 2) {
                             RoundedRectangle(cornerRadius: 5)
                                 .fill(BSColors.accent)
-                                .frame(width: geo.size.width * prediction.fighterAWinProb)
+                                .frame(width: animateBar ? geo.size.width * prediction.fighterAWinProb : 0)
                             RoundedRectangle(cornerRadius: 5)
                                 .fill(BSColors.accentBlue)
                         }
                     }
                     .frame(height: 12)
+                    .onAppear {
+                        withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
+                            animateBar = true
+                        }
+                    }
+                    
                 }
                 .padding(.top, 16)
                 
@@ -264,13 +271,13 @@ struct PredictionView: View {
                 HStack(spacing: 6) {
                     Circle()
                         .fill(prediction.confidence == "HIGH"
-                              ? Color(hex: "34C759")
+                              ? BSColors.winGreen
                               : Color(hex: "888888"))
                         .frame(width: 8, height: 8)
                     Text(prediction.confidence == "HIGH" ? "High confidence" : "Low confidence")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(prediction.confidence == "HIGH"
-                                         ? Color(hex: "34C759")
+                                         ? BSColors.winGreen
                                          : Color(hex: "888888"))
                     Spacer()
                 }
@@ -304,6 +311,7 @@ struct PredictionView: View {
             
             // New prediction button
             Button {
+                animateBar = false
                 viewModel.reset()
             } label: {
                 HStack(spacing: 6) {

@@ -27,6 +27,9 @@ final class CachedFighter {
     var recordWin: Int
     var recordLoss: Int
     var recordDraw: Int
+    
+    // Rankings
+    var currentRank: Int?
 
     // Cache metadata
     var cachedAt: Date
@@ -56,6 +59,7 @@ final class CachedFighter {
         recordWin: Int = 0,
         recordLoss: Int = 0,
         recordDraw: Int = 0,
+        currentRank: Int? = nil,
         cachedAt: Date = .now
     ) {
         self.fighterId = fighterId
@@ -69,6 +73,7 @@ final class CachedFighter {
         self.recordWin = recordWin
         self.recordLoss = recordLoss
         self.recordDraw = recordDraw
+        self.currentRank = currentRank
         self.cachedAt = cachedAt
     }
 
@@ -85,7 +90,8 @@ final class CachedFighter {
             isActive:    remote.isActive,
             recordWin:   remote.recordWin,
             recordLoss:  remote.recordLoss,
-            recordDraw:  remote.recordDraw
+            recordDraw:  remote.recordDraw,
+            currentRank: remote.currentRank
         )
     }
 
@@ -101,6 +107,7 @@ final class CachedFighter {
         self.recordWin   = remote.recordWin
         self.recordLoss  = remote.recordLoss
         self.recordDraw  = remote.recordDraw
+        self.currentRank = remote.currentRank
         self.cachedAt    = .now
     }
 }

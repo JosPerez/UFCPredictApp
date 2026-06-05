@@ -117,13 +117,13 @@ struct PredictionHistoryRow: View {
                 HStack(spacing: 5) {
                     Circle()
                         .fill(prediction.confidence == "HIGH"
-                            ? Color(hex: "34C759")
+                            ? BSColors.winGreen
                             : Color(hex: "888888"))
                         .frame(width: 7, height: 7)
                     Text(prediction.confidence == "HIGH" ? "High confidence" : "Low confidence")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(prediction.confidence == "HIGH"
-                            ? Color(hex: "34C759")
+                            ? BSColors.winGreen
                             : Color(hex: "888888"))
                 }
                 Spacer()

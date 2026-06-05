@@ -20,6 +20,7 @@ public struct BSFighter: Codable, Identifiable, Hashable {
     public let recordDraw: Int
     public let isActive: Bool
     public let imgThumb: String?
+    public let currentRank: Int?
 
     public var fullName: String { "\(firstName) \(lastName)" }
     public var record: String { "\(recordWin)W · \(recordLoss)L - \(recordDraw)D" }
@@ -49,6 +50,7 @@ public struct BSFighter: Codable, Identifiable, Hashable {
         case recordDraw  = "record_draw"
         case isActive    = "is_active"
         case imgThumb = "img_thumb"
+        case currentRank = "current_rank"
     }
 }
 

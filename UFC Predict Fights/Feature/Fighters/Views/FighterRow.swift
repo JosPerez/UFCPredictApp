@@ -21,30 +21,40 @@ struct FighterRow: View {
                 )
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(fighter.fullName)
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(BSColors.textPrimary)
-                        .lineLimit(1)
+                    HStack(spacing: 6) {
+                        Text(fighter.fullName)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(BSColors.textPrimary)
+                            .lineLimit(1)
+                        if let rank = fighter.currentRank {
+                            Text(rank == 0 ? "C" : "#\(rank)")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 2)
+                                .background(rank == 0 ? BSColors.titleGold : BSColors.rankBadgeColor)
+                                .cornerRadius(4)
+                        }
+                    }
                     Text(fighter.weightClass ?? "—")
                         .font(.system(size: 12))
                         .foregroundColor(BSColors.textSecondary)
                 }
-
+                
                 Spacer()
                 
-                VStack(spacing: 16) {
+                VStack(spacing: 2) {
                     Text(winRateText)
                         .font(.system(size: 22, weight: .bold))
                         .foregroundColor(BSColors.accent)
                     Text("win rate")
-                            .font(.system(size: 11))
-                            .foregroundColor(BSColors.textTertiary)
+                        .font(.system(size: 9))
+                        .foregroundColor(BSColors.textTertiary)
                 }
             }
-
             // Bottom: record
             HStack(spacing: 16) {
-                recordItem(value: fighter.recordWin, label: "W", color: Color(hex: "34C759"))
+                recordItem(value: fighter.recordWin, label: "W", color: BSColors.winGreen)
                 recordItem(value: fighter.recordLoss, label: "L", color: BSColors.accent)
                 recordItem(value: fighter.recordDraw, label: "D", color: Color(hex: "888888"))
             }

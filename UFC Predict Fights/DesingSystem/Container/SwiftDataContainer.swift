@@ -15,6 +15,7 @@ struct SwiftDataContainer {
         CachedFighter.self,
         CachedEvent.self,
         CachedPrediction.self,
+        CachedRanking.self,
         // CachedFight.self,
     ]
     

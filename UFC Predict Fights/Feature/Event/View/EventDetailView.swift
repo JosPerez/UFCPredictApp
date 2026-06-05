@@ -158,7 +158,7 @@ struct EventFightCard: View {
                 if fight.isTitleFight {
                     Image(systemName: "trophy.fill")
                         .font(.system(size: 10))
-                        .foregroundColor(Color(hex: "FFD700"))
+                        .foregroundColor(BSColors.titleGold)
                 }
                 
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
@@ -169,7 +169,7 @@ struct EventFightCard: View {
             .padding(.vertical, 10)
             .contentShape(Rectangle())
             .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     isExpanded.toggle()
                 }
             }
@@ -247,6 +247,30 @@ struct EventFightCard: View {
                                 .foregroundColor(BSColors.textTertiary)
                         }
                         
+                        // ── Upcoming: career stats comparison ──
+                        if fight.fighterRSlpm != nil || fight.fighterBSlpm != nil {
+                            VStack(spacing: 6) {
+                                Text("Career stats")
+                                    .font(.system(size: 9, weight: .medium))
+                                    .foregroundColor(BSColors.textHint)
+                                    .textCase(.uppercase)
+                                    .kerning(1)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                                if let a = fight.fighterRSlpm, let b = fight.fighterBSlpm {
+                                    decimalComparisonRow(label: "Str. / min", valueA: a, valueB: b)
+                                }
+                                if let a = fight.fighterRStrDef, let b = fight.fighterBStrDef {
+                                    decimalComparisonRow(label: "Str. defense",
+                                        valueA: a * 100, valueB: b * 100, suffix: "%")
+                                }
+                                if let a = fight.fighterRSubAvg, let b = fight.fighterBSubAvg {
+                                    decimalComparisonRow(label: "Sub. avg", valueA: a, valueB: b)
+                                }
+                            }
+                            .padding(.top, 4)
+                        }
+                        
                         // Predict button
                         Button {
                             coordinator.predictRematch(
@@ -308,7 +332,33 @@ struct EventFightCard: View {
                                 kd: fight.fighterBKd
                             )
                         }
-                        
+                        // ── Completed: fight stats ──
+                        VStack(spacing: 6) {
+                            if fight.fighterRKd > 0 || fight.fighterBKd > 0 {
+                                statComparisonRow(label: "Knockdowns",
+                                    valueA: fight.fighterRKd, valueB: fight.fighterBKd)
+                            }
+                            if fight.fighterRSigStr > 0 || fight.fighterBSigStr > 0 {
+                                statComparisonRow(label: "Sig. strikes",
+                                    valueA: fight.fighterRSigStr, valueB: fight.fighterBSigStr)
+                            }
+                            if fight.fighterRTdLanded > 0 || fight.fighterBTdLanded > 0 {
+                                statComparisonRow(label: "Takedowns",
+                                    valueA: fight.fighterRTdLanded, valueB: fight.fighterBTdLanded)
+                            }
+                            if fight.fighterRSubAtt > 0 || fight.fighterBSubAtt > 0 {
+                                statComparisonRow(label: "Sub. attempts",
+                                    valueA: fight.fighterRSubAtt, valueB: fight.fighterBSubAtt)
+                            }
+                            if fight.fighterRCtrlSecs > 0 || fight.fighterBCtrlSecs > 0 {
+                                ctrlTimeRow(
+                                    label: "Control",
+                                    secsA: fight.fighterRCtrlSecs,
+                                    secsB: fight.fighterBCtrlSecs
+                                )
+                            }
+                        }
+                        .padding(.top, 4)
                         // Predict rematch button
                         Button {
                             coordinator.predictRematch(
@@ -339,7 +389,7 @@ struct EventFightCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(
-                    fight.isTitleFight ? Color(hex: "FFD700").opacity(0.3) : Color.clear,
+                    fight.isTitleFight ? BSColors.titleGold.opacity(0.3) : Color.clear,
                     lineWidth: 0.5
                 )
         )
@@ -378,7 +428,7 @@ struct EventFightCard: View {
             if isWinner {
                 Text("Winner")
                     .font(.system(size: 8, weight: .semibold))
-                    .foregroundColor(Color(hex: "34C759"))
+                    .foregroundColor(BSColors.winGreen)
             }
 
             if kd > 0 {
@@ -393,8 +443,157 @@ struct EventFightCard: View {
         }
         .frame(maxWidth: .infinity)
     }
+    
+    @ViewBuilder
+    private func ctrlTimeRow(label: String, secsA: Int, secsB: Int) -> some View {
+        let maxVal = max(secsA, secsB, 1)
+
+        HStack(spacing: 8) {
+            Text(formatTime(secsA))
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 40, alignment: .trailing)
+
+            GeometryReader { geo in
+                let half = (geo.size.width - 70) / 2
+                HStack(spacing: 0) {
+                    HStack {
+                        Spacer()
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(BSColors.accent)
+                            .frame(width: max(half * CGFloat(secsA) / CGFloat(maxVal), 2), height: 4)
+                    }
+                    .frame(width: half)
+
+                    Text(label)
+                        .font(.system(size: 9))
+                        .foregroundColor(BSColors.textTertiary)
+                        .frame(width: 70)
+
+                    HStack {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(BSColors.accentBlue)
+                            .frame(width: max(half * CGFloat(secsB) / CGFloat(maxVal), 2), height: 4)
+                        Spacer()
+                    }
+                    .frame(width: half)
+                }
+            }
+            .frame(height: 14)
+
+            Text(formatTime(secsB))
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 40, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private func decimalComparisonRow(label: String, valueA: Double, valueB: Double, suffix: String = "") -> some View {
+        let maxVal = max(valueA, valueB, 0.01)
+
+        HStack(spacing: 8) {
+            Text(String(format: "%.1f", valueA) + suffix)
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 46, alignment: .trailing)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+
+            GeometryReader { geo in
+                let half = (geo.size.width - 70) / 2
+                HStack(spacing: 0) {
+                    HStack {
+                        Spacer()
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(BSColors.accent)
+                            .frame(width: max(half * CGFloat(valueA / maxVal), 2), height: 4)
+                    }
+                    .frame(width: half)
+
+                    Text(label)
+                        .font(.system(size: 9))
+                        .foregroundColor(BSColors.textTertiary)
+                        .frame(width: 70)
+
+                    HStack {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(BSColors.accentBlue)
+                            .frame(width: max(half * CGFloat(valueB / maxVal), 2), height: 4)
+                        Spacer()
+                    }
+                    .frame(width: half)
+                }
+            }
+            .frame(height: 14)
+
+            Text(String(format: "%.1f", valueB) + suffix)
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 46, alignment: .leading)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+    }
+    
+    @ViewBuilder
+    private func statComparisonRow(label: String, valueA: Int, valueB: Int) -> some View {
+        let maxVal = max(valueA, valueB, 1)
+
+        HStack(spacing: 8) {
+            // Value A
+            Text("\(valueA)")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 28, alignment: .trailing)
+
+            // Bar A
+            GeometryReader { geo in
+                let half = (geo.size.width - 60) / 2
+                HStack(spacing: 0) {
+                    Spacer()
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(BSColors.accent)
+                        .frame(width: max(half * CGFloat(valueA) / CGFloat(maxVal), 2), height: 4)
+                }
+                .frame(width: half)
+            }
+            .frame(height: 4)
+
+            // Label
+            Text(label)
+                .font(.system(size: 9))
+                .foregroundColor(BSColors.textTertiary)
+                .frame(width: 60)
+
+            // Bar B
+            GeometryReader { geo in
+                let half = (geo.size.width - 60) / 2
+                HStack(spacing: 0) {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(BSColors.accentBlue)
+                        .frame(width: max(half * CGFloat(valueB) / CGFloat(maxVal), 2), height: 4)
+                    Spacer()
+                }
+                .frame(width: half)
+            }
+            .frame(height: 4)
+
+            // Value B
+            Text("\(valueB)")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 28, alignment: .leading)
+        }
+    }
 
     // MARK: - Helpers
+    
+    private func formatTime(_ secs: Int) -> String {
+        let m = secs / 60
+        let s = secs % 60
+        return "\(m):\(String(format: "%02d", s))"
+    }
 
     private func initials(_ fullName: String) -> String {
         let parts = fullName.split(separator: " ")

@@ -60,7 +60,7 @@ struct StatBar: View {
         HStack(spacing: 0) {
             Text(label)
                 .font(.system(size: 12))
-                .foregroundColor(Color(hex: "777777"))
+                .foregroundColor(BSColors.textTertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             HStack(spacing: 8) {

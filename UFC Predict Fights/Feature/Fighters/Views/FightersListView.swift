@@ -147,9 +147,11 @@ struct FighterListView: View {
                 EmptyStateView(message: "No fighters found")
             } else {
                 List {
-                    ForEach(vm.fighters, id: \.fighterId) { fighter in
+                    ForEach(Array(vm.fighters.enumerated()), id: \.element.fighterId) { index, fighter in
                         NavigationLink(value: fighter.fighterId) {
                             FighterRow(fighter: fighter)
+                                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                                .animation(.easeOut(duration: 0.3).delay(Double(index % 20) * 0.03), value: vm.fighters.count)
                         }
                         .listRowBackground(BSColors.background)
                         .listRowSeparator(.hidden)
@@ -174,6 +176,7 @@ struct FighterListView: View {
                 .refreshable {
                     await vm.refresh()
                 }
+                .tint(BSColors.accent)
                 .sheet(isPresented: $showSettings) {
                     SettingsSheet()
                 }

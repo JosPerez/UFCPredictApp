@@ -40,6 +40,11 @@ struct BSColors {
         light: "BBBBBB",
         dark:  "3A3A3A"
     )
+    
+    static let rankBadgeColor = Color(
+        light: "1C1C1E",
+        dark: "555555"
+    )
 
     // MARK: - Accents (same in both modes)
     static let accent      = Color(hex: "FF3B30")

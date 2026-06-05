@@ -89,10 +89,10 @@ struct FighterDetailView: View {
                     if p.currentStreak > 0 {
                         Text("\(p.currentStreak)W streak")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(Color(hex: "34C759"))
+                            .foregroundColor(BSColors.winGreen)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(Color(hex: "34C759").opacity(0.15))
+                            .background(BSColors.winGreen.opacity(0.15))
                             .cornerRadius(4)
                     } else if p.currentStreak < 0 {
                         Text("\(abs(p.currentStreak))L streak")
@@ -299,7 +299,7 @@ struct MethodBar: View {
         HStack(spacing: 8) {
             Text(label)
                 .font(.system(size: 12))
-                .foregroundColor(Color(hex: "777777"))
+                .foregroundColor(BSColors.textTertiary)
                 .frame(width: 80, alignment: .leading)
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -357,7 +357,7 @@ struct RecentFightRow: View {
                     .frame(width: 28, height: 28)
                     .background(
                         fight.result == "WIN"
-                            ? Color(hex: "34C759")
+                            ? BSColors.winGreen
                             : fight.result == "LOSS"
                                 ? BSColors.accent
                                 : BSColors.textTertiary
@@ -388,7 +388,7 @@ struct RecentFightRow: View {
                         Text("Title")
                             .font(.system(size: 11, weight: .semibold))
                     }
-                    .foregroundColor(Color(hex: "FFD700"))
+                    .foregroundColor(BSColors.titleGold)
                 }
             }
 
@@ -400,7 +400,7 @@ struct RecentFightRow: View {
             // Event + date
             Text(fight.eventName)
                 .font(.system(size: 12))
-                .foregroundColor(Color(hex: "777777"))
+                .foregroundColor(BSColors.textTertiary)
                 .lineLimit(1)
 
             // Stats row

@@ -30,7 +30,7 @@ final class AppCoordinator {
         guard let fighter = lookupFighter(id: id) else { return }
         predictionViewModel?.reset()
         predictionViewModel?.selectFighterA(fighter)
-        selectedTab = 2
+        selectedTab = 3
     }
 
     /// Desde EventDetailView → Predict tab con ambos fighters
@@ -40,7 +40,7 @@ final class AppCoordinator {
         predictionViewModel?.reset()
         predictionViewModel?.selectFighterA(a)
         predictionViewModel?.selectFighterB(b)
-        selectedTab = 2
+        selectedTab = 3
     }
 
     private func lookupFighter(id: Int) -> CachedFighter? {

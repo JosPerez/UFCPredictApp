@@ -63,6 +63,12 @@ public struct BSEventFight: Codable, Identifiable {
     public let fighterRWinner: Bool?
     public let fighterRKd: Int
     public let fighterRSigStr: Int
+    public let fighterRSigStrAttempted: Int
+    public let fighterRSigStrPct: Double?
+    public let fighterRTdLanded: Int
+    public let fighterRTdAttempted: Int
+    public let fighterRSubAtt: Int
+    public let fighterRCtrlSecs: Int
     // Blue corner
     public let fighterBId: Int
     public let fighterBName: String
@@ -70,10 +76,23 @@ public struct BSEventFight: Codable, Identifiable {
     public let fighterBWinner: Bool?
     public let fighterBKd: Int
     public let fighterBSigStr: Int
+    public let fighterBSigStrAttempted: Int
+    public let fighterBSigStrPct: Double?
+    public let fighterBTdLanded: Int
+    public let fighterBTdAttempted: Int
+    public let fighterBSubAtt: Int
+    public let fighterBCtrlSecs: Int
     // Odds
     public let oddsFighterRProb: Double?
     public let oddsFighterBProb: Double?
     public let oddsNumSources: Int?
+    // Career stats (upcoming)
+    public let fighterRSlpm: Double?
+    public let fighterRStrDef: Double?
+    public let fighterRSubAvg: Double?
+    public let fighterBSlpm: Double?
+    public let fighterBStrDef: Double?
+    public let fighterBSubAvg: Double?
 
     public var id: Int { fightId }
 
@@ -115,5 +134,23 @@ public struct BSEventFight: Codable, Identifiable {
         case oddsFighterRProb = "odds_fighter_r_prob"
         case oddsFighterBProb = "odds_fighter_b_prob"
         case oddsNumSources   = "odds_num_sources"
+        case fighterRSigStrAttempted = "fighter_r_sig_str_attempted"
+        case fighterRSigStrPct       = "fighter_r_sig_str_pct"
+        case fighterRTdLanded        = "fighter_r_td_landed"
+        case fighterRTdAttempted     = "fighter_r_td_attempted"
+        case fighterRSubAtt          = "fighter_r_sub_att"
+        case fighterRCtrlSecs        = "fighter_r_ctrl_secs"
+        case fighterBSigStrAttempted = "fighter_b_sig_str_attempted"
+        case fighterBSigStrPct       = "fighter_b_sig_str_pct"
+        case fighterBTdLanded        = "fighter_b_td_landed"
+        case fighterBTdAttempted     = "fighter_b_td_attempted"
+        case fighterBSubAtt          = "fighter_b_sub_att"
+        case fighterBCtrlSecs        = "fighter_b_ctrl_secs"
+        case fighterRSlpm            = "fighter_r_slpm"
+        case fighterRStrDef          = "fighter_r_str_def"
+        case fighterRSubAvg          = "fighter_r_sub_avg"
+        case fighterBSlpm            = "fighter_b_slpm"
+        case fighterBStrDef          = "fighter_b_str_def"
+        case fighterBSubAvg          = "fighter_b_sub_avg"
     }
 }

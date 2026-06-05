@@ -27,6 +27,7 @@ struct ContentView: View {
             let syncManager = SyncManager(modelContext: modelContext)
             let fighterRepo = FighterRepository(modelContext: modelContext, syncManager: syncManager)
             let eventRepo   = EventRepository(modelContext: modelContext, syncManager: syncManager)
+            let rankingRepo = RankingRepository(modelContext: modelContext, syncManager: syncManager)
 
             TabView(selection: $coordinator.selectedTab) {
                 FighterListView(repository: fighterRepo)
@@ -43,16 +44,24 @@ struct ContentView: View {
                     }
                     .tag(1)
 
+                RankingsView(repository: rankingRepo)
+                    .tabItem {
+                        Image(systemName: "trophy")
+                        Text("Rankings")
+                    }
+                    .tag(2)
+
                 if let vm = predictionViewModel {
                     PredictionView(viewModel: vm)
                         .tabItem {
                             Image(systemName: "bolt.fill")
                             Text("Predict")
                         }
-                        .tag(2)
+                        .tag(3)
                 }
             }
             .tint(BSColors.accent)
+            .animation(.easeInOut(duration: 0.2), value: coordinator.selectedTab)
             .environment(coordinator)
             .environment(themeManager)
             .opacity(showLaunch ? 0 : 1)

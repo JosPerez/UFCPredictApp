@@ -45,6 +45,17 @@ struct EventListView: View {
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)
                 Spacer()
+                Button {
+                    vm.toggleSortOrder()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: vm.sortAscending ? "arrow.up" : "arrow.down")
+                            .font(.system(size: 12, weight: .semibold))
+                        Text(vm.sortAscending ? "Oldest" : "Newest")
+                            .font(.system(size: 11, weight: .medium))
+                    }
+                    .foregroundColor(BSColors.accent)
+                }
                 if vm.isSyncing {
                     HStack(spacing: 4) {
                         ProgressView()
@@ -184,6 +195,7 @@ struct EventListView: View {
                 .refreshable {
                     await vm.refresh()
                 }
+                .tint(BSColors.accent)
             }
         }
     }
@@ -239,7 +251,7 @@ struct EventRow: View {
                     HStack(spacing: 4) {
                         Text("\(event.titleFights)")
                             .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(Color(hex: "FFD700"))
+                            .foregroundColor(BSColors.titleGold)
                         Text(event.titleFights == 1 ? "title" : "titles")
                             .font(.system(size: 13))
                             .foregroundColor(BSColors.textTertiary)
@@ -267,7 +279,7 @@ struct EventRow: View {
 
     private var accentColor: Color {
         if event.titleFights > 0 {
-            return Color(hex: "FFD700")
+            return BSColors.titleGold
         }
         if isPPV {
             return BSColors.accent

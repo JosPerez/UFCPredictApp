@@ -20,6 +20,7 @@ final class SyncManager {
 
     var isSyncingFighters: Bool = false
     var isSyncingEvents: Bool = false
+    var isSyncingRankings: Bool = false
     var isSyncing: Bool { isSyncingFighters || isSyncingEvents }
     var syncProgress: String? = nil
     var syncError: String? = nil
@@ -35,12 +36,14 @@ final class SyncManager {
 
     private let fighterService: BSFighterService
     private let eventService: BSEventService
+    private let rankingService: BSRankingService
     private let modelContext: ModelContext
 
     // MARK: - Internal state
 
     private var fighterContinuation: CheckedContinuation<[BSFighter], Error>?
     private var eventContinuation: CheckedContinuation<[BSEvent], Error>?
+    private var rankingContinuation: CheckedContinuation<[BSRankingDivision], Error>?
     private var activeRequestType: String? = nil
 
     // MARK: - UserDefaults keys
@@ -48,6 +51,7 @@ final class SyncManager {
     private enum Keys {
         static let lastFighterSyncAt = "sync_fighters_last_at"
         static let lastEventSyncAt   = "sync_events_last_at"
+        static let lastRankingSyncAt  = "sync_rankings_last_at"
     }
 
     // MARK: - Init
@@ -56,6 +60,7 @@ final class SyncManager {
         self.modelContext = modelContext
         self.fighterService = BSFighterService(url: Config.baseURL)
         self.eventService = BSEventService(url: Config.baseURL)
+        self.rankingService = BSRankingService(url: Config.baseURL)
     }
 
     // MARK: - Public API: Fighters
@@ -219,6 +224,67 @@ final class SyncManager {
         }
         try? modelContext.save()
     }
+    
+    // MARK: - Rankings Sync
+
+    private func syncAllRankings() async {
+        isSyncingRankings = true
+        syncError = nil
+        syncProgress = "Loading rankings..."
+
+        do {
+            let divisions = try await fetchRankings()
+            saveRankingsToCache(divisions)
+            UserDefaults.standard.set(Date.now, forKey: Keys.lastRankingSyncAt)
+            syncProgress = nil
+            isSyncingRankings = false
+        } catch {
+            syncError = error.localizedDescription
+            syncProgress = nil
+            isSyncingRankings = false
+        }
+    }
+
+    private func fetchRankings() async throws -> [BSRankingDivision] {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.rankingContinuation = continuation
+            self.activeRequestType = "rankings"
+            self.rankingService.delegate = self
+            self.rankingService.getRankings()
+        }
+    }
+
+    private func saveRankingsToCache(_ divisions: [BSRankingDivision]) {
+        // Borrar rankings anteriores
+        let oldDescriptor = FetchDescriptor<CachedRanking>()
+        if let old = try? modelContext.fetch(oldDescriptor) {
+            for item in old {
+                modelContext.delete(item)
+            }
+        }
+
+        // Insertar nuevos
+        for division in divisions {
+            let entries = CachedRanking.fromRemote(division: division)
+            for entry in entries {
+                modelContext.insert(entry)
+            }
+        }
+        try? modelContext.save()
+    }
+    
+    // MARK: - Public API: Rankings
+
+    func syncRankingsIfNeeded() async {
+        guard !isSyncingRankings else { return }
+        guard isSyncRequired(key: Keys.lastRankingSyncAt) else { return }
+        await syncAllRankings()
+    }
+
+    func forceSyncRankings() async {
+        guard !isSyncingRankings else { return }
+        await syncAllRankings()
+    }
 }
 
 // MARK: - BSResponseDelegate
@@ -241,6 +307,14 @@ extension SyncManager: BSResponseDelegate {
             } else if let error = entity as? BSErrorBase {
                 eventContinuation?.resume(throwing: error)
                 eventContinuation = nil
+            }
+        case "rankings":
+            if let divisions = entity as? [BSRankingDivision] {
+                rankingContinuation?.resume(returning: divisions)
+                rankingContinuation = nil
+            } else if let error = entity as? BSErrorBase {
+                rankingContinuation?.resume(throwing: error)
+                rankingContinuation = nil
             }
         default:
             break

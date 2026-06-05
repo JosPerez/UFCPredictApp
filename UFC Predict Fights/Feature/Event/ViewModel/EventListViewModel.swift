@@ -46,6 +46,10 @@ final class EventListViewModel {
     }
 
     private var searchTask: Task<Void, Never>?
+    
+    var sortAscending: Bool = false {
+        didSet { reload() }
+    }
 
     init(repository: EventRepository) {
         self.repository = repository
@@ -78,6 +82,10 @@ final class EventListViewModel {
             }
         }
     }
+    
+    func toggleSortOrder() {
+        sortAscending.toggle()
+    }
 
     func loadFromCache() {
         let results: [CachedEvent]
@@ -87,18 +95,19 @@ final class EventListViewModel {
         case .all:
             results = repository.getEvents(
                 query: query,
+                ascending: sortAscending,
                 limit: pageSize,
                 offset: currentOffset
             )
         case .upcoming:
             if let q = query {
-                // Filter upcoming by name locally
-                let all = repository.getUpcomingEvents(limit: 100, offset: 0)
+                let all = repository.getUpcomingEvents(ascending: sortAscending, limit: 100, offset: 0)
                 results = Array(all.filter {
                     $0.name.localizedStandardContains(q)
                 }.prefix(pageSize))
             } else {
                 results = repository.getUpcomingEvents(
+                    ascending: sortAscending,
                     limit: pageSize,
                     offset: currentOffset
                 )
@@ -107,11 +116,12 @@ final class EventListViewModel {
             results = repository.getEvents(
                 year: year,
                 query: query,
+                ascending: sortAscending,
                 limit: pageSize,
                 offset: currentOffset
             )
         }
-
+        
         if currentOffset == 0 {
             events = results
         } else {
