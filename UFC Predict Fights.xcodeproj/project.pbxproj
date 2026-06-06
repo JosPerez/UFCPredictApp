@@ -45,11 +45,11 @@
 		07841B572FD2B36A005EA7FD /* RankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B562FD2B36A005EA7FD /* RankingsView.swift */; };
 		07841B5A2FD2C109005EA7FD /* CachedRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B592FD2C109005EA7FD /* CachedRanking.swift */; };
 		07841B5C2FD2C21D005EA7FD /* RankingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B5B2FD2C21D005EA7FD /* RankingRepository.swift */; };
-		DFFE5DCB542ADDD3CA74AEE4 /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220BAE0CFBE335AFCC81E1BD /* Pods_UFC_Predict_Fights.framework */; };
+		E9F88201E8DE5CF18416EBED /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0368F085476F002E98FCF97D /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
+		038C071143A81B2556464920 /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
 		072C52732FCCE45A00FEEACD /* UFC Predict Fights.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UFC Predict Fights.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		072C52762FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UFC_Predict_FightsApp.swift; sourceTree = "<group>"; };
 		072C52782FCCE45A00FEEACD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -90,8 +90,8 @@
 		07841B562FD2B36A005EA7FD /* RankingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsView.swift; sourceTree = "<group>"; };
 		07841B592FD2C109005EA7FD /* CachedRanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedRanking.swift; sourceTree = "<group>"; };
 		07841B5B2FD2C21D005EA7FD /* RankingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRepository.swift; sourceTree = "<group>"; };
-		220BAE0CFBE335AFCC81E1BD /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD3082DDBDA57B5CF93F8DB0 /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
+		6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
+		C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFFE5DCB542ADDD3CA74AEE4 /* Pods_UFC_Predict_Fights.framework in Frameworks */,
+				E9F88201E8DE5CF18416EBED /* Pods_UFC_Predict_Fights.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +112,7 @@
 				072C52752FCCE45A00FEEACD /* UFC Predict Fights */,
 				072C52742FCCE45A00FEEACD /* Products */,
 				36763802F7D1F014A868BFD9 /* Pods */,
-				BD47C40C307439C27B43FA68 /* Frameworks */,
+				4A1DDCC31EBC86CC15CEF84C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -421,16 +421,16 @@
 		36763802F7D1F014A868BFD9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0368F085476F002E98FCF97D /* Pods-UFC Predict Fights.debug.xcconfig */,
-				FD3082DDBDA57B5CF93F8DB0 /* Pods-UFC Predict Fights.release.xcconfig */,
+				038C071143A81B2556464920 /* Pods-UFC Predict Fights.debug.xcconfig */,
+				6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		BD47C40C307439C27B43FA68 /* Frameworks */ = {
+		4A1DDCC31EBC86CC15CEF84C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				220BAE0CFBE335AFCC81E1BD /* Pods_UFC_Predict_Fights.framework */,
+				C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -442,11 +442,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 072C52812FCCE45A00FEEACD /* Build configuration list for PBXNativeTarget "UFC Predict Fights" */;
 			buildPhases = (
-				15A83995829EA367AFE22345 /* [CP] Check Pods Manifest.lock */,
+				E1EB5DF2CBC74155905564AB /* [CP] Check Pods Manifest.lock */,
 				072C526F2FCCE45900FEEACD /* Sources */,
 				072C52702FCCE45900FEEACD /* Frameworks */,
 				072C52712FCCE45900FEEACD /* Resources */,
-				B56626DC483B69B1AA159780 /* [CP] Embed Pods Frameworks */,
+				7BFA1CFCB8B041FF61DB4FAF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -503,7 +503,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		15A83995829EA367AFE22345 /* [CP] Check Pods Manifest.lock */ = {
+		7BFA1CFCB8B041FF61DB4FAF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1EB5DF2CBC74155905564AB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -523,23 +540,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B56626DC483B69B1AA159780 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -712,7 +712,7 @@
 		};
 		072C52822FCCE45A00FEEACD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0368F085476F002E98FCF97D /* Pods-UFC Predict Fights.debug.xcconfig */;
+			baseConfigurationReference = 038C071143A81B2556464920 /* Pods-UFC Predict Fights.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -750,7 +750,7 @@
 		};
 		072C52832FCCE45A00FEEACD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD3082DDBDA57B5CF93F8DB0 /* Pods-UFC Predict Fights.release.xcconfig */;
+			baseConfigurationReference = 6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

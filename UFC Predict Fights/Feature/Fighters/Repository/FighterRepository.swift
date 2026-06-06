@@ -132,7 +132,6 @@ final class FighterRepository {
             return DivisionAverages.empty
         }
 
-        let count = Double(fighters.count)
         let totalWins   = fighters.reduce(0) { $0 + $1.recordWin }
         let totalLosses = fighters.reduce(0) { $0 + $1.recordLoss }
         let totalFights = totalWins + totalLosses

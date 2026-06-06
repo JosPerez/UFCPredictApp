@@ -14,8 +14,8 @@ import BlackSpartan
 final class EventListViewModel {
     
     enum EventFilter: Equatable {
-        case all
         case upcoming
+        case completed
         case year(Int)
     }
     
@@ -23,7 +23,7 @@ final class EventListViewModel {
     var isLoading: Bool = false
     var errorMessage: String? = nil
     var eventCount: Int = 0
-    var selectedFilter: EventFilter = .all {
+    var selectedFilter: EventFilter = .upcoming {
         didSet { reload() }
     }
 
@@ -88,32 +88,32 @@ final class EventListViewModel {
     }
 
     func loadFromCache() {
-        let results: [CachedEvent]
         let query = searchText.isEmpty ? nil : searchText
+        var results: [CachedEvent] = []
 
         switch selectedFilter {
-        case .all:
-            results = repository.getEvents(
-                query: query,
-                ascending: sortAscending,
-                limit: pageSize,
-                offset: currentOffset
-            )
         case .upcoming:
             if let q = query {
-                let all = repository.getUpcomingEvents(ascending: sortAscending, limit: 100, offset: 0)
+                let all = repository.getUpcomingEvents(ascending: true, limit: 100, offset: 0)
                 results = Array(all.filter {
                     $0.name.localizedStandardContains(q)
                 }.prefix(pageSize))
             } else {
                 results = repository.getUpcomingEvents(
-                    ascending: sortAscending,
+                    ascending: true,
                     limit: pageSize,
                     offset: currentOffset
                 )
             }
+        case .completed:
+            results = repository.getCompletedEvents(
+                query: query,
+                ascending: sortAscending,
+                limit: pageSize,
+                offset: currentOffset
+            )
         case .year(let year):
-            results = repository.getEvents(
+            results = repository.getCompletedEvents(
                 year: year,
                 query: query,
                 ascending: sortAscending,
@@ -121,7 +121,7 @@ final class EventListViewModel {
                 offset: currentOffset
             )
         }
-        
+
         if currentOffset == 0 {
             events = results
         } else {
@@ -131,11 +131,12 @@ final class EventListViewModel {
         canLoadMore = results.count == pageSize
 
         switch selectedFilter {
-        case .all:      eventCount = repository.eventCount()
         case .upcoming: eventCount = repository.upcomingCount()
-        case .year(let y): eventCount = repository.eventCount(year: y)
+        case .completed: eventCount = repository.completedCount()
+        case .year(let y): eventCount = repository.completedCount(year: y)
         }
     }
+
 
     func loadMore(currentItem: CachedEvent) {
         guard canLoadMore, !isLoading else { return }

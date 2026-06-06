@@ -11,6 +11,7 @@ public struct BSEvent: Codable, Identifiable {
     public let id: Int
     public let name: String
     public let eventDate: String
+    public let location: String?
     public let fightCount: Int
     public let titleFights: Int
     public let isUpcoming: Bool
@@ -22,6 +23,7 @@ public struct BSEvent: Codable, Identifiable {
         case fightCount  = "fight_count"
         case titleFights = "title_fights"
         case isUpcoming  = "is_upcoming"
+        case location
     }
 }
 

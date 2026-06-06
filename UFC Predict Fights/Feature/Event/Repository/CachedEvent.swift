@@ -18,6 +18,7 @@ final class CachedEvent {
     var fightCount: Int
     var titleFights: Int
     var isUpcoming: Bool
+    var location: String?
     var cachedAt: Date
 
     // Computed: extraer año del date string para filtros
@@ -33,6 +34,7 @@ final class CachedEvent {
         fightCount: Int,
         titleFights: Int = 0,
         isUpcoming: Bool = false,
+        location: String? = nil,
         cachedAt: Date = .now
     ) {
         self.eventId = eventId
@@ -41,6 +43,7 @@ final class CachedEvent {
         self.fightCount = fightCount
         self.titleFights = titleFights
         self.isUpcoming = isUpcoming
+        self.location = location
         self.cachedAt = cachedAt
     }
 
@@ -51,7 +54,8 @@ final class CachedEvent {
             eventDate:   remote.eventDate,
             fightCount:  remote.fightCount,
             titleFights: remote.titleFights,
-            isUpcoming:  remote.isUpcoming
+            isUpcoming:  remote.isUpcoming,
+            location:    remote.location
         )
     }
 
@@ -61,6 +65,7 @@ final class CachedEvent {
         self.fightCount  = remote.fightCount
         self.titleFights = remote.titleFights
         self.isUpcoming  = remote.isUpcoming
+        self.location    = remote.location
         self.cachedAt    = .now
     }
 }

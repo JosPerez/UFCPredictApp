@@ -37,6 +37,10 @@ public struct BSFighterProfile: Codable, Identifiable {
     public let physical: BSPhysicalStats
     // Últimas peleas
     public let recentFights: [BSRecentFight]
+    public let fightingStyleData: BSFightingStyleData?
+    // Elo
+    public let currentElo: Double?
+    public let currentRank: Int?
 
     public var fullName: String { "\(firstName) \(lastName)" }
     public var initials: String {
@@ -69,6 +73,10 @@ public struct BSFighterProfile: Codable, Identifiable {
         case performance
         case physical
         case recentFights  = "recent_fights"
+        case fightingStyleData = "fighting_style_data"
+        case currentElo     = "current_elo"
+        case currentRank     = "current_rank"
+
     }
 }
 
@@ -150,6 +158,13 @@ public struct BSRecentFight: Codable, Identifiable {
     public let isTitleFight: Bool
     public let knockdowns: Int
     public let significantStrikes: Int
+    public let sigStrAttempted: Int
+    public let sigStrPct: Double?
+    public let takedownsLanded: Int
+    public let takedownsAttempted: Int
+    public let subAttempts: Int
+    public let ctrlTimeSecs: Int
+    public let opponentImg: String?
 
     public var id: Int { fightId }
 
@@ -167,5 +182,72 @@ public struct BSRecentFight: Codable, Identifiable {
         case isTitleFight      = "is_title_fight"
         case knockdowns
         case significantStrikes = "significant_strikes"
+        case sigStrAttempted    = "sig_str_attempted"
+        case sigStrPct          = "sig_str_pct"
+        case takedownsLanded    = "takedowns_landed"
+        case takedownsAttempted = "takedowns_attempted"
+        case subAttempts        = "sub_attempts"
+        case ctrlTimeSecs       = "ctrl_time_secs"
+        case opponentImg = "opponent_img"
+    }
+}
+
+// ── Fighting Style Data ──
+
+public struct BSFightingStyleData: Codable {
+    public let strikeTarget: BSStrikeTargetBreakdown
+    public let strikePosition: BSStrikePositionBreakdown
+    public let grappling: BSGrapplingStyle
+    public let tempo: BSTempoStyle
+
+    enum CodingKeys: String, CodingKey {
+        case strikeTarget   = "strike_target"
+        case strikePosition = "strike_position"
+        case grappling
+        case tempo
+    }
+}
+
+public struct BSStrikeTargetBreakdown: Codable {
+    public let headPct: Double?
+    public let bodyPct: Double?
+    public let legPct: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case headPct = "head_pct"
+        case bodyPct = "body_pct"
+        case legPct  = "leg_pct"
+    }
+}
+
+public struct BSStrikePositionBreakdown: Codable {
+    public let distancePct: Double?
+    public let clinchPct: Double?
+    public let groundPct: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case distancePct = "distance_pct"
+        case clinchPct   = "clinch_pct"
+        case groundPct   = "ground_pct"
+    }
+}
+
+public struct BSGrapplingStyle: Codable {
+    public let tdAccuracy: Double?
+    public let avgCtrlTimeSecs: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case tdAccuracy       = "td_accuracy"
+        case avgCtrlTimeSecs  = "avg_ctrl_time_secs"
+    }
+}
+
+public struct BSTempoStyle: Codable {
+    public let r1KdAvg: Double?
+    public let cardioIndex: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case r1KdAvg     = "r1_kd_avg"
+        case cardioIndex = "cardio_index"
     }
 }

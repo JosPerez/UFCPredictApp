@@ -156,7 +156,7 @@ struct FighterListView: View {
                         .listRowBackground(BSColors.background)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(
-                            top: 3, leading: 16, bottom: 3, trailing: 16
+                            top: 4, leading: 16, bottom: 4, trailing: 4
                         ))
                         .onAppear {
                             vm.loadMore(currentItem: fighter)

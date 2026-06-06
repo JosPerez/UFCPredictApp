@@ -128,6 +128,19 @@ struct PredictionView: View {
                     showPickerB = true
                 }, color: BSColors.accentBlue)
             }
+            
+            if viewModel.fighterA != nil && viewModel.fighterB != nil {
+                if viewModel.isLoadingProfiles {
+                    HStack {
+                        Spacer()
+                        ProgressView().tint(BSColors.accent)
+                        Spacer()
+                    }
+                    .padding(.top, 16)
+                } else if let pA = viewModel.profileA, let pB = viewModel.profileB {
+                    comparisonSection(profileA: pA, profileB: pB)
+                }
+            }
 
             // Predict button
             if viewModel.canPredict {
@@ -181,7 +194,226 @@ struct PredictionView: View {
             }
         }
     }
+    
+    // MARK: - Pre-prediction comparison
 
+    @ViewBuilder
+    private func comparisonSection(profileA: BSFighterProfile, profileB: BSFighterProfile) -> some View {
+        VStack(spacing: 12) {
+            // Header
+            Text("Matchup breakdown")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(BSColors.textHint)
+                .textCase(.uppercase)
+                .kerning(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            // Names header
+            HStack {
+                Text(lastName(profileA.fullName))
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(BSColors.accent)
+                Spacer()
+                Text(lastName(profileB.fullName))
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(BSColors.accentBlue)
+            }
+
+            // Record comparison
+            comparisonRow(
+                label: "Record",
+                valueA: "\(profileA.recordWin)-\(profileA.recordLoss)",
+                valueB: "\(profileB.recordWin)-\(profileB.recordLoss)"
+            )
+
+            // Win rate
+            if let wrA = profileA.winRate, let wrB = profileB.winRate {
+                comparisonBar(label: "Win rate", valA: wrA, valB: wrB, suffix: "%", multiply: 100)
+            }
+
+            // Finish rate
+            if let frA = profileA.finishRate, let frB = profileB.finishRate {
+                comparisonBar(label: "Finish rate", valA: frA, valB: frB, suffix: "%", multiply: 100)
+            }
+
+            // Performance stats
+            let perfA = profileA.performance
+            let perfB = profileB.performance
+
+            if let a = perfA.sigStrikesLandedPm, let b = perfB.sigStrikesLandedPm {
+                comparisonBar(label: "Str. / min", valA: a, valB: b)
+            }
+
+            if let a = perfA.sigStrikeDefensePct, let b = perfB.sigStrikeDefensePct {
+                comparisonBar(label: "Str. defense", valA: a, valB: b, suffix: "%", multiply: 100)
+            }
+
+            if let a = perfA.takedownAvg, let b = perfB.takedownAvg {
+                comparisonBar(label: "TD avg", valA: a, valB: b)
+            }
+
+            if let a = perfA.submissionAvg, let b = perfB.submissionAvg {
+                comparisonBar(label: "Sub avg", valA: a, valB: b)
+            }
+
+            // Fighting style data
+            if let styleA = profileA.fightingStyleData, let styleB = profileB.fightingStyleData {
+
+                Divider().background(BSColors.border)
+
+                // Strike targets
+                if let hA = styleA.strikeTarget.headPct, let hB = styleB.strikeTarget.headPct {
+                    comparisonBar(label: "Head strikes", valA: hA, valB: hB, suffix: "%", multiply: 100)
+                }
+
+                if let dA = styleA.strikePosition.distancePct, let dB = styleB.strikePosition.distancePct {
+                    comparisonBar(label: "At distance", valA: dA, valB: dB, suffix: "%", multiply: 100)
+                }
+
+                if let gA = styleA.strikePosition.groundPct, let gB = styleB.strikePosition.groundPct {
+                    comparisonBar(label: "On ground", valA: gA, valB: gB, suffix: "%", multiply: 100)
+                }
+
+                // Grappling
+                if let tdA = styleA.grappling.tdAccuracy, let tdB = styleB.grappling.tdAccuracy {
+                    comparisonBar(label: "TD accuracy", valA: tdA, valB: tdB, suffix: "%", multiply: 100)
+                }
+
+                if let cA = styleA.grappling.avgCtrlTimeSecs, let cB = styleB.grappling.avgCtrlTimeSecs {
+                    comparisonRow(
+                        label: "Avg control",
+                        valueA: formatCtrlTime(Int(cA)),
+                        valueB: formatCtrlTime(Int(cB))
+                    )
+                }
+
+                // Tempo
+                if let rA = styleA.tempo.cardioIndex, let rB = styleB.tempo.cardioIndex {
+                    comparisonRow(
+                        label: "Cardio",
+                        valueA: cardioLabel(rA),
+                        valueB: cardioLabel(rB)
+                    )
+                }
+            }
+
+            // Physical
+            let physA = profileA.physical
+            let physB = profileB.physical
+
+            if let hA = physA.heightInches, let hB = physB.heightInches {
+                comparisonRow(
+                    label: "Height",
+                    valueA: formatHeight(hA),
+                    valueB: formatHeight(hB)
+                )
+            }
+
+            if let rA = physA.reachInches, let rB = physB.reachInches {
+                comparisonBar(label: "Reach", valA: rA, valB: rB, suffix: "\"")
+            }
+
+            if let aA = physA.age, let aB = physB.age {
+                comparisonRow(label: "Age", valueA: "\(aA)", valueB: "\(aB)")
+            }
+        }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+    }
+    
+    private func formatHeight(_ inches: Double) -> String {
+        let feet = Int(inches) / 12
+        let remaining = Int(inches) % 12
+        return "\(feet)'\(remaining)\""
+    }
+
+    // MARK: - Comparison components
+
+    @ViewBuilder
+    private func comparisonBar(label: String, valA: Double, valB: Double, suffix: String = "", multiply: Double = 1) -> some View {
+        let displayA = valA * multiply
+        let displayB = valB * multiply
+        let maxVal = max(displayA, displayB, 0.01)
+
+        HStack(spacing: 8) {
+            Text(suffix == "\"" ? String(format: "%.0f%@", displayA, suffix) : String(format: "%.1f%@", displayA, suffix))
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 46, alignment: .trailing)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+
+            GeometryReader { geo in
+                let half = (geo.size.width - 60) / 2
+                HStack(spacing: 0) {
+                    HStack {
+                        Spacer()
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(BSColors.accent)
+                            .frame(width: max(half * CGFloat(displayA / maxVal), 2), height: 4)
+                    }
+                    .frame(width: half)
+
+                    Text(label)
+                        .font(.system(size: 8))
+                        .foregroundColor(BSColors.textTertiary)
+                        .frame(width: 60)
+
+                    HStack {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(BSColors.accentBlue)
+                            .frame(width: max(half * CGFloat(displayB / maxVal), 2), height: 4)
+                        Spacer()
+                    }
+                    .frame(width: half)
+                }
+            }
+            .frame(height: 14)
+
+            Text(suffix == "\"" ? String(format: "%.0f%@", displayB, suffix) : String(format: "%.1f%@", displayB, suffix))
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 46, alignment: .leading)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+    }
+
+    @ViewBuilder
+    private func comparisonRow(label: String, valueA: String, valueB: String) -> some View {
+        HStack {
+            Text(valueA)
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 60, alignment: .trailing)
+            Spacer()
+            Text(label)
+                .font(.system(size: 10))
+                .foregroundColor(BSColors.textTertiary)
+            Spacer()
+            Text(valueB)
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 60, alignment: .leading)
+        }
+    }
+
+    private func formatCtrlTime(_ secs: Int) -> String {
+        let m = secs / 60
+        let s = secs % 60
+        return "\(m):\(String(format: "%02d", s))"
+    }
+
+    private func cardioLabel(_ index: Double) -> String {
+        if index >= 0.8 { return "Elite" }
+        if index >= 0.5 { return "Good" }
+        if index >= 0.3 { return "Avg" }
+        return "Low"
+    }
+    
     // MARK: - Result Section
 
     @ViewBuilder

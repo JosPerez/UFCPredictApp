@@ -41,6 +41,11 @@ struct BSColors {
         dark:  "3A3A3A"
     )
     
+    static let textRecord = Color(
+        light: "BBBBBB",
+        dark:  "FFFFFF"
+    )
+    
     static let rankBadgeColor = Color(
         light: "1C1C1E",
         dark: "555555"

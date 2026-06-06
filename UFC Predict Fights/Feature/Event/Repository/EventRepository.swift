@@ -113,4 +113,61 @@ final class EventRepository {
     var hasCachedData: Bool {
         eventCount() > 0
     }
+    
+    
+    func getCompletedEvents(year: Int? = nil, query: String? = nil, ascending: Bool = false, limit: Int = 20, offset: Int = 0) -> [CachedEvent] {
+        var descriptor = FetchDescriptor<CachedEvent>(
+            sortBy: [SortDescriptor(\.eventDate, order: ascending ? .forward : .reverse)]
+        )
+        descriptor.fetchLimit = limit
+        descriptor.fetchOffset = offset
+
+        if let y = year, let q = query, !q.isEmpty {
+            let prefix = "\(y)-"
+            descriptor.predicate = #Predicate {
+                $0.isUpcoming == false &&
+                $0.eventDate.starts(with: prefix) &&
+                $0.name.localizedStandardContains(q)
+            }
+        } else if let y = year {
+            let prefix = "\(y)-"
+            descriptor.predicate = #Predicate {
+                $0.isUpcoming == false &&
+                $0.eventDate.starts(with: prefix)
+            }
+        } else if let q = query, !q.isEmpty {
+            descriptor.predicate = #Predicate {
+                $0.isUpcoming == false &&
+                $0.name.localizedStandardContains(q)
+            }
+        } else {
+            descriptor.predicate = #Predicate {
+                $0.isUpcoming == false
+            }
+        }
+
+        do {
+            return try modelContext.fetch(descriptor)
+        } catch {
+            print("[EventRepository] completed fetch error: \(error)")
+            return []
+        }
+    }
+
+    func completedCount(year: Int? = nil) -> Int {
+        var descriptor = FetchDescriptor<CachedEvent>()
+        if let y = year {
+            let prefix = "\(y)-"
+            descriptor.predicate = #Predicate {
+                $0.isUpcoming == false && $0.eventDate.starts(with: prefix)
+            }
+        } else {
+            descriptor.predicate = #Predicate { $0.isUpcoming == false }
+        }
+        do {
+            return try modelContext.fetchCount(descriptor)
+        } catch {
+            return 0
+        }
+    }
 }
