@@ -95,7 +95,7 @@ struct EventDetailView: View {
                 Image(systemName: "mappin.circle.fill")
                     .font(.system(size: 12))
                     .foregroundColor(BSColors.textTertiary)
-                Text("Location TBD")
+                Text(event.location ?? "Location TBD")
                     .font(.system(size: 13))
                     .foregroundColor(BSColors.textSecondary)
             }
@@ -241,6 +241,7 @@ struct EventDetailView: View {
                 fighterColumn(
                     name: fight.fighterRName,
                     img: fight.fighterRImg,
+                    record: fight.fighterRRecord,
                     isWinner: fight.fighterRWinner == true,
                     cornerColor: BSColors.accent,
                     cornerLabel: "Red corner",
@@ -272,6 +273,7 @@ struct EventDetailView: View {
                 fighterColumn(
                     name: fight.fighterBName,
                     img: fight.fighterBImg,
+                    record: fight.fighterBRecord,
                     isWinner: fight.fighterBWinner == true,
                     cornerColor: BSColors.accentBlue,
                     cornerLabel: "Blue corner",
@@ -368,6 +370,7 @@ struct EventDetailView: View {
                 fighterColumn(
                     name: fight.fighterRName,
                     img: fight.fighterRImg,
+                    record: fight.fighterRRecord,
                     isWinner: false,
                     cornerColor: BSColors.accent,
                     cornerLabel: "Red corner",
@@ -390,6 +393,7 @@ struct EventDetailView: View {
                 fighterColumn(
                     name: fight.fighterBName,
                     img: fight.fighterBImg,
+                    record: fight.fighterBRecord,
                     isWinner: false,
                     cornerColor: BSColors.accentBlue,
                     cornerLabel: "Blue corner",
@@ -418,7 +422,6 @@ struct EventDetailView: View {
                     .font(.system(size: 13, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)
 
-                // Names header
                 HStack {
                     Text(lastName(fight.fighterRName))
                         .font(.system(size: 11, weight: .bold))
@@ -432,11 +435,20 @@ struct EventDetailView: View {
                 if let a = fight.fighterRSlpm, let b = fight.fighterBSlpm {
                     comparisonBar(label: "Str. / min", valA: a, valB: b)
                 }
+                if let a = fight.fighterRSapm, let b = fight.fighterBSapm {
+                    comparisonBar(label: "Str. absorbed", valA: a, valB: b)
+                }
                 if let a = fight.fighterRStrDef, let b = fight.fighterBStrDef {
                     comparisonBar(label: "Str. defense", valA: a * 100, valB: b * 100, suffix: "%")
                 }
+                if let a = fight.fighterRKdAvg, let b = fight.fighterBKdAvg {
+                    comparisonBar(label: "KD avg", valA: a, valB: b)
+                }
                 if let a = fight.fighterRSubAvg, let b = fight.fighterBSubAvg {
                     comparisonBar(label: "Sub avg", valA: a, valB: b)
+                }
+                if let a = fight.fighterRTdDef, let b = fight.fighterBTdDef {
+                    comparisonBar(label: "TD defense", valA: a * 100, valB: b * 100, suffix: "%")
                 }
             }
             .padding(16)
@@ -689,7 +701,7 @@ struct EventDetailView: View {
     // ═══════════════════════════════════════════════
 
     @ViewBuilder
-    private func fighterColumn(name: String, img: String?, isWinner: Bool, cornerColor: Color, cornerLabel: String, rank: Int?, isUpcoming: Bool) -> some View {
+    private func fighterColumn(name: String, img: String?, record: String?, isWinner: Bool, cornerColor: Color, cornerLabel: String, rank: Int?, isUpcoming: Bool) -> some View {
         VStack(spacing: 6) {
             FighterAvatar(
                 imageUrl: img,
@@ -697,13 +709,21 @@ struct EventDetailView: View {
                 size: 64,
                 accentColor: cornerColor
             )
-
+            
+            // Name
             Text(name)
                 .font(.system(size: 13, weight: .bold))
                 .foregroundColor(BSColors.textPrimary)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
-
+            
+            // Record
+            if let record = record {
+                Text(record)
+                    .font(.system(size: 11))
+                    .foregroundColor(BSColors.textTertiary)
+            }
+            
             if !isUpcoming {
                 if isWinner {
                     Text("Winner")
@@ -894,13 +914,17 @@ struct EventDetailView: View {
 
     private func generateStrengths(_ fight: BSEventFight, isRed: Bool) -> [String] {
         var strengths: [String] = []
-        let slpm = isRed ? fight.fighterRSlpm : fight.fighterBSlpm
+        let slpm   = isRed ? fight.fighterRSlpm : fight.fighterBSlpm
         let strDef = isRed ? fight.fighterRStrDef : fight.fighterBStrDef
         let subAvg = isRed ? fight.fighterRSubAvg : fight.fighterBSubAvg
+        let kdAvg  = isRed ? fight.fighterRKdAvg : fight.fighterBKdAvg
+        let tdDef  = isRed ? fight.fighterRTdDef : fight.fighterBTdDef
 
         if let s = slpm, s > 4.0 { strengths.append("High striking output") }
         if let d = strDef, d > 0.55 { strengths.append("Strong strike defense") }
         if let sub = subAvg, sub > 1.0 { strengths.append("Submission threat") }
+        if let kd = kdAvg, kd > 1.0 { strengths.append("KO power") }
+        if let td = tdDef, td > 0.7 { strengths.append("Takedown defense") }
         if fight.isTitleFight { strengths.append("Championship experience") }
 
         return Array(strengths.prefix(3))
@@ -908,11 +932,15 @@ struct EventDetailView: View {
 
     private func generateWeaknesses(_ fight: BSEventFight, isRed: Bool) -> [String] {
         var weaknesses: [String] = []
-        let slpm = isRed ? fight.fighterRSlpm : fight.fighterBSlpm
+        let slpm   = isRed ? fight.fighterRSlpm : fight.fighterBSlpm
+        let sapm   = isRed ? fight.fighterRSapm : fight.fighterBSapm
         let strDef = isRed ? fight.fighterRStrDef : fight.fighterBStrDef
+        let tdDef  = isRed ? fight.fighterRTdDef : fight.fighterBTdDef
 
         if let s = slpm, s < 2.5 { weaknesses.append("Low strike volume") }
         if let d = strDef, d < 0.45 { weaknesses.append("Vulnerable to strikes") }
+        if let a = sapm, a > 4.0 { weaknesses.append("Absorbs too many strikes") }
+        if let td = tdDef, td < 0.5 { weaknesses.append("Weak takedown defense") }
 
         return Array(weaknesses.prefix(2))
     }

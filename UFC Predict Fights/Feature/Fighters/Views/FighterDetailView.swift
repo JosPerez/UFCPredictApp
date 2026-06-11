@@ -8,6 +8,10 @@
 import SwiftUI
 import BlackSpartan
 
+struct EventNavigation: Hashable {
+    let eventId: Int
+}
+
 @MainActor
 struct FighterDetailView: View {
     let fighterId: Int
@@ -56,6 +60,9 @@ struct FighterDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
+        .navigationDestination(for: EventNavigation.self) { nav in
+            EventDetailView(eventId: nav.eventId)
+        }
     }
 
     // MARK: - Large Header (Overview)
@@ -515,7 +522,7 @@ struct FighterDetailView: View {
                 HStack(spacing: 3) {
                     segmentBar("Distance", pct: pos.distancePct ?? 0, color: BSColors.accent)
                     segmentBar("Clinch", pct: pos.clinchPct ?? 0, color: BSColors.accentBlue)
-                    segmentBar("Ground", pct: pos.groundPct ?? 0, color: BSColors.titleGold)
+                    segmentBar("Ground", pct: pos.groundPct ?? 0, color: BSColors.winGreen)
                 }
                 .frame(height: 22)
             }
@@ -547,7 +554,10 @@ struct FighterDetailView: View {
         ScrollView {
             VStack(spacing: 8) {
                 ForEach(p.recentFights) { fight in
-                    fightHistoryCard(fight)
+                    NavigationLink(value: EventNavigation(eventId: fight.eventId)) {
+                        fightHistoryCard(fight)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, 16)
@@ -617,6 +627,15 @@ struct FighterDetailView: View {
                 size: 44,
                 accentColor: BSColors.textTertiary
             )
+            
+            VStack {
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textHint)
+                    .frame(alignment: .center)
+                Spacer()
+            }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)

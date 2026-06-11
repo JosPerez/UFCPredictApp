@@ -146,6 +146,7 @@ public struct BSPhysicalStats: Codable {
 
 public struct BSRecentFight: Codable, Identifiable {
     public let fightId: Int
+    public let eventId: Int
     public let eventName: String
     public let eventDate: String
     public let opponentId: Int
@@ -170,6 +171,7 @@ public struct BSRecentFight: Codable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case fightId           = "fight_id"
+        case eventId           = "event_id"
         case eventName         = "event_name"
         case eventDate         = "event_date"
         case opponentId        = "opponent_id"

@@ -31,6 +31,7 @@ public struct BSEventDetail: Codable, Identifiable {
     public let id: Int
     public let name: String
     public let eventDate: String
+    public let location: String?
     public let fightCount: Int
     public let titleFights: Int
     public let finishes: Int
@@ -46,6 +47,7 @@ public struct BSEventDetail: Codable, Identifiable {
         case finishes
         case isUpcoming  = "is_upcoming"
         case fights
+        case location
     }
 }
 
@@ -95,6 +97,16 @@ public struct BSEventFight: Codable, Identifiable {
     public let fighterBSlpm: Double?
     public let fighterBStrDef: Double?
     public let fighterBSubAvg: Double?
+    // Records
+    public let fighterRRecord: String?
+    public let fighterBRecord: String?
+    // Career stats (extra)
+    public let fighterRSapm: Double?
+    public let fighterRKdAvg: Double?
+    public let fighterRTdDef: Double?
+    public let fighterBSapm: Double?
+    public let fighterBKdAvg: Double?
+    public let fighterBTdDef: Double?
 
     public var id: Int { fightId }
 
@@ -154,5 +166,13 @@ public struct BSEventFight: Codable, Identifiable {
         case fighterBSlpm            = "fighter_b_slpm"
         case fighterBStrDef          = "fighter_b_str_def"
         case fighterBSubAvg          = "fighter_b_sub_avg"
+        case fighterRRecord  = "fighter_r_record"
+        case fighterBRecord  = "fighter_b_record"
+        case fighterRSapm    = "fighter_r_sapm"
+        case fighterRKdAvg   = "fighter_r_kd_avg"
+        case fighterRTdDef   = "fighter_r_td_def"
+        case fighterBSapm    = "fighter_b_sapm"
+        case fighterBKdAvg   = "fighter_b_kd_avg"
+        case fighterBTdDef   = "fighter_b_td_def"
     }
 }

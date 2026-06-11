@@ -14,7 +14,7 @@ final public class BSPredictService: BSBaseFacade {
     }
     
     public func predictFight(request: PredictionRequest) {
-        let uri = "/predict"
+        let uri = "/predict/"
         do {
             let body = try JSONEncoder().encode(request)
             let request = try postRequest(uri: uri, body: body)

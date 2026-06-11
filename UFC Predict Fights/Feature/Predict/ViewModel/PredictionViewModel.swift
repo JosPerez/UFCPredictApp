@@ -221,11 +221,10 @@ extension PredictionViewModel: BSResponseDelegate {
             }
         case .profile:
             if let profile = entity as? BSFighterProfile {
-                // Determinar si es A o B por la continuation activa
-                if profileContinuationA != nil {
+                if profile.id == fighterA?.fighterId {
                     profileContinuationA?.resume(returning: profile)
                     profileContinuationA = nil
-                } else if profileContinuationB != nil {
+                } else if profile.id == fighterB?.fighterId {
                     profileContinuationB?.resume(returning: profile)
                     profileContinuationB = nil
                 }
