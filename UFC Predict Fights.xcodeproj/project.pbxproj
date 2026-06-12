@@ -45,6 +45,10 @@
 		07841B572FD2B36A005EA7FD /* RankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B562FD2B36A005EA7FD /* RankingsView.swift */; };
 		07841B5A2FD2C109005EA7FD /* CachedRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B592FD2C109005EA7FD /* CachedRanking.swift */; };
 		07841B5C2FD2C21D005EA7FD /* RankingRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B5B2FD2C21D005EA7FD /* RankingRepository.swift */; };
+		0797F60A2FDA7E6800B52A0C /* SegmentedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6092FDA7E4B00B52A0C /* SegmentedBar.swift */; };
+		0797F60D2FDA813500B52A0C /* PerformanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F60C2FDA812900B52A0C /* PerformanceChart.swift */; };
+		0797F60F2FDB3F0500B52A0C /* MarkdownFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F60E2FDB3EF400B52A0C /* MarkdownFile.swift */; };
+		0797F6112FDB3F1800B52A0C /* prediction_factors_guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 0797F6102FDB3F1800B52A0C /* prediction_factors_guide.md */; };
 		E9F88201E8DE5CF18416EBED /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +94,10 @@
 		07841B562FD2B36A005EA7FD /* RankingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsView.swift; sourceTree = "<group>"; };
 		07841B592FD2C109005EA7FD /* CachedRanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedRanking.swift; sourceTree = "<group>"; };
 		07841B5B2FD2C21D005EA7FD /* RankingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingRepository.swift; sourceTree = "<group>"; };
+		0797F6092FDA7E4B00B52A0C /* SegmentedBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBar.swift; sourceTree = "<group>"; };
+		0797F60C2FDA812900B52A0C /* PerformanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceChart.swift; sourceTree = "<group>"; };
+		0797F60E2FDB3EF400B52A0C /* MarkdownFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownFile.swift; sourceTree = "<group>"; };
+		0797F6102FDB3F1800B52A0C /* prediction_factors_guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = prediction_factors_guide.md; sourceTree = "<group>"; };
 		6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
 		C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -127,6 +135,7 @@
 		072C52752FCCE45A00FEEACD /* UFC Predict Fights */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6102FDB3F1800B52A0C /* prediction_factors_guide.md */,
 				07841B0F2FCEC20A005EA7FD /* UFC-Predict-Fights-Info.plist */,
 				07841AF62FCD8AAB005EA7FD /* DesingSystem */,
 				07841AEB2FCD827E005EA7FD /* Constant */,
@@ -213,6 +222,9 @@
 		07841AF72FCD8ADB005EA7FD /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0797F60E2FDB3EF400B52A0C /* MarkdownFile.swift */,
+				0797F60C2FDA812900B52A0C /* PerformanceChart.swift */,
+				0797F6092FDA7E4B00B52A0C /* SegmentedBar.swift */,
 				07841AF82FCD8AF1005EA7FD /* DivisionPill.swift */,
 				07841B052FCEB80D005EA7FD /* DatabaseErrorView.swift */,
 				07841B382FD01A8E005EA7FD /* FighterAvatar.swift */,
@@ -465,7 +477,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					072C52722FCCE45900FEEACD = {
 						CreatedOnToolsVersion = 15.4;
@@ -496,6 +508,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				072C527E2FCCE45A00FEEACD /* Preview Assets.xcassets in Resources */,
+				0797F6112FDB3F1800B52A0C /* prediction_factors_guide.md in Resources */,
 				072C527B2FCCE45A00FEEACD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,6 +577,7 @@
 				07841B3E2FD0231D005EA7FD /* PredictionHistoryView.swift in Sources */,
 				07841B0A2FCEBA8B005EA7FD /* SyncManager.swift in Sources */,
 				07841B1F2FCEE43E005EA7FD /* EventDetailViewModel.swift in Sources */,
+				0797F60F2FDB3F0500B52A0C /* MarkdownFile.swift in Sources */,
 				07841B2A2FCEFD1E005EA7FD /* FighterPickerView.swift in Sources */,
 				072C52772FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift in Sources */,
 				07841B3C2FD021CC005EA7FD /* CachedPrediction.swift in Sources */,
@@ -574,11 +588,13 @@
 				07841B392FD01A8E005EA7FD /* FighterAvatar.swift in Sources */,
 				07841AED2FCD8297005EA7FD /* Config.swift in Sources */,
 				07841B5A2FD2C109005EA7FD /* CachedRanking.swift in Sources */,
+				0797F60D2FDA813500B52A0C /* PerformanceChart.swift in Sources */,
 				07841B0C2FCEBBBE005EA7FD /* FighterRepository.swift in Sources */,
 				07841B1A2FCEE3C5005EA7FD /* EventListViewModel.swift in Sources */,
 				07841B492FD02600005EA7FD /* SettingsSheet.swift in Sources */,
 				07841B5C2FD2C21D005EA7FD /* RankingRepository.swift in Sources */,
 				07841AF92FCD8AF1005EA7FD /* DivisionPill.swift in Sources */,
+				0797F60A2FDA7E6800B52A0C /* SegmentedBar.swift in Sources */,
 				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
 				07841B032FCEB75F005EA7FD /* SwiftDataContainer.swift in Sources */,
 				07841B452FD025BB005EA7FD /* BSColor.swift in Sources */,
@@ -626,6 +642,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -649,6 +666,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -689,6 +707,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -705,6 +724,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -719,7 +739,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"UFC Predict Fights/Preview Content\"";
-				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
@@ -757,7 +776,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"UFC Predict Fights/Preview Content\"";
-				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";

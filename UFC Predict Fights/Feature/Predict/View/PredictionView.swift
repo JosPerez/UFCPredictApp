@@ -14,6 +14,8 @@ struct PredictionView: View {
     @State private var showPickerA = false
     @State private var showPickerB = false
     @State private var animateBar = false
+    @State private var showFactorsGuide = false
+
     @Environment(ThemeManager.self) private var themeManager
 
 
@@ -71,6 +73,9 @@ struct PredictionView: View {
                 allowedWeightClasses: viewModel.allowedWeightClasses
             )
             .preferredColorScheme(themeManager.current.colorScheme)
+        }
+        .sheet(isPresented: $showFactorsGuide) {
+            FactorsGuideSheet()
         }
     }
 
@@ -514,6 +519,16 @@ struct PredictionView: View {
                     Spacer()
                 }
                 .padding(.top, 12)
+                
+                // Outcome prediction
+                if let outcome = prediction.outcome {
+                    outcomeSection(outcome)
+                }
+
+                // Method prediction
+                if let method = prediction.method {
+                    methodSection(method)
+                }
             }
             .padding(16)
             .background(BSColors.surface)
@@ -522,12 +537,18 @@ struct PredictionView: View {
             
             // Key factors card
             VStack(alignment: .leading, spacing: 10) {
-                Text("Key factors")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(BSColors.textTertiary)
-                    .textCase(.uppercase)
-                    .kerning(1)
-                
+                HStack(spacing: 6) {
+                    Text("Key factors")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                    Button {
+                        showFactorsGuide = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .font(.system(size: 14))
+                            .foregroundColor(BSColors.textHint)
+                    }
+                }
                 ForEach(prediction.topFactors) { factor in
                     FactorRow(
                         factor: factor,
@@ -562,8 +583,137 @@ struct PredictionView: View {
             .padding(.top, 4)
         }
     }
-    
+    // ═══════════════════════════════════════════════
+    // MARK: - Outcome Prediction (Decision vs Finish)
+    // ═══════════════════════════════════════════════
 
+    @ViewBuilder
+    private func outcomeSection(_ outcome: OutcomePrediction) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Fight outcome")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(BSColors.textPrimary)
+
+            HStack(spacing: 12) {
+                // Decision
+                VStack(spacing: 4) {
+                    Text("\(Int(outcome.decisionProb * 100))%")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(BSColors.accentBlue)
+                    Text("Decision")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(BSColors.textTertiary)
+                }
+                .frame(maxWidth: .infinity)
+
+                // Divider
+                Rectangle()
+                    .fill(BSColors.border)
+                    .frame(width: 1, height: 40)
+
+                // Finish
+                VStack(spacing: 4) {
+                    Text("\(Int(outcome.finishProb * 100))%")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(BSColors.accent)
+                    Text("Finish")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(BSColors.textTertiary)
+                }
+                .frame(maxWidth: .infinity)
+            }
+
+            // Bar
+            GeometryReader { geo in
+                HStack(spacing: 2) {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(BSColors.accentBlue)
+                        .frame(width: geo.size.width * outcome.decisionProb)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(BSColors.accent)
+                }
+            }
+            .frame(height: 8)
+        }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
+    }
+
+    // ═══════════════════════════════════════════════
+    // MARK: - Method Prediction (DEC / KO / SUB)
+    // ═══════════════════════════════════════════════
+
+    @ViewBuilder
+    private func methodSection(_ method: MethodPrediction) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Predicted method")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(BSColors.textPrimary)
+
+            // Three method cards
+            HStack(spacing: 8) {
+                methodCard(
+                    label: "Decision",
+                    prob: method.decisionProb,
+                    icon: "hand.raised.fill",
+                    color: BSColors.accentBlue
+                )
+                methodCard(
+                    label: "KO/TKO",
+                    prob: method.koTkoProb,
+                    icon: "bolt.fill",
+                    color: BSColors.accent
+                )
+                methodCard(
+                    label: "Submission",
+                    prob: method.submissionProb,
+                    icon: "arrow.triangle.2.circlepath",
+                    color: BSColors.winGreen
+                )
+            }
+
+            // Segmented bar
+            SegmentedBar(segments: [
+                ("DEC", method.decisionProb, BSColors.accentBlue),
+                ("KO", method.koTkoProb, BSColors.accent),
+                ("SUB", method.submissionProb, BSColors.winGreen),
+            ])
+        }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
+    }
+
+    @ViewBuilder
+    private func methodCard(label: String, prob: Double, icon: String, color: Color) -> some View {
+        let isTop = prob >= 0.4
+
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 16))
+                .foregroundColor(isTop ? color : BSColors.textHint)
+
+            Text("\(Int(prob * 100))%")
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(isTop ? color : BSColors.textTertiary)
+
+            Text(label)
+                .font(.system(size: 9, weight: .medium))
+                .foregroundColor(BSColors.textTertiary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
+        .background(isTop ? color.opacity(0.08) : BSColors.surfaceSecondary)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(isTop ? color.opacity(0.3) : Color.clear, lineWidth: 1)
+        )
+    }
+    
     // MARK: - Components
 
     private func sectionLabel(_ text: String) -> some View {
@@ -718,7 +868,7 @@ struct FactorRow: View {
         VStack(spacing: 4) {
             // Label + direction
             HStack {
-                Text(formatFeature(factor.feature))
+                Text(displayName(for: factor.feature))
                     .font(.system(size: 12))
                     .foregroundColor(Color(hex: "BBBBBB"))
                 Spacer()
@@ -763,9 +913,72 @@ struct FactorRow: View {
             .frame(height: 4)
         }
     }
+    
+    // MARK: - Feature name mapping
 
-    private func formatFeature(_ feature: String) -> String {
-        feature
+    private let featureDisplayNames: [String: String] = [
+        // Elo
+        "elo_a":                        "Elo rating (Red)",
+        "elo_b":                        "Elo rating (Blue)",
+        "elo_delta":                    "Elo advantage",
+        // Rankings
+        "rank_a":                       "Ranking (Red)",
+        "rank_b":                       "Ranking (Blue)",
+        "rank_delta":                   "Ranking advantage",
+        "is_ranked_a":                  "Red is ranked",
+        "is_ranked_b":                  "Blue is ranked",
+        // Odds
+        "odds_delta":                   "Market odds edge",
+        "odds_missing":                 "No odds available",
+        // Career
+        "diff_total_fights":            "Experience gap",
+        "diff_win_rate":                "Win rate advantage",
+        "diff_finish_rate":             "Finish rate edge",
+        "diff_ko_rate":                 "KO rate edge",
+        "diff_sub_rate":                "Submission rate edge",
+        "diff_finish_loss_rate":        "Vulnerability to finishes",
+        "diff_avg_finish_round":        "Avg finish round gap",
+        "diff_avg_kd":                  "Knockdown average gap",
+        "diff_avg_sig_str":             "Sig. strikes per fight gap",
+        // Form
+        "diff_win_rate_l3":             "Recent form (last 3)",
+        "diff_win_rate_l5":             "Recent form (last 5)",
+        "diff_last_result":             "Last fight result",
+        "diff_current_streak":          "Win streak advantage",
+        "diff_days_since_last_fight":   "Activity gap",
+        // Physical
+        "diff_height_inches":           "Height advantage",
+        "diff_reach_inches":            "Reach advantage",
+        "diff_leg_reach_inches":        "Leg reach advantage",
+        "diff_age":                     "Age difference",
+        "diff_reach_relative":          "Relative reach edge",
+        // Striking
+        "diff_sig_strikes_landed_pm":   "Striking volume edge",
+        "diff_sig_strikes_absorbed_pm": "Damage absorbed gap",
+        "diff_sig_strike_defense_pct":  "Strike defense edge",
+        "diff_knockdown_avg":           "KO power advantage",
+        // Grappling
+        "diff_submission_avg":          "Submission threat edge",
+        "diff_takedown_defense_pct":    "Takedown defense edge",
+        "diff_avg_td_accuracy":         "Takedown accuracy edge",
+        "diff_avg_ctrl_time_secs":      "Control time advantage",
+        // Tempo
+        "diff_avg_head_pct":            "Head targeting edge",
+        "diff_avg_distance_pct":        "Distance fighting edge",
+        "diff_r1_kd_avg":               "Round 1 aggression",
+        "diff_cardio_index":            "Cardio advantage",
+        // Missing flags
+        "physical_missing_a":           "Missing physical data (Red)",
+        "physical_missing_b":           "Missing physical data (Blue)",
+        "snapshot_missing_a":           "Missing career stats (Red)",
+        "snapshot_missing_b":           "Missing career stats (Blue)",
+        "rank_missing_a":               "Unranked (Red)",
+        "rank_missing_b":               "Unranked (Blue)",
+    ]
+
+    private func displayName(for feature: String) -> String {
+        featureDisplayNames[feature] ?? feature
+            .replacingOccurrences(of: "diff_", with: "")
             .replacingOccurrences(of: "_", with: " ")
             .capitalized
     }

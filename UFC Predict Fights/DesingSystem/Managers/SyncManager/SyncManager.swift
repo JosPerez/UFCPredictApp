@@ -289,7 +289,7 @@ final class SyncManager {
 
 // MARK: - BSResponseDelegate
 
-extension SyncManager: BSResponseDelegate {
+extension SyncManager: @MainActor BSResponseDelegate {
     func recievedEntity<T>(entity: T, requestName: String) {
         switch activeRequestType {
         case "fighters":

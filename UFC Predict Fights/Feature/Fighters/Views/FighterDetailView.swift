@@ -193,7 +193,7 @@ struct FighterDetailView: View {
 
                 // Fight style
                 if let style = p.fightingStyleData {
-                    fightStyleCard(p, style: style)
+                    performanceSection(p)
                 }
 
                 // Predict button
@@ -216,6 +216,101 @@ struct FighterDetailView: View {
             .padding(.top, 12)
             .padding(.bottom, 32)
         }
+    }
+    
+    // MARK: - Performance Section (Overview)
+
+    @ViewBuilder
+    private func performanceSection(_ p: BSFighterProfile) -> some View {
+        let radarItems = buildRadarItems(p)
+        let stats = buildPerformanceStats(p)
+
+        if !radarItems.isEmpty {
+            PerformanceCard(
+                title: "Performance",
+                radarItems: radarItems,
+                stats: stats
+            )
+        }
+    }
+
+    private func buildRadarItems(_ p: BSFighterProfile) -> [RadarItem] {
+        var items: [RadarItem] = []
+
+        // Striking (SLpM normalized: 8.0 = max UFC)
+        if let slpm = p.performance.sigStrikesLandedPm {
+            items.append(RadarItem(label: "Striking", value: min(slpm / 8.0, 1.0)))
+        }
+
+        // Grappling (TD defense + sub avg)
+        if let tdDef = p.performance.takedownDefensePct {
+            items.append(RadarItem(label: "Grappling", value: tdDef))
+        }
+
+        // Defense (strike defense)
+        if let strDef = p.performance.sigStrikeDefensePct {
+            items.append(RadarItem(label: "Defense", value: strDef))
+        }
+
+        // Power (KD avg normalized: 2.0 = max)
+        if let kdAvg = p.performance.knockdownAvg {
+            items.append(RadarItem(label: "Power", value: min(kdAvg / 2.0, 1.0)))
+        }
+
+        // Win rate
+        if let wr = p.winRate {
+            items.append(RadarItem(label: "Win Rate", value: wr))
+        }
+
+        // Cardio (from fighting style data)
+        if let style = p.fightingStyleData, let ci = style.tempo.cardioIndex {
+            items.append(RadarItem(label: "Cardio", value: min(ci / 1.0, 1.0)))
+        } else {
+            // Fallback: finish rate inverted (fighters that go to decision have better cardio)
+            if let fr = p.finishRate {
+                items.append(RadarItem(label: "Cardio", value: 1.0 - fr))
+            }
+        }
+
+        return items
+    }
+
+    private func buildPerformanceStats(_ p: BSFighterProfile) -> [PerformanceStat] {
+        var stats: [PerformanceStat] = []
+
+        if let slpm = p.performance.sigStrikesLandedPm {
+            stats.append(PerformanceStat(title: "Str/Min", value: String(format: "%.1f", slpm), style: .valueFirst))
+        }
+        if let strDef = p.performance.sigStrikeDefensePct {
+            stats.append(PerformanceStat(title: "Str. Def", value: "\(Int(strDef * 100))%", style: .valueFirst))
+        }
+        if let tdDef = p.performance.takedownDefensePct {
+            stats.append(PerformanceStat(title: "TD Def", value: "\(Int(tdDef * 100))%", style: .valueFirst))
+        }
+        if let kdAvg = p.performance.knockdownAvg {
+            stats.append(PerformanceStat(title: "KD Avg", value: String(format: "%.2f", kdAvg), style: .valueFirst))
+        }
+        if let subAvg = p.performance.submissionAvg {
+            stats.append(PerformanceStat(title: "Sub Avg", value: String(format: "%.1f", subAvg), style: .valueFirst))
+        }
+
+        // From fighting style data
+        if let style = p.fightingStyleData {
+            if let td = style.grappling.tdAccuracy {
+                stats.append(PerformanceStat(title: "TD Acc", value: "\(Int(td * 100))%", style: .valueFirst))
+            }
+            if let ctrl = style.grappling.avgCtrlTimeSecs {
+                stats.append(PerformanceStat(title: "Avg Ctrl", value: formatCtrlTime(Int(ctrl)), style: .valueFirst))
+            }
+            if let r1 = style.tempo.r1KdAvg, r1 > 0 {
+                stats.append(PerformanceStat(title: "R1 KD", value: String(format: "%.1f", r1), style: .valueFirst))
+            }
+            if let ci = style.tempo.cardioIndex {
+                stats.append(PerformanceStat(title: "Cardio", value: cardioLabel(ci), style: .titleFirst))
+            }
+        }
+
+        return stats
     }
 
     @ViewBuilder
@@ -345,9 +440,11 @@ struct FighterDetailView: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(BSColors.textTertiary)
                     HStack(spacing: 3) {
-                        segmentBar("Head", pct: t.headPct ?? 0, color: BSColors.accent)
-                        segmentBar("Body", pct: t.bodyPct ?? 0, color: BSColors.accentBlue)
-                        segmentBar("Legs", pct: t.legPct ?? 0, color: BSColors.winGreen)
+                        SegmentedBar(segments:[
+                            ("Head", t.headPct ?? 0, BSColors.accent),
+                            ("Body", t.bodyPct ?? 0, BSColors.accentBlue),
+                            ("Legs", t.legPct ?? 0, BSColors.winGreen),
+                        ])
                     }
                     .frame(height: 24)
                 }
@@ -361,9 +458,11 @@ struct FighterDetailView: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(BSColors.textTertiary)
                     HStack(spacing: 3) {
-                        segmentBar("Distance", pct: pos.distancePct ?? 0, color: BSColors.accent)
-                        segmentBar("Clinch", pct: pos.clinchPct ?? 0, color: BSColors.accentBlue)
-                        segmentBar("Ground", pct: pos.groundPct ?? 0, color: BSColors.titleGold)
+                        SegmentedBar(segments: [
+                            ("Distance", pos.distancePct ?? 0, BSColors.accent),
+                            ("Clinch", pos.clinchPct ?? 0, BSColors.accentBlue),
+                            ("Ground", pos.groundPct ?? 0, BSColors.titleGold),
+                        ])
                     }
                     .frame(height: 24)
                 }
@@ -505,9 +604,11 @@ struct FighterDetailView: View {
                     .foregroundColor(BSColors.textTertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: 3) {
-                    segmentBar("Head", pct: t.headPct ?? 0, color: BSColors.accent)
-                    segmentBar("Body", pct: t.bodyPct ?? 0, color: BSColors.accentBlue)
-                    segmentBar("Legs", pct: t.legPct ?? 0, color: BSColors.winGreen)
+                    SegmentedBar(segments: [
+                        ("Head", t.headPct ?? 0, BSColors.accent),
+                        ("Body", t.bodyPct ?? 0, BSColors.accentBlue),
+                        ("Legs", t.legPct ?? 0, BSColors.winGreen),
+                    ])
                 }
                 .frame(height: 22)
             }
@@ -520,9 +621,11 @@ struct FighterDetailView: View {
                     .foregroundColor(BSColors.textTertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: 3) {
-                    segmentBar("Distance", pct: pos.distancePct ?? 0, color: BSColors.accent)
-                    segmentBar("Clinch", pct: pos.clinchPct ?? 0, color: BSColors.accentBlue)
-                    segmentBar("Ground", pct: pos.groundPct ?? 0, color: BSColors.winGreen)
+                    SegmentedBar(segments: [
+                        ("Distance", pos.distancePct ?? 0, BSColors.accent),
+                        ("Clinch", pos.clinchPct ?? 0, BSColors.accentBlue),
+                        ("Ground", pos.groundPct ?? 0, BSColors.titleGold),
+                    ])
                 }
                 .frame(height: 22)
             }
@@ -542,12 +645,69 @@ struct FighterDetailView: View {
                     miniStat(value: cardioLabel(ci), label: "Cardio")
                 }
             }
+            
+            // Style pills
+            Divider().background(BSColors.border)
+            styleTagsSection(style)
         }
     }
 
     // ═══════════════════════════════════════════════
     // MARK: - TAB 3: Fights
     // ═══════════════════════════════════════════════
+    
+    @ViewBuilder
+    private func styleTagsSection(_ style: BSFightingStyleData) -> some View {
+        let tags = deriveStyleTags(style)
+        if !tags.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Fighting style")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(BSColors.textTertiary)
+
+                FlowLayout(spacing: 8) {
+                    // Official style first
+                    if let profile = viewModel.profile, let fs = profile.fightingStyle, !fs.isEmpty {
+                        stylePill(fs, primary: true)
+                    }
+                    ForEach(tags, id: \.self) { tag in
+                        stylePill(tag)
+                    }
+                }
+            }
+        }
+    }
+
+    private func deriveStyleTags(_ style: BSFightingStyleData) -> [String] {
+        var tags: [String] = []
+
+        if let dp = style.strikePosition.distancePct, dp > 0.6 {
+            tags.append("Distance fighter")
+        }
+        if let gp = style.strikePosition.groundPct, gp > 0.3 {
+            tags.append("Ground game")
+        }
+        if let td = style.grappling.tdAccuracy, td > 0.5 {
+            tags.append("Wrestler")
+        }
+        if let hp = style.strikeTarget.headPct, hp > 0.55 {
+            tags.append("Head hunter")
+        }
+        if let lp = style.strikeTarget.legPct, lp > 0.3 {
+            tags.append("Leg kicks")
+        }
+        if let r1 = style.tempo.r1KdAvg, r1 > 0.3 {
+            tags.append("Fast starter")
+        }
+        if let ci = style.tempo.cardioIndex, ci > 0.7 {
+            tags.append("Cardio machine")
+        }
+        if let sub = viewModel.profile?.performance.submissionAvg, sub > 1.0 {
+            tags.append("Submission threat")
+        }
+
+        return tags
+    }
 
     @ViewBuilder
     private func fightsTab(_ p: BSFighterProfile) -> some View {
@@ -768,23 +928,6 @@ struct FighterDetailView: View {
         .overlay(alignment: .bottom) {
             Divider().background(BSColors.border)
         }
-    }
-
-    @ViewBuilder
-    private func segmentBar(_ label: String, pct: Double, color: Color) -> some View {
-        let flexValue = max(pct, 0.05)
-        RoundedRectangle(cornerRadius: 4)
-            .fill(color)
-            .frame(maxWidth: .infinity)
-            .frame(height: 22)
-            .layoutPriority(flexValue)
-            .overlay {
-                Text("\(label) \(Int(pct * 100))%")
-                    .font(.system(size: 8, weight: .bold))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-            }
     }
 
     @ViewBuilder
