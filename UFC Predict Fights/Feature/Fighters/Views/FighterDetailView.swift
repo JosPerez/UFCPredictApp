@@ -440,7 +440,7 @@ struct FighterDetailView: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(BSColors.textTertiary)
                     HStack(spacing: 3) {
-                        SegmentedBar(segments:[
+                        SmartSegmentedBar(segments:[
                             ("Head", t.headPct ?? 0, BSColors.accent),
                             ("Body", t.bodyPct ?? 0, BSColors.accentBlue),
                             ("Legs", t.legPct ?? 0, BSColors.winGreen),
@@ -458,7 +458,7 @@ struct FighterDetailView: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(BSColors.textTertiary)
                     HStack(spacing: 3) {
-                        SegmentedBar(segments: [
+                        SmartSegmentedBar(segments: [
                             ("Distance", pos.distancePct ?? 0, BSColors.accent),
                             ("Clinch", pos.clinchPct ?? 0, BSColors.accentBlue),
                             ("Ground", pos.groundPct ?? 0, BSColors.titleGold),
@@ -604,7 +604,7 @@ struct FighterDetailView: View {
                     .foregroundColor(BSColors.textTertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: 3) {
-                    SegmentedBar(segments: [
+                    SmartSegmentedBar(segments: [
                         ("Head", t.headPct ?? 0, BSColors.accent),
                         ("Body", t.bodyPct ?? 0, BSColors.accentBlue),
                         ("Legs", t.legPct ?? 0, BSColors.winGreen),
@@ -621,7 +621,7 @@ struct FighterDetailView: View {
                     .foregroundColor(BSColors.textTertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack(spacing: 3) {
-                    SegmentedBar(segments: [
+                    SmartSegmentedBar(segments: [
                         ("Distance", pos.distancePct ?? 0, BSColors.accent),
                         ("Clinch", pos.clinchPct ?? 0, BSColors.accentBlue),
                         ("Ground", pos.groundPct ?? 0, BSColors.titleGold),

@@ -76,22 +76,35 @@ struct PredictionHistoryRow: View {
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             prediction.fighterAProb > prediction.fighterBProb
-                                ? BSColors.accent : BSColors.textPrimary
+                                ? BSColors.accent : BSColors.textTertiary
                         )
                 }
                 .frame(maxWidth: .infinity)
 
                 // Probabilities
-                HStack(spacing: 4) {
-                    Text("\(Int(prediction.fighterAProb * 100))%")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(BSColors.accent)
-                    Text("-")
-                        .font(.system(size: 12))
-                        .foregroundColor(BSColors.textHint)
-                    Text("\(Int(prediction.fighterBProb * 100))%")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(BSColors.accentBlue)
+                VStack(spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text("\(Int(prediction.fighterAProb * 100))%")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(BSColors.accent)
+                        Text("-")
+                            .font(.system(size: 12))
+                            .foregroundColor(BSColors.textHint)
+                        Text("\(Int(prediction.fighterBProb * 100))%")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(BSColors.accentBlue)
+                    }
+                    // Probability mini bar
+                    GeometryReader { geo in
+                        HStack(spacing: 1) {
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(BSColors.accent)
+                                .frame(width: geo.size.width * prediction.fighterAProb)
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(BSColors.accentBlue)
+                        }
+                    }
+                    .frame(width: 80, height: 4)
                 }
 
                 // Blue corner
@@ -106,36 +119,74 @@ struct PredictionHistoryRow: View {
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             prediction.fighterBProb > prediction.fighterAProb
-                                ? BSColors.accentBlue : BSColors.textPrimary
+                                ? BSColors.accentBlue : BSColors.textTertiary
                         )
                 }
                 .frame(maxWidth: .infinity)
+            }
+
+            // Method + Outcome row
+            if prediction.methodDecProb != nil || prediction.finishProb != nil {
+                HStack(spacing: 6) {
+                    // Predicted method badge
+                    if let method = prediction.predictedMethod, let prob = prediction.predictedMethodProb {
+                        HStack(spacing: 4) {
+                            Image(systemName: methodIcon(method))
+                                .font(.system(size: 8))
+                            Text("\(method) \(Int(prob * 100))%")
+                                .font(.system(size: 10, weight: .semibold))
+                        }
+                        .foregroundColor(methodColor(method))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(methodColor(method).opacity(0.1))
+                        .cornerRadius(6)
+                    }
+
+                    // Outcome badge
+                    if let finish = prediction.finishProb {
+                        let isFinish = finish > 0.5
+                        HStack(spacing: 4) {
+                            Image(systemName: isFinish ? "flame.fill" : "clock.fill")
+                                .font(.system(size: 8))
+                            Text(isFinish ? "Finish \(Int(finish * 100))%" : "Decision \(Int((1 - finish) * 100))%")
+                                .font(.system(size: 10, weight: .semibold))
+                        }
+                        .foregroundColor(isFinish ? BSColors.accent : BSColors.accentBlue)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background((isFinish ? BSColors.accent : BSColors.accentBlue).opacity(0.1))
+                        .cornerRadius(6)
+                    }
+
+                    Spacer()
+                }
             }
 
             // Bottom: confidence + date
             HStack {
                 HStack(spacing: 5) {
                     Circle()
-                        .fill(prediction.confidence == "HIGH"
-                            ? BSColors.winGreen
-                            : Color(hex: "888888"))
-                        .frame(width: 7, height: 7)
-                    Text(prediction.confidence == "HIGH" ? "High confidence" : "Low confidence")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(prediction.confidence == "HIGH"
-                            ? BSColors.winGreen
-                            : Color(hex: "888888"))
+                        .fill(confidenceColor(prediction.confidence))
+                        .frame(width: 6, height: 6)
+                    Text(prediction.confidence)
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(confidenceColor(prediction.confidence))
                 }
+
                 Spacer()
+
                 Text(prediction.createdAt.formatted(.dateTime.month(.abbreviated).day().hour().minute()))
-                    .font(.system(size: 12))
-                    .foregroundColor(Color(hex: "888888"))
+                    .font(.system(size: 10))
+                    .foregroundColor(BSColors.textHint)
             }
         }
         .padding(12)
         .background(BSColors.surface)
         .cornerRadius(12)
     }
+
+    // MARK: - Helpers
 
     private func initials(_ name: String) -> String {
         let parts = name.split(separator: " ")
@@ -147,5 +198,29 @@ struct PredictionHistoryRow: View {
     private func lastName(_ name: String) -> String {
         let parts = name.split(separator: " ")
         return parts.count > 1 ? String(parts.last ?? "") : name
+    }
+
+    private func confidenceColor(_ confidence: String) -> Color {
+        switch confidence {
+        case "HIGH":   return BSColors.winGreen
+        case "MEDIUM": return BSColors.titleGold
+        default:       return BSColors.textTertiary
+        }
+    }
+
+    private func methodColor(_ method: String) -> Color {
+        switch method {
+        case "KO/TKO": return BSColors.accent
+        case "SUB":    return BSColors.winGreen
+        default:       return BSColors.accentBlue
+        }
+    }
+
+    private func methodIcon(_ method: String) -> String {
+        switch method {
+        case "KO/TKO": return "bolt.fill"
+        case "SUB":    return "arrow.triangle.2.circlepath"
+        default:       return "hand.raised.fill"
+        }
     }
 }

@@ -423,145 +423,28 @@ struct PredictionView: View {
 
     @ViewBuilder
     private func resultSection(_ prediction: Prediction) -> some View {
-        VStack(spacing: 12) {
-            // Fighter face-off card
-            VStack(spacing: 0) {
-                // Fighters
-                HStack(spacing: 0) {
-                    // Red corner
-                    VStack(spacing: 4) {
-                        FighterAvatar(
-                            imageUrl: viewModel.fighterA?.imgThumb,
-                            initials: initials(prediction.fighterAName),
-                            size: 52,
-                            accentColor: BSColors.accent
-                        )
-                        Text(lastName(prediction.fighterAName))
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(BSColors.textPrimary)
-                        Text("Red corner")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(BSColors.accent)
-                    }
-                    .frame(maxWidth: .infinity)
-                    
-                    // VS
-                    ZStack {
-                        Circle()
-                            .fill(BSColors.surfaceSecondary)
-                            .frame(width: 32, height: 32)
-                        Text("VS")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(BSColors.textTertiary)
-                    }
-                    
-                    // Blue corner
-                    VStack(spacing: 4) {
-                        FighterAvatar(
-                            imageUrl: viewModel.fighterB?.imgThumb,
-                            initials: initials(prediction.fighterBName),
-                            size: 52,
-                            accentColor: BSColors.accentBlue
-                        )
-                        Text(lastName(prediction.fighterBName))
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundColor(BSColors.textPrimary)
-                        Text("Blue corner")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(BSColors.accentBlue)
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                
-                // Probability bar
-                VStack(spacing: 4) {
-                    HStack {
-                        Text("\(Int(prediction.fighterAWinProb * 100))%")
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(BSColors.accent)
-                        Spacer()
-                        Text("\(Int(prediction.fighterBWinProb * 100))%")
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(BSColors.accentBlue)
-                    }
-                    
-                    GeometryReader { geo in
-                        HStack(spacing: 2) {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(BSColors.accent)
-                                .frame(width: animateBar ? geo.size.width * prediction.fighterAWinProb : 0)
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(BSColors.accentBlue)
-                        }
-                    }
-                    .frame(height: 12)
-                    .onAppear {
-                        withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
-                            animateBar = true
-                        }
-                    }
-                    
-                }
-                .padding(.top, 16)
-                
-                // Confidence
-                HStack(spacing: 6) {
-                    Circle()
-                        .fill(prediction.confidence == "HIGH"
-                              ? BSColors.winGreen
-                              : Color(hex: "888888"))
-                        .frame(width: 8, height: 8)
-                    Text(prediction.confidence == "HIGH" ? "High confidence" : "Low confidence")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(prediction.confidence == "HIGH"
-                                         ? BSColors.winGreen
-                                         : Color(hex: "888888"))
-                    Spacer()
-                }
-                .padding(.top, 12)
-                
-                // Outcome prediction
-                if let outcome = prediction.outcome {
-                    outcomeSection(outcome)
-                }
+        VStack(spacing: 16) {
+            // 1. Winner prediction
+            winnerCard(prediction)
 
-                // Method prediction
-                if let method = prediction.method {
-                    methodSection(method)
-                }
+            // 2. Fight outcome (Decision vs Finish)
+            if let outcome = prediction.outcome {
+                outcomeCard(outcome)
             }
-            .padding(16)
-            .background(BSColors.surface)
-            .cornerRadius(14)
-            .padding(.horizontal, 16)
-            
-            // Key factors card
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 6) {
-                    Text("Key factors")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(BSColors.textPrimary)
-                    Button {
-                        showFactorsGuide = true
-                    } label: {
-                        Image(systemName: "info.circle")
-                            .font(.system(size: 14))
-                            .foregroundColor(BSColors.textHint)
-                    }
-                }
-                ForEach(prediction.topFactors) { factor in
-                    FactorRow(
-                        factor: factor,
-                        fighterAName: lastName(prediction.fighterAName),
-                        fighterBName: lastName(prediction.fighterBName)
-                    )
-                }
+
+            // 3. Predicted method (DEC / KO / SUB)
+            if let method = prediction.method {
+                methodCard(method)
             }
-            .padding(16)
-            .background(BSColors.surface)
-            .cornerRadius(14)
-            .padding(.horizontal, 16)
-            
+
+            // 4. Duration forecast
+            if let duration = prediction.duration {
+                durationCard(duration)
+            }
+
+            // 5. Key factors
+            factorsCard(prediction)
+
             // New prediction button
             Button {
                 animateBar = false
@@ -580,25 +463,130 @@ struct PredictionView: View {
                 .cornerRadius(12)
             }
             .padding(.horizontal, 16)
-            .padding(.top, 4)
         }
     }
+
     // ═══════════════════════════════════════════════
-    // MARK: - Outcome Prediction (Decision vs Finish)
+    // MARK: - 1. Winner Card
     // ═══════════════════════════════════════════════
 
     @ViewBuilder
-    private func outcomeSection(_ outcome: OutcomePrediction) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Fight outcome")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(BSColors.textPrimary)
+    private func winnerCard(_ prediction: Prediction) -> some View {
+        VStack(spacing: 14) {
+            // Section title
+            HStack {
+                Image(systemName: "trophy.fill")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.accent)
+                Text("Winner prediction")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                Spacer()
+                // Confidence badge
+                Text(prediction.confidence)
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(confidenceColor(prediction.confidence))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(confidenceColor(prediction.confidence).opacity(0.12))
+                    .cornerRadius(4)
+            }
 
-            HStack(spacing: 12) {
-                // Decision
+            // Fighters face-off
+            HStack(spacing: 0) {
+                VStack(spacing: 4) {
+                    FighterAvatar(
+                        imageUrl: viewModel.fighterA?.imgThumb,
+                        initials: initials(prediction.fighterAName),
+                        size: 52,
+                        accentColor: BSColors.accent
+                    )
+                    Text(lastName(prediction.fighterAName))
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                    cornerDot("Red corner", color: BSColors.accent)
+                }
+                .frame(maxWidth: .infinity)
+
+                ZStack {
+                    Circle()
+                        .fill(BSColors.surfaceSecondary)
+                        .frame(width: 32, height: 32)
+                    Text("VS")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(BSColors.textTertiary)
+                }
+
+                VStack(spacing: 4) {
+                    FighterAvatar(
+                        imageUrl: viewModel.fighterB?.imgThumb,
+                        initials: initials(prediction.fighterBName),
+                        size: 52,
+                        accentColor: BSColors.accentBlue
+                    )
+                    Text(lastName(prediction.fighterBName))
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                    cornerDot("Blue corner", color: BSColors.accentBlue)
+                }
+                .frame(maxWidth: .infinity)
+            }
+
+            // Probabilities
+            HStack {
+                Text("\(Int(prediction.fighterAWinProb * 100))%")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(BSColors.accent)
+                Spacer()
+                Text("\(Int(prediction.fighterBWinProb * 100))%")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(BSColors.accentBlue)
+            }
+
+            // Animated bar
+            GeometryReader { geo in
+                HStack(spacing: 2) {
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(BSColors.accent)
+                        .frame(width: animateBar ? geo.size.width * prediction.fighterAWinProb : 0)
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(BSColors.accentBlue)
+                }
+            }
+            .frame(height: 10)
+            .onAppear {
+                withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
+                    animateBar = true
+                }
+            }
+        }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
+    }
+
+    // ═══════════════════════════════════════════════
+    // MARK: - 2. Outcome Card (Decision vs Finish)
+    // ═══════════════════════════════════════════════
+
+    @ViewBuilder
+    private func outcomeCard(_ outcome: OutcomePrediction) -> some View {
+        VStack(spacing: 14) {
+            HStack {
+                Image(systemName: "flag.checkered")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textSecondary)
+                Text("Fight outcome")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                Spacer()
+            }
+
+            HStack(spacing: 0) {
                 VStack(spacing: 4) {
                     Text("\(Int(outcome.decisionProb * 100))%")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.system(size: 24, weight: .bold))
                         .foregroundColor(BSColors.accentBlue)
                     Text("Decision")
                         .font(.system(size: 11, weight: .medium))
@@ -606,15 +594,13 @@ struct PredictionView: View {
                 }
                 .frame(maxWidth: .infinity)
 
-                // Divider
                 Rectangle()
                     .fill(BSColors.border)
                     .frame(width: 1, height: 40)
 
-                // Finish
                 VStack(spacing: 4) {
                     Text("\(Int(outcome.finishProb * 100))%")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.system(size: 24, weight: .bold))
                         .foregroundColor(BSColors.accent)
                     Text("Finish")
                         .font(.system(size: 11, weight: .medium))
@@ -623,7 +609,6 @@ struct PredictionView: View {
                 .frame(maxWidth: .infinity)
             }
 
-            // Bar
             GeometryReader { geo in
                 HStack(spacing: 2) {
                     RoundedRectangle(cornerRadius: 4)
@@ -642,44 +627,37 @@ struct PredictionView: View {
     }
 
     // ═══════════════════════════════════════════════
-    // MARK: - Method Prediction (DEC / KO / SUB)
+    // MARK: - 3. Method Card (DEC / KO / SUB)
     // ═══════════════════════════════════════════════
 
     @ViewBuilder
-    private func methodSection(_ method: MethodPrediction) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Predicted method")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(BSColors.textPrimary)
+    private func methodCard(_ method: MethodPrediction) -> some View {
+        let segments: [(String, Double, Color)] = [
+            ("DEC", method.decisionProb, BSColors.accentBlue),
+            ("KO/TKO", method.koTkoProb, BSColors.accent),
+            ("SUB", method.submissionProb, BSColors.winGreen),
+        ]
+        let maxProb = segments.map(\.1).max() ?? 0
 
-            // Three method cards
-            HStack(spacing: 8) {
-                methodCard(
-                    label: "Decision",
-                    prob: method.decisionProb,
-                    icon: "hand.raised.fill",
-                    color: BSColors.accentBlue
-                )
-                methodCard(
-                    label: "KO/TKO",
-                    prob: method.koTkoProb,
-                    icon: "bolt.fill",
-                    color: BSColors.accent
-                )
-                methodCard(
-                    label: "Submission",
-                    prob: method.submissionProb,
-                    icon: "arrow.triangle.2.circlepath",
-                    color: BSColors.winGreen
-                )
+        VStack(spacing: 14) {
+            HStack {
+                Image(systemName: "target")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textSecondary)
+                Text("Predicted method")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                Spacer()
             }
 
-            // Segmented bar
-            SegmentedBar(segments: [
-                ("DEC", method.decisionProb, BSColors.accentBlue),
-                ("KO", method.koTkoProb, BSColors.accent),
-                ("SUB", method.submissionProb, BSColors.winGreen),
-            ])
+            HStack(spacing: 8) {
+                methodProbCard(label: "Decision", prob: method.decisionProb, icon: "hand.raised.fill", color: BSColors.accentBlue, isTop: method.decisionProb == maxProb)
+                methodProbCard(label: "KO/TKO", prob: method.koTkoProb, icon: "bolt.fill", color: BSColors.accent, isTop: method.koTkoProb == maxProb)
+                methodProbCard(label: "Submission", prob: method.submissionProb, icon: "arrow.triangle.2.circlepath", color: BSColors.winGreen, isTop: method.submissionProb == maxProb)
+            }
+
+            SmartSegmentedBar(segments: segments)
+            Spacer()
         }
         .padding(16)
         .background(BSColors.surface)
@@ -688,18 +666,14 @@ struct PredictionView: View {
     }
 
     @ViewBuilder
-    private func methodCard(label: String, prob: Double, icon: String, color: Color) -> some View {
-        let isTop = prob >= 0.4
-
+    private func methodProbCard(label: String, prob: Double, icon: String, color: Color, isTop: Bool) -> some View {
         VStack(spacing: 6) {
             Image(systemName: icon)
-                .font(.system(size: 16))
+                .font(.system(size: 14))
                 .foregroundColor(isTop ? color : BSColors.textHint)
-
             Text("\(Int(prob * 100))%")
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(isTop ? color : BSColors.textTertiary)
-
             Text(label)
                 .font(.system(size: 9, weight: .medium))
                 .foregroundColor(BSColors.textTertiary)
@@ -712,6 +686,130 @@ struct PredictionView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(isTop ? color.opacity(0.3) : Color.clear, lineWidth: 1)
         )
+    }
+
+    // ═══════════════════════════════════════════════
+    // MARK: - 4. Duration Card
+    // ═══════════════════════════════════════════════
+
+    @ViewBuilder
+    private func durationCard(_ duration: BSDurationPrediction) -> some View {
+        let rounds: [(String, Double, Color)] = [
+            ("R1", duration.r1FinishProb, BSColors.accent),
+            ("R2", duration.r2FinishProb, BSColors.accent.opacity(0.75)),
+            ("R3", duration.r3FinishProb, BSColors.accent.opacity(0.5)),
+            ("R4/5", duration.lateFinishProb, BSColors.textTertiary),
+            ("DEC", duration.decisionProb, BSColors.accentBlue),
+        ]
+        let maxProb = rounds.map(\.1).max() ?? 1
+
+        VStack(spacing: 14) {
+            HStack {
+                Image(systemName: "clock.fill")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textSecondary)
+                Text("Duration forecast")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                Spacer()
+            }
+
+            VStack(spacing: 8) {
+                ForEach(Array(rounds.enumerated()), id: \.offset) { _, round in
+                    let (label, prob, color) = round
+                    HStack(spacing: 8) {
+                        Text(label)
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(BSColors.textSecondary)
+                            .frame(width: 30, alignment: .trailing)
+
+                        GeometryReader { geo in
+                            let width = geo.size.width * CGFloat(prob / max(maxProb, 0.01))
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(BSColors.surfaceSecondary)
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(color)
+                                    .frame(width: max(width, 2))
+                            }
+                        }
+                        .frame(height: 12)
+
+                        Text("\(Int(prob * 100))%")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(prob == maxProb ? color : BSColors.textTertiary)
+                            .frame(width: 32, alignment: .leading)
+                    }
+                }
+            }
+
+            SmartSegmentedBar(segments: rounds)
+            Spacer()
+        }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
+    }
+
+    // ═══════════════════════════════════════════════
+    // MARK: - 5. Factors Card
+    // ═══════════════════════════════════════════════
+
+    @ViewBuilder
+    private func factorsCard(_ prediction: Prediction) -> some View {
+
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                Image(systemName: "chart.bar.fill")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textSecondary)
+                Text("Key factors")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                Button {
+                    showFactorsGuide = true
+                } label: {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 14))
+                        .foregroundColor(BSColors.textHint)
+                }
+                Spacer()
+            }
+            ForEach(prediction.topFactors) { factor in
+                FactorRow(
+                    factor: factor,
+                    fighterAName: lastName(prediction.fighterAName),
+                    fighterBName: lastName(prediction.fighterBName)
+                )
+            }
+        }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
+    }
+    
+    // ═══════════════════════════════════════════════
+    // MARK: - Shared Small Components
+    // ═══════════════════════════════════════════════
+
+    @ViewBuilder
+    private func cornerDot(_ text: String, color: Color) -> some View {
+        HStack(spacing: 4) {
+            Circle().fill(color).frame(width: 5, height: 5)
+            Text(text)
+                .font(.system(size: 9, weight: .medium))
+                .foregroundColor(color)
+        }
+    }
+
+    private func confidenceColor(_ confidence: String) -> Color {
+        switch confidence {
+        case "HIGH":   return BSColors.winGreen
+        case "MEDIUM": return BSColors.titleGold
+        default:       return BSColors.textTertiary
+        }
     }
     
     // MARK: - Components

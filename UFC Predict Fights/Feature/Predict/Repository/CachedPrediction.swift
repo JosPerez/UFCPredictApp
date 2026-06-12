@@ -20,6 +20,21 @@ final class CachedPrediction {
     var fighterAProb: Double
     var fighterBProb: Double
     var confidence: String
+    var modelUsed: String
+    // Outcome
+    var decisionProb: Double?
+    var finishProb: Double?
+    // Method
+    var methodDecProb: Double?
+    var methodKoProb: Double?
+    var methodSubProb: Double?
+    // Duration
+    var durationR1: Double?
+    var durationR2: Double?
+    var durationR3: Double?
+    var durationLate: Double?
+    var durationDec: Double?
+
     var createdAt: Date
 
     var winnerName: String {
@@ -28,6 +43,24 @@ final class CachedPrediction {
 
     var winnerProb: Double {
         max(fighterAProb, fighterBProb)
+    }
+
+    var predictedMethod: String? {
+        guard let dec = methodDecProb, let ko = methodKoProb, let sub = methodSubProb else { return nil }
+        let maxProb = max(dec, ko, sub)
+        if maxProb == ko { return "KO/TKO" }
+        if maxProb == sub { return "SUB" }
+        return "DEC"
+    }
+
+    var predictedMethodProb: Double? {
+        guard let dec = methodDecProb, let ko = methodKoProb, let sub = methodSubProb else { return nil }
+        return max(dec, ko, sub)
+    }
+
+    var isFinishLikely: Bool {
+        guard let finish = finishProb else { return false }
+        return finish > 0.5
     }
 
     init(
@@ -40,6 +73,17 @@ final class CachedPrediction {
         fighterAProb: Double,
         fighterBProb: Double,
         confidence: String,
+        modelUsed: String = "winner_pure",
+        decisionProb: Double? = nil,
+        finishProb: Double? = nil,
+        methodDecProb: Double? = nil,
+        methodKoProb: Double? = nil,
+        methodSubProb: Double? = nil,
+        durationR1: Double? = nil,
+        durationR2: Double? = nil,
+        durationR3: Double? = nil,
+        durationLate: Double? = nil,
+        durationDec: Double? = nil,
         createdAt: Date = .now
     ) {
         self.fighterAId = fighterAId
@@ -51,6 +95,17 @@ final class CachedPrediction {
         self.fighterAProb = fighterAProb
         self.fighterBProb = fighterBProb
         self.confidence = confidence
+        self.modelUsed = modelUsed
+        self.decisionProb = decisionProb
+        self.finishProb = finishProb
+        self.methodDecProb = methodDecProb
+        self.methodKoProb = methodKoProb
+        self.methodSubProb = methodSubProb
+        self.durationR1 = durationR1
+        self.durationR2 = durationR2
+        self.durationR3 = durationR3
+        self.durationLate = durationLate
+        self.durationDec = durationDec
         self.createdAt = createdAt
     }
 }

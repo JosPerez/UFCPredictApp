@@ -10,7 +10,6 @@ import Observation
 import BlackSpartan
 import SwiftData
 
-@MainActor
 @Observable
 final class PredictionViewModel {
 
@@ -193,7 +192,18 @@ extension PredictionViewModel {
             fighterBImg:   fighterB?.imgThumb,
             fighterAProb:  prediction.fighterAWinProb,
             fighterBProb:  prediction.fighterBWinProb,
-            confidence:    prediction.confidence
+            confidence:    prediction.confidence,
+            modelUsed:     prediction.modelUsed,
+            decisionProb:  prediction.outcome?.decisionProb,
+            finishProb:    prediction.outcome?.finishProb,
+            methodDecProb: prediction.method?.decisionProb,
+            methodKoProb:  prediction.method?.koTkoProb,
+            methodSubProb: prediction.method?.submissionProb,
+            durationR1:    prediction.duration?.r1FinishProb,
+            durationR2:    prediction.duration?.r2FinishProb,
+            durationR3:    prediction.duration?.r3FinishProb,
+            durationLate:  prediction.duration?.lateFinishProb,
+            durationDec:   prediction.duration?.decisionProb
         )
         context.insert(cached)
         try? context.save()

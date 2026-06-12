@@ -9,7 +9,6 @@ import Foundation
 import Observation
 import BlackSpartan
 
-@MainActor
 @Observable
 final class EventDetailViewModel {
 
