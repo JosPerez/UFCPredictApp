@@ -48,12 +48,19 @@
 		0797F60A2FDA7E6800B52A0C /* SegmentedBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6092FDA7E4B00B52A0C /* SegmentedBar.swift */; };
 		0797F60D2FDA813500B52A0C /* PerformanceChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F60C2FDA812900B52A0C /* PerformanceChart.swift */; };
 		0797F60F2FDB3F0500B52A0C /* MarkdownFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F60E2FDB3EF400B52A0C /* MarkdownFile.swift */; };
-		0797F6112FDB3F1800B52A0C /* prediction_factors_guide.md in Resources */ = {isa = PBXBuildFile; fileRef = 0797F6102FDB3F1800B52A0C /* prediction_factors_guide.md */; };
-		E9F88201E8DE5CF18416EBED /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */; };
+		0797F6132FDF609700B52A0C /* EloRankingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6122FDF608C00B52A0C /* EloRankingsViewModel.swift */; };
+		0797F6152FDF60D500B52A0C /* EloRankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6142FDF60CF00B52A0C /* EloRankingsView.swift */; };
+		0797F6172FDF63B300B52A0C /* CachedEloRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6162FDF63B200B52A0C /* CachedEloRanking.swift */; };
+		0797F61B2FE0EF8200B52A0C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0797F61A2FE0EF8200B52A0C /* GoogleService-Info.plist */; };
+		0797F6242FE0F13500B52A0C /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6212FE0F13500B52A0C /* AuthState.swift */; };
+		0797F6272FE0F16100B52A0C /* SessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6262FE0F15900B52A0C /* SessionPolicy.swift */; };
+		0797F62A2FE0F18400B52A0C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6292FE0F18000B52A0C /* AuthService.swift */; };
+		0797F62D2FE0F19E00B52A0C /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F62C2FE0F19A00B52A0C /* AuthViewModel.swift */; };
+		0797F62F2FE0F1BA00B52A0C /* ProtectedDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F62E2FE0F1BA00B52A0C /* ProtectedDestination.swift */; };
+		8E929EA254E757754E990D8A /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1F7407C4ADB16C151BCF8E /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		038C071143A81B2556464920 /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
 		072C52732FCCE45A00FEEACD /* UFC Predict Fights.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UFC Predict Fights.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		072C52762FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UFC_Predict_FightsApp.swift; sourceTree = "<group>"; };
 		072C52782FCCE45A00FEEACD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -97,9 +104,18 @@
 		0797F6092FDA7E4B00B52A0C /* SegmentedBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBar.swift; sourceTree = "<group>"; };
 		0797F60C2FDA812900B52A0C /* PerformanceChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceChart.swift; sourceTree = "<group>"; };
 		0797F60E2FDB3EF400B52A0C /* MarkdownFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownFile.swift; sourceTree = "<group>"; };
-		0797F6102FDB3F1800B52A0C /* prediction_factors_guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = prediction_factors_guide.md; sourceTree = "<group>"; };
-		6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
-		C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0797F6122FDF608C00B52A0C /* EloRankingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EloRankingsViewModel.swift; sourceTree = "<group>"; };
+		0797F6142FDF60CF00B52A0C /* EloRankingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EloRankingsView.swift; sourceTree = "<group>"; };
+		0797F6162FDF63B200B52A0C /* CachedEloRanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEloRanking.swift; sourceTree = "<group>"; };
+		0797F61A2FE0EF8200B52A0C /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0797F6212FE0F13500B52A0C /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
+		0797F6262FE0F15900B52A0C /* SessionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPolicy.swift; sourceTree = "<group>"; };
+		0797F6292FE0F18000B52A0C /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		0797F62C2FE0F19A00B52A0C /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		0797F62E2FE0F1BA00B52A0C /* ProtectedDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedDestination.swift; sourceTree = "<group>"; };
+		2D178E230F67CF0AA65822E7 /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
+		DE1F7407C4ADB16C151BCF8E /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F23BFBA94236F790BCA0F56D /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9F88201E8DE5CF18416EBED /* Pods_UFC_Predict_Fights.framework in Frameworks */,
+				8E929EA254E757754E990D8A /* Pods_UFC_Predict_Fights.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +136,7 @@
 				072C52752FCCE45A00FEEACD /* UFC Predict Fights */,
 				072C52742FCCE45A00FEEACD /* Products */,
 				36763802F7D1F014A868BFD9 /* Pods */,
-				4A1DDCC31EBC86CC15CEF84C /* Frameworks */,
+				6BC970B76256C82C49BC1FBD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,7 +151,7 @@
 		072C52752FCCE45A00FEEACD /* UFC Predict Fights */ = {
 			isa = PBXGroup;
 			children = (
-				0797F6102FDB3F1800B52A0C /* prediction_factors_guide.md */,
+				0797F61A2FE0EF8200B52A0C /* GoogleService-Info.plist */,
 				07841B0F2FCEC20A005EA7FD /* UFC-Predict-Fights-Info.plist */,
 				07841AF62FCD8AAB005EA7FD /* DesingSystem */,
 				07841AEB2FCD827E005EA7FD /* Constant */,
@@ -210,6 +226,7 @@
 		07841AF62FCD8AAB005EA7FD /* DesingSystem */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6232FE0F13500B52A0C /* Auth */,
 				07841B3F2FD0257B005EA7FD /* Theme */,
 				07841B312FCFA785005EA7FD /* Coordinator */,
 				07841B072FCEBA74005EA7FD /* Managers */,
@@ -408,6 +425,7 @@
 		07841B522FD2B330005EA7FD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6122FDF608C00B52A0C /* EloRankingsViewModel.swift */,
 				07841B532FD2B341005EA7FD /* RankingsViewModel.swift */,
 			);
 			path = Model;
@@ -416,6 +434,7 @@
 		07841B552FD2B35B005EA7FD /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6142FDF60CF00B52A0C /* EloRankingsView.swift */,
 				07841B562FD2B36A005EA7FD /* RankingsView.swift */,
 			);
 			path = View;
@@ -424,25 +443,70 @@
 		07841B582FD2C0E1005EA7FD /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6162FDF63B200B52A0C /* CachedEloRanking.swift */,
 				07841B592FD2C109005EA7FD /* CachedRanking.swift */,
 				07841B5B2FD2C21D005EA7FD /* RankingRepository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
 		};
+		0797F6222FE0F13500B52A0C /* State */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6212FE0F13500B52A0C /* AuthState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		0797F6232FE0F13500B52A0C /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				0797F62B2FE0F19500B52A0C /* ViewModel */,
+				0797F6282FE0F17A00B52A0C /* Service */,
+				0797F6252FE0F15200B52A0C /* Policy */,
+				0797F6222FE0F13500B52A0C /* State */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		0797F6252FE0F15200B52A0C /* Policy */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6262FE0F15900B52A0C /* SessionPolicy.swift */,
+			);
+			path = Policy;
+			sourceTree = "<group>";
+		};
+		0797F6282FE0F17A00B52A0C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6292FE0F18000B52A0C /* AuthService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		0797F62B2FE0F19500B52A0C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0797F62E2FE0F1BA00B52A0C /* ProtectedDestination.swift */,
+				0797F62C2FE0F19A00B52A0C /* AuthViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		36763802F7D1F014A868BFD9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				038C071143A81B2556464920 /* Pods-UFC Predict Fights.debug.xcconfig */,
-				6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */,
+				F23BFBA94236F790BCA0F56D /* Pods-UFC Predict Fights.debug.xcconfig */,
+				2D178E230F67CF0AA65822E7 /* Pods-UFC Predict Fights.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		4A1DDCC31EBC86CC15CEF84C /* Frameworks */ = {
+		6BC970B76256C82C49BC1FBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C43D6FB578300A7C015F5003 /* Pods_UFC_Predict_Fights.framework */,
+				DE1F7407C4ADB16C151BCF8E /* Pods_UFC_Predict_Fights.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -454,11 +518,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 072C52812FCCE45A00FEEACD /* Build configuration list for PBXNativeTarget "UFC Predict Fights" */;
 			buildPhases = (
-				E1EB5DF2CBC74155905564AB /* [CP] Check Pods Manifest.lock */,
+				C717005F50718AE3CED1CC31 /* [CP] Check Pods Manifest.lock */,
 				072C526F2FCCE45900FEEACD /* Sources */,
 				072C52702FCCE45900FEEACD /* Frameworks */,
 				072C52712FCCE45900FEEACD /* Resources */,
-				7BFA1CFCB8B041FF61DB4FAF /* [CP] Embed Pods Frameworks */,
+				3D63C746BAA8BB17A7F5A9BD /* [CP] Embed Pods Frameworks */,
+				55B6FFF7DD5A67A88996DD8A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -508,7 +573,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				072C527E2FCCE45A00FEEACD /* Preview Assets.xcassets in Resources */,
-				0797F6112FDB3F1800B52A0C /* prediction_factors_guide.md in Resources */,
+				0797F61B2FE0EF8200B52A0C /* GoogleService-Info.plist in Resources */,
 				072C527B2FCCE45A00FEEACD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,7 +581,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7BFA1CFCB8B041FF61DB4FAF /* [CP] Embed Pods Frameworks */ = {
+		3D63C746BAA8BB17A7F5A9BD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -524,16 +589,41 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E1EB5DF2CBC74155905564AB /* [CP] Check Pods Manifest.lock */ = {
+		55B6FFF7DD5A67A88996DD8A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C717005F50718AE3CED1CC31 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -567,12 +657,14 @@
 				07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */,
 				07841B332FCFA796005EA7FD /* AppCoordinator.swift in Sources */,
 				07841B1D2FCEE41F005EA7FD /* EventListView.swift in Sources */,
+				0797F6172FDF63B300B52A0C /* CachedEloRanking.swift in Sources */,
 				07841B262FCEEA83005EA7FD /* EventRepository.swift in Sources */,
 				072C52792FCCE45A00FEEACD /* ContentView.swift in Sources */,
 				07841B242FCEE9D0005EA7FD /* CachedEvent.swift in Sources */,
 				07841AF12FCD88B0005EA7FD /* FighterRow.swift in Sources */,
 				07841B002FCEB5BB005EA7FD /* CachedFighter.swift in Sources */,
 				07841AF52FCD8A88005EA7FD /* FighterDetailView.swift in Sources */,
+				0797F62A2FE0F18400B52A0C /* AuthService.swift in Sources */,
 				07841B302FCEFD9E005EA7FD /* PredictionView.swift in Sources */,
 				07841B3E2FD0231D005EA7FD /* PredictionHistoryView.swift in Sources */,
 				07841B0A2FCEBA8B005EA7FD /* SyncManager.swift in Sources */,
@@ -589,13 +681,19 @@
 				07841AED2FCD8297005EA7FD /* Config.swift in Sources */,
 				07841B5A2FD2C109005EA7FD /* CachedRanking.swift in Sources */,
 				0797F60D2FDA813500B52A0C /* PerformanceChart.swift in Sources */,
+				0797F6242FE0F13500B52A0C /* AuthState.swift in Sources */,
 				07841B0C2FCEBBBE005EA7FD /* FighterRepository.swift in Sources */,
 				07841B1A2FCEE3C5005EA7FD /* EventListViewModel.swift in Sources */,
+				0797F62F2FE0F1BA00B52A0C /* ProtectedDestination.swift in Sources */,
 				07841B492FD02600005EA7FD /* SettingsSheet.swift in Sources */,
+				0797F6132FDF609700B52A0C /* EloRankingsViewModel.swift in Sources */,
 				07841B5C2FD2C21D005EA7FD /* RankingRepository.swift in Sources */,
+				0797F6272FE0F16100B52A0C /* SessionPolicy.swift in Sources */,
 				07841AF92FCD8AF1005EA7FD /* DivisionPill.swift in Sources */,
 				0797F60A2FDA7E6800B52A0C /* SegmentedBar.swift in Sources */,
+				0797F6152FDF60D500B52A0C /* EloRankingsView.swift in Sources */,
 				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
+				0797F62D2FE0F19E00B52A0C /* AuthViewModel.swift in Sources */,
 				07841B032FCEB75F005EA7FD /* SwiftDataContainer.swift in Sources */,
 				07841B452FD025BB005EA7FD /* BSColor.swift in Sources */,
 				07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */,
@@ -732,7 +830,7 @@
 		};
 		072C52822FCCE45A00FEEACD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 038C071143A81B2556464920 /* Pods-UFC Predict Fights.debug.xcconfig */;
+			baseConfigurationReference = F23BFBA94236F790BCA0F56D /* Pods-UFC Predict Fights.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -769,7 +867,7 @@
 		};
 		072C52832FCCE45A00FEEACD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B81D801E7AE6CFA48A2AF1C /* Pods-UFC Predict Fights.release.xcconfig */;
+			baseConfigurationReference = 2D178E230F67CF0AA65822E7 /* Pods-UFC Predict Fights.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

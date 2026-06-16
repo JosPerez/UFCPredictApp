@@ -10,6 +10,12 @@ import BlackSpartan
 
 struct EventNavigation: Hashable {
     let eventId: Int
+    let fightId: Int?
+    
+    init(eventId: Int, fightId: Int? = nil) {
+        self.eventId = eventId
+        self.fightId = fightId
+    }
 }
 
 @MainActor
@@ -61,7 +67,7 @@ struct FighterDetailView: View {
         .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .navigationDestination(for: EventNavigation.self) { nav in
-            EventDetailView(eventId: nav.eventId)
+            EventDetailView(eventId: nav.eventId, preselectedFightId: nav.fightId)
         }
     }
 
@@ -629,7 +635,9 @@ struct FighterDetailView: View {
                 }
                 .frame(height: 22)
             }
-
+            
+            Spacer()
+            
             // Grappling stats
             HStack(spacing: 8) {
                 if let td = style.grappling.tdAccuracy {
@@ -714,7 +722,7 @@ struct FighterDetailView: View {
         ScrollView {
             VStack(spacing: 8) {
                 ForEach(p.recentFights) { fight in
-                    NavigationLink(value: EventNavigation(eventId: fight.eventId)) {
+                    NavigationLink(value: EventNavigation(eventId: fight.eventId, fightId: fight.fightId)) {
                         fightHistoryCard(fight)
                     }
                     .buttonStyle(.plain)

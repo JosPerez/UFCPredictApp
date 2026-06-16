@@ -8,15 +8,19 @@
 import SwiftUI
 import SwiftData
 import BlackSpartan
+import FirebaseCore
 
 @main
 struct UFC_Predict_FightsApp: App {
 
     let modelContainer: ModelContainer?
     let containerError: String?
+    @State private var authViewModel: AuthViewModel
 
     init() {
         BSNetworkManager.shared.start()
+        FirebaseApp.configure()
+        authViewModel = AuthViewModel()
         do {
             modelContainer = try SwiftDataContainer.create()
             containerError = nil
@@ -31,6 +35,7 @@ struct UFC_Predict_FightsApp: App {
         WindowGroup {
             if let container = modelContainer {
                 ContentView()
+                    .environment(authViewModel)
                     .modelContainer(container)
             } else {
                 DatabaseErrorView(message: containerError ?? "Unknown error")

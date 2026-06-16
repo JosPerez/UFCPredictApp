@@ -53,3 +53,25 @@ public struct BSRankedFighter: Codable, Identifiable {
         case recordDraw = "record_draw"
     }
 }
+
+public struct BSEloRanking: Codable, Identifiable {
+    public let rank: Int
+    public let fighterId: Int
+    public let fighterName: String
+    public let weightClass: String?
+    public let elo: Double
+    public let imgThumb: String?
+    public let record: String?
+
+    public var id: Int { fighterId }
+
+    enum CodingKeys: String, CodingKey {
+        case rank
+        case fighterId   = "fighter_id"
+        case fighterName = "fighter_name"
+        case weightClass = "weight_class"
+        case elo
+        case imgThumb    = "img_thumb"
+        case record
+    }
+}

@@ -11,12 +11,14 @@ import BlackSpartan
 @MainActor
 struct EventDetailView: View {
     let eventId: Int
+    var preselectedFightId: Int? = nil
     @State private var viewModel: EventDetailViewModel
     @State private var selectedFightIndex: Int = 0
     @Environment(AppCoordinator.self) private var coordinator
 
-    init(eventId: Int) {
+    init(eventId: Int, preselectedFightId: Int? = nil) {
         self.eventId = eventId
+        self.preselectedFightId = preselectedFightId
         _viewModel = State(initialValue: EventDetailViewModel(eventId: eventId))
     }
 
@@ -197,6 +199,12 @@ struct EventDetailView: View {
             }
         }
         .padding(.bottom, 16)
+        .onAppear {
+            if let fightId = preselectedFightId,
+               let index = fights.firstIndex(where: { $0.fightId == fightId }) {
+                selectedFightIndex = index
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════

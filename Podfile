@@ -5,5 +5,9 @@ target 'UFC Predict Fights' do
 
   pod 'BlackSpartan',
       :git => 'https://github.com/JosPerez/BlackSpartan.git',
-      :tag => '1.5.1'
+      :tag => '1.6.0'
+
+  pod 'FirebaseAuth'
+  pod 'GoogleSignIn'
+  pod 'FirebaseCore'
 end

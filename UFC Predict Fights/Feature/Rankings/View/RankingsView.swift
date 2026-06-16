@@ -13,25 +13,79 @@ struct RankingsView: View {
     let repository: RankingRepository
     @State private var viewModel: RankingsViewModel?
     @State private var path = NavigationPath()
+    @State private var rankingType: RankingType = .ufc
 
+    enum RankingType: String, CaseIterable {
+        case ufc = "UFC"
+        case elo = "Elo"
+    }
+    
     var body: some View {
         NavigationStack(path: $path) {
-            ZStack(alignment: .top) {
+            ZStack {
                 BSColors.background.ignoresSafeArea()
-
-                if let viewModel {
-                    content(viewModel)
-                } else {
-                    ProgressView().tint(BSColors.accent)
+                VStack(spacing: 0) {
+                    // Title + segment
+                    HStack {
+                        Text("Rankings")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(BSColors.textPrimary)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    
+                    // Toggle
+                    HStack(spacing: 0) {
+                        ForEach(RankingType.allCases, id: \.self) { type in
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    rankingType = type
+                                }
+                            } label: {
+                                Text(type.rawValue)
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(
+                                        rankingType == type
+                                        ? BSColors.textPrimary
+                                        : BSColors.textTertiary
+                                    )
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        rankingType == type
+                                        ? BSColors.accent
+                                        : Color.clear
+                                    )
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                    .padding(3)
+                    .background(BSColors.surface)
+                    .cornerRadius(10)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    
+                    // Content
+                    switch rankingType {
+                    case .ufc:
+                        // Tu contenido actual de rankings UFC
+                        if let viewModel {
+                            content(viewModel)
+                        }
+                    case .elo:
+                        EloRankingsView()
+                    }
+                }
+                .navigationDestination(for: Int.self) { fighterId in
+                    FighterDetailView(fighterId: fighterId)
                 }
             }
-            .navigationDestination(for: Int.self) { fighterId in
-                FighterDetailView(fighterId: fighterId)
-            }
-        }
-        .onAppear {
-            if viewModel == nil {
-                viewModel = RankingsViewModel(repository: repository)
+            .onAppear {
+                if viewModel == nil {
+                    viewModel = RankingsViewModel(repository: repository)
+                }
             }
         }
     }
