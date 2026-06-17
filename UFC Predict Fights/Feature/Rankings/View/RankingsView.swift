@@ -116,12 +116,7 @@ struct RankingsView: View {
     @ViewBuilder
     private func content(_ vm: RankingsViewModel) -> some View {
         VStack(spacing: 0) {
-            // Title
             HStack {
-                Text("Rankings")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(BSColors.textPrimary)
-                Spacer()
                 if vm.isSyncing {
                     ProgressView()
                         .tint(BSColors.accent)

@@ -108,3 +108,40 @@ struct FightScoreDTO: Codable, Identifiable {
     var isVoid: Bool { resultStatus == "void" }
     var isScored: Bool { resultStatus == "scored" }
 }
+
+// MARK: - Event Leaderboard
+
+struct EventLeaderboardRowDTO: Codable, Identifiable {
+    let rank: Int?
+    let nickname: String
+    let totalPoints: Int
+    let correctWinners: Int
+    let perfectPicks: Int
+    let isCurrentUser: Bool
+
+    var id: String { "\(nickname)-\(rank ?? 0)" }
+}
+
+// MARK: - Monthly Leaderboard
+
+struct MonthlyLeaderboardRowDTO: Codable, Identifiable {
+    let rank: Int?
+    let nickname: String
+    let totalPoints: Int
+    let eventsPlayed: Int
+    let perfectPicks: Int
+    let isCurrentUser: Bool
+
+    var id: String { "\(nickname)-\(rank ?? 0)" }
+}
+
+// MARK: - User Event Result
+
+struct UserEventResultDTO: Codable {
+    let eventId: Int
+    let name: String
+    let totalPoints: Int
+    let rank: Int?
+    let totalParticipants: Int
+    let fightScores: [FightScoreDTO]
+}

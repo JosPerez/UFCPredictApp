@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum GameNavigation: Hashable {
+    case eventLeaderboard(Int, String)
+    case monthlyLeaderboard
+    case postEventResults(Int)
+}
+
 struct GameHomeView: View {
     @Environment(AuthViewModel.self) private var authVM
     @State private var viewModel = GameViewModel()
@@ -31,6 +37,16 @@ struct GameHomeView: View {
             }
             .navigationDestination(for: Int.self) { eventId in
                 EventPicksView(eventId: eventId)
+            }
+            .navigationDestination(for: GameNavigation.self) { nav in
+                switch nav {
+                case .eventLeaderboard(let id, let name):
+                    EventLeaderboardView(eventId: id, eventName: name)
+                case .monthlyLeaderboard:
+                    MonthlyLeaderboardView()
+                case .postEventResults(let id):
+                    PostEventResultsView(eventId: id)
+                }
             }
         }
         .onAppear {
@@ -69,6 +85,32 @@ struct GameHomeView: View {
                 if let scored = viewModel.recentScoredEvent {
                     recentResultCard(scored)
                 }
+                
+                // Monthly leaderboard link
+                NavigationLink(value: GameNavigation.monthlyLeaderboard) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(BSColors.accent)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Monthly leaderboard")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(BSColors.textPrimary)
+                            Text(MonthlyLeaderboardView.currentPeriodKey())
+                                .font(.system(size: 11))
+                                .foregroundColor(BSColors.textTertiary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11))
+                            .foregroundColor(BSColors.textHint)
+                    }
+                    .padding(14)
+                    .background(BSColors.surface)
+                    .cornerRadius(12)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 16)
 
                 // All events
                 if !viewModel.events.isEmpty {
@@ -109,9 +151,19 @@ struct GameHomeView: View {
                         .foregroundColor(BSColors.textSecondary)
                 }
 
-                Text(formatDate(event.eventDate))
+                Text(event.eventDate.formatEventDate())
                     .font(.system(size: 12))
                     .foregroundColor(BSColors.textTertiary)
+                
+                if event.isOpen {
+                    HStack(spacing: 4) {
+                        Image(systemName: "clock")
+                            .font(.system(size: 10))
+                        Text(countdownText(event.lockAt))
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundColor(BSColors.titleGold)
+                }
 
                 HStack(spacing: 12) {
                     // Fights
@@ -170,7 +222,7 @@ struct GameHomeView: View {
 
     @ViewBuilder
     private func recentResultCard(_ event: GameEventDTO) -> some View {
-        NavigationLink(value: event.eventId) {
+        NavigationLink(value: GameNavigation.postEventResults(event.eventId)) {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Recent results")
@@ -217,7 +269,7 @@ struct GameHomeView: View {
                 .textCase(.uppercase)
                 .kerning(1)
                 .padding(.horizontal, 16)
-
+            
             ForEach(viewModel.events) { event in
                 NavigationLink(value: event.eventId) {
                     gameEventCard(event)
@@ -227,42 +279,40 @@ struct GameHomeView: View {
             }
         }
     }
-
+    
     // MARK: - Event Card
-
+    
     @ViewBuilder
     private func gameEventCard(_ event: GameEventDTO) -> some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Text(event.name)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(BSColors.textPrimary)
-                        .lineLimit(1)
-                    gameStatusBadge(event.status)
-                }
-
-                Text(formatDate(event.eventDate))
+                Text(event.name)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(BSColors.textPrimary)
+                    .multilineTextAlignment(.leading)
+                
+                Text(event.eventDate.formatEventDate())
                     .font(.system(size: 11))
                     .foregroundColor(BSColors.textTertiary)
             }
-
             Spacer()
-
-            // Progress or points
-            if event.isScored, let points = event.userEventPoints {
-                Text("\(points) pts")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(BSColors.winGreen)
-            } else {
-                Text(event.picksProgress)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(event.userCompletedPicks == event.fightCount
-                        ? BSColors.winGreen
-                        : BSColors.textTertiary
-                    )
+            VStack(spacing: 8) {
+                gameStatusBadge(event.status)
+                // Progress or points
+                if event.isScored, let points = event.userEventPoints {
+                    Text("\(points) pts")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(BSColors.winGreen)
+                } else {
+                    Text(event.picksProgress)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(event.userCompletedPicks == event.fightCount
+                                         ? BSColors.winGreen
+                                         : BSColors.textTertiary
+                        )
+                }
             }
-
+            
             Image(systemName: "chevron.right")
                 .font(.system(size: 11))
                 .foregroundColor(BSColors.textHint)
@@ -271,9 +321,9 @@ struct GameHomeView: View {
         .background(BSColors.surface)
         .cornerRadius(10)
     }
-
+    
     // MARK: - Locked View
-
+    
     @ViewBuilder
     private var lockedGameView: some View {
         VStack(spacing: 16) {
@@ -338,13 +388,20 @@ struct GameHomeView: View {
         default:             return "Open"
         }
     }
+    
+    private func countdownText(_ lockAt: Date) -> String {
+        let remaining = lockAt.timeIntervalSince(Date())
+        if remaining <= 0 { return "Locked" }
 
-    private func formatDate(_ dateStr: String) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        guard let date = formatter.date(from: dateStr) else { return dateStr }
-        let output = DateFormatter()
-        output.dateFormat = "MMMM d, yyyy"
-        return output.string(from: date)
+        let hours = Int(remaining) / 3600
+        let minutes = (Int(remaining) % 3600) / 60
+
+        if hours > 24 {
+            return "\(hours / 24)d \(hours % 24)h left"
+        } else if hours > 0 {
+            return "\(hours)h \(minutes)m left"
+        } else {
+            return "\(minutes)m left"
+        }
     }
 }

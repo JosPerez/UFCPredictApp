@@ -57,9 +57,10 @@ final class GameAPIClient {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
         if let body {
-            req.httpBody = try JSONEncoder().encode(body)
+            let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
+            req.httpBody = try encoder.encode(body)
         }
-
         let (data, response) = try await URLSession.shared.data(for: req)
 
         guard let http = response as? HTTPURLResponse else {
@@ -118,6 +119,27 @@ final class GameAPIClient {
         let data = try await request("/game/fights/\(fightId)/pick", method: "PUT", body: pick)
         return try JSONDecoder.apiDecoder.decode(FightPickDTO.self, from: data)
     }
+    
+    // MARK: - Leaderboards
+
+        func getEventLeaderboard(eventId: Int) async throws -> [EventLeaderboardRowDTO] {
+            let data = try await request("/game/events/\(eventId)/leaderboard")
+            return try JSONDecoder.apiDecoder.decode([EventLeaderboardRowDTO].self, from: data)
+        }
+
+        func getMonthlyLeaderboard(periodKey: String? = nil) async throws -> [MonthlyLeaderboardRowDTO] {
+            var endpoint = "/game/leaderboards/monthly"
+            if let key = periodKey {
+                endpoint += "?period_key=\(key)"
+            }
+            let data = try await request(endpoint)
+            return try JSONDecoder.apiDecoder.decode([MonthlyLeaderboardRowDTO].self, from: data)
+        }
+
+        func getMyEventResults(eventId: Int) async throws -> UserEventResultDTO {
+            let data = try await request("/game/events/\(eventId)/results/me")
+            return try JSONDecoder.apiDecoder.decode(UserEventResultDTO.self, from: data)
+        }
 }
 
 // MARK: - JSON Decoder
