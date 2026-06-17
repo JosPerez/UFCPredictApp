@@ -10,12 +10,16 @@ import BlackSpartan
 
 @MainActor
 struct FighterListView: View {
-
+    // Variables
     let repository: FighterRepository
+    // Enviroment
+    @Environment(ThemeManager.self) private var themeManager
+    @Environment(AuthViewModel.self) private var authVM
+    // State
     @State private var viewModel: FighterListViewModel?
     @State private var path = NavigationPath()
-    @State private var showSettings = false
-    @Environment(ThemeManager.self) private var themeManager
+    @State private var showProfile = false
+    @State private var showLogin = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -30,6 +34,19 @@ struct FighterListView: View {
             }
             .navigationDestination(for: Int.self) { fighterId in
                 FighterDetailView(fighterId: fighterId)
+            }
+        }
+        .sheet(isPresented: $showLogin) {
+            LoginView()
+        }
+        .onChange(of: authVM.state) { _, newState in
+            if newState == .authenticated {
+                showLogin = false
+                if let dest = authVM.completePendingNavigation() {
+                    if case .fighterDetail(let id) = dest {
+                        path.append(id)
+                    }
+                }
             }
         }
         .onAppear {
@@ -48,23 +65,19 @@ struct FighterListView: View {
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)
                 Spacer()
-                Button {
-                    showSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 18))
-                        .foregroundColor(BSColors.textTertiary)
-                }
-                // Sync indicator
-                if vm.isSyncing {
-                    HStack(spacing: 4) {
-                        ProgressView()
-                            .tint(BSColors.accent)
-                            .scaleEffect(0.7)
-                        if let progress = vm.syncProgress {
-                            Text(progress)
-                                .font(.system(size: 9))
-                                .foregroundColor(BSColors.textTertiary)
+                VStack(spacing: 8) {
+                    ProfileButton(showProfile: $showProfile)
+                    // Sync indicator
+                    if vm.isSyncing {
+                        HStack(spacing: 4) {
+                            ProgressView()
+                                .tint(BSColors.accent)
+                                .scaleEffect(0.7)
+                            if let progress = vm.syncProgress {
+                                Text(progress)
+                                    .font(.system(size: 9))
+                                    .foregroundColor(BSColors.textTertiary)
+                            }
                         }
                     }
                 }
@@ -148,11 +161,19 @@ struct FighterListView: View {
             } else {
                 List {
                     ForEach(Array(vm.fighters.enumerated()), id: \.element.fighterId) { index, fighter in
-                        NavigationLink(value: fighter.fighterId) {
+                        Button {
+                            if authVM.state == .authenticated {
+                                path.append(fighter.fighterId)
+                            } else {
+                                authVM.pendingDestination = .fighterDetail(fighter.fighterId)
+                                showLogin = true
+                            }
+                        } label: {
                             FighterRow(fighter: fighter)
                                 .transition(.opacity.combined(with: .move(edge: .bottom)))
                                 .animation(.easeOut(duration: 0.3).delay(Double(index % 20) * 0.03), value: vm.fighters.count)
                         }
+                        .buttonStyle(.plain)
                         .listRowBackground(BSColors.background)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(
@@ -177,8 +198,8 @@ struct FighterListView: View {
                     await vm.refresh()
                 }
                 .tint(BSColors.accent)
-                .sheet(isPresented: $showSettings) {
-                    SettingsSheet()
+                .sheet(isPresented: $showProfile) {
+                    ProfileSheetView()
                 }
             }
         }

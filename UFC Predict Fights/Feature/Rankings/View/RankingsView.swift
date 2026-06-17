@@ -10,10 +10,16 @@ import BlackSpartan
 
 @MainActor
 struct RankingsView: View {
+    // Variables
     let repository: RankingRepository
+    // Environment
+    @Environment(AuthViewModel.self) private var authVM
+    // State
+    @State private var showLogin = false
     @State private var viewModel: RankingsViewModel?
     @State private var path = NavigationPath()
     @State private var rankingType: RankingType = .ufc
+    @State private var showProfile = false
 
     enum RankingType: String, CaseIterable {
         case ufc = "UFC"
@@ -31,6 +37,7 @@ struct RankingsView: View {
                             .font(.system(size: 28, weight: .bold))
                             .foregroundColor(BSColors.textPrimary)
                         Spacer()
+                        ProfileButton(showProfile: $showProfile)
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
@@ -80,6 +87,22 @@ struct RankingsView: View {
                 }
                 .navigationDestination(for: Int.self) { fighterId in
                     FighterDetailView(fighterId: fighterId)
+                }
+            }
+            .sheet(isPresented: $showLogin) {
+                LoginView()
+            }
+            .sheet(isPresented: $showProfile) {
+                ProfileSheetView()
+            }
+            .onChange(of: authVM.state) { _, newState in
+                if newState == .authenticated {
+                    showLogin = false
+                    if let dest = authVM.completePendingNavigation() {
+                        if case .fighterDetail(let id) = dest {
+                            path.append(id)
+                        }
+                    }
                 }
             }
             .onAppear {
@@ -175,15 +198,21 @@ struct RankingsView: View {
                 .kerning(1)
 
             if let champion = division.champion {
-                NavigationLink(value: champion.fighterId) {
+                Button {
+                    navigateToFighter(champion.fighterId)
+                } label: {
                     championCard(champion)
                 }
+                .buttonStyle(.plain)
             }
-
+            
             ForEach(division.ranked, id: \.fighterId) { fighter in
-                NavigationLink(value: fighter.fighterId) {
+                Button {
+                    navigateToFighter(fighter.fighterId)
+                } label: {
                     rankedRow(fighter)
                 }
+                .buttonStyle(.plain)
             }
         }
     }
@@ -270,5 +299,15 @@ struct RankingsView: View {
             "Women's Featherweight": "W·FW",
         ]
         return map[weightClass] ?? weightClass
+    }
+    
+    // Helper
+    private func navigateToFighter(_ id: Int) {
+        if authVM.state == .authenticated {
+            path.append(id)
+        } else {
+            authVM.pendingDestination = .fighterDetail(id)
+            showLogin = true
+        }
     }
 }

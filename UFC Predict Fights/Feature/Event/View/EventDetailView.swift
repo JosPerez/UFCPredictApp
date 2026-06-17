@@ -52,8 +52,7 @@ struct EventDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(BSColors.background, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackground(.clear, for: .navigationBar)
     }
 
     // ═══════════════════════════════════════════════
@@ -106,7 +105,7 @@ struct EventDetailView: View {
                 Image(systemName: "calendar")
                     .font(.system(size: 12))
                     .foregroundColor(BSColors.textTertiary)
-                Text(formatEventDate(event.eventDate))
+                Text(event.eventDate.formatEventDate())
                     .font(.system(size: 13))
                     .foregroundColor(BSColors.textTertiary)
             }
@@ -973,15 +972,6 @@ struct EventDetailView: View {
         let m = secs / 60
         let s = secs % 60
         return "\(m):\(String(format: "%02d", s))"
-    }
-
-    private func formatEventDate(_ dateStr: String) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        guard let date = formatter.date(from: dateStr) else { return dateStr }
-        let output = DateFormatter()
-        output.dateFormat = "MMMM d, yyyy"
-        return output.string(from: date)
     }
 
     private func daysUntil(_ dateStr: String) -> Int {

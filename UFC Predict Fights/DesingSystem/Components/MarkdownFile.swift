@@ -110,8 +110,7 @@ struct FactorsGuideSheet: View {
                     }
                 }
             }
-            .toolbarBackground(BSColors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.clear, for: .navigationBar)
         }
     }
 

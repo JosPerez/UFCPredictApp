@@ -14,4 +14,6 @@ enum Config {
     #else
     static let baseURL = "https://ufc-predictor-production-a513.up.railway.app"
     #endif
+    
+    static let apiKey = "ufc-predictor-secret-key-2024"
 }

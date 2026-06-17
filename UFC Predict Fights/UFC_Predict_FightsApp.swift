@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 import BlackSpartan
 import FirebaseCore
+import GoogleSignIn
+
 
 @main
 struct UFC_Predict_FightsApp: App {
@@ -36,6 +38,9 @@ struct UFC_Predict_FightsApp: App {
             if let container = modelContainer {
                 ContentView()
                     .environment(authViewModel)
+                    .onOpenURL { url in
+                        GIDSignIn.sharedInstance.handle(url)
+                    }
                     .modelContainer(container)
             } else {
                 DatabaseErrorView(message: containerError ?? "Unknown error")

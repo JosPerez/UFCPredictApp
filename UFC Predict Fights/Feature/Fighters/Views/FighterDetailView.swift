@@ -198,7 +198,7 @@ struct FighterDetailView: View {
                 winMethodsCard(p)
 
                 // Fight style
-                if let style = p.fightingStyleData {
+                if let _ = p.fightingStyleData {
                     performanceSection(p)
                 }
 
@@ -756,7 +756,7 @@ struct FighterDetailView: View {
                         .foregroundColor(BSColors.accentBlue)
                     Text("·")
                         .foregroundColor(BSColors.textHint)
-                    Text(fight.eventDate)
+                    Text(fight.eventDate.formatEventDate())
                         .font(.system(size: 11))
                         .foregroundColor(BSColors.textTertiary)
                 }

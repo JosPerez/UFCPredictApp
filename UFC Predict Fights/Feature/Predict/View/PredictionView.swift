@@ -15,6 +15,8 @@ struct PredictionView: View {
     @State private var showPickerB = false
     @State private var animateBar = false
     @State private var showFactorsGuide = false
+    @State private var showProfile = false
+
 
     @Environment(ThemeManager.self) private var themeManager
 
@@ -30,8 +32,10 @@ struct PredictionView: View {
                         HStack {
                             Text("Predict")
                                 .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(BSColors.textPrimary)
+                                .foregroundColor(BSColors.textPrimary)                            
                             Spacer()
+                            ProfileButton(showProfile: $showProfile)
+                            // History
                             NavigationLink {
                                 PredictionHistoryView()
                             } label: {
@@ -76,6 +80,9 @@ struct PredictionView: View {
         }
         .sheet(isPresented: $showFactorsGuide) {
             FactorsGuideSheet()
+        }
+        .sheet(isPresented: $showProfile) {
+            ProfileSheetView()
         }
     }
 

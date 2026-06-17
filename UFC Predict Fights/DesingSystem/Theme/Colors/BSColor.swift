@@ -56,6 +56,8 @@ struct BSColors {
     static let accentBlue  = Color(hex: "3B82F6")
     static let winGreen    = Color(hex: "34C759")
     static let titleGold   = Color(hex: "FFD700")
+    static let lossRed     = Color(hex: "FF4444")
+
 
     // MARK: - Borders
     static let border = Color(

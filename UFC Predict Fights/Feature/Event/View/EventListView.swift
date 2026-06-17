@@ -10,11 +10,17 @@ import BlackSpartan
 
 @MainActor
 struct EventListView: View {
+    // Variables
     let repository: EventRepository
+    // Environment
+    @Environment(ThemeManager.self) private var themeManager
+    @Environment(AuthViewModel.self) private var authVM
+    // State
+    @State private var showLogin = false
     @State private var viewModel: EventListViewModel?
     @State private var path = NavigationPath()
-    @State private var showSettings = false
-    @Environment(ThemeManager.self) private var themeManager
+    @State private var showProfile = false
+    
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -29,6 +35,19 @@ struct EventListView: View {
             }
             .navigationDestination(for: Int.self) { eventId in
                 EventDetailView(eventId: eventId)
+            }
+        }
+        .sheet(isPresented: $showLogin) {
+            LoginView()
+        }
+        .onChange(of: authVM.state) { _, newState in
+            if newState == .authenticated {
+                showLogin = false
+                if let dest = authVM.completePendingNavigation() {
+                    if case .eventDetail(let id) = dest {
+                        path.append(id)
+                    }
+                }
             }
         }
         .onAppear {
@@ -47,24 +66,27 @@ struct EventListView: View {
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)
                 Spacer()
-                // Sort toggle
-                if vm.selectedFilter != .upcoming {
-                    Button {
-                        vm.toggleSortOrder()
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: vm.sortAscending ? "arrow.up" : "arrow.down")
-                                .font(.system(size: 12, weight: .semibold))
-                            Text(vm.sortAscending ? "Oldest" : "Newest")
-                                .font(.system(size: 11, weight: .medium))
+                VStack(spacing: 8) {
+                    ProfileButton(showProfile: $showProfile)
+                    // Sort toggle
+                    if vm.selectedFilter != .upcoming {
+                        Button {
+                            vm.toggleSortOrder()
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: vm.sortAscending ? "arrow.up" : "arrow.down")
+                                    .font(.system(size: 12, weight: .semibold))
+                                Text(vm.sortAscending ? "Oldest" : "Newest")
+                                    .font(.system(size: 11, weight: .medium))
+                            }
+                            .foregroundColor(BSColors.accent)
                         }
-                        .foregroundColor(BSColors.accent)
                     }
-                }
-                if vm.isSyncing {
-                    ProgressView()
-                        .tint(BSColors.accent)
-                        .scaleEffect(0.7)
+                    if vm.isSyncing {
+                        ProgressView()
+                            .tint(BSColors.accent)
+                            .scaleEffect(0.7)
+                    }
                 }
             }
             .padding(.horizontal, 16)
@@ -97,7 +119,12 @@ struct EventListView: View {
                                 .padding(.bottom, 16)
                                 .padding(.top, 16)
                                 .onTapGesture {
-                                    path.append(featured.eventId)
+                                    if authVM.state == .authenticated {
+                                        path.append(featured.eventId)
+                                    } else {
+                                        authVM.pendingDestination = .eventDetail(featured.eventId)
+                                        showLogin = true
+                                    }
                                 }
                         }
 
@@ -132,10 +159,15 @@ struct EventListView: View {
                         // Event list
                         let startIndex = (vm.selectedFilter == .upcoming) ? 1 : 0
                         let displayEvents = Array(vm.events.dropFirst(startIndex))
-
+                        
                         ForEach(displayEvents, id: \.eventId) { event in
                             Button {
-                                path.append(event.eventId)
+                                if authVM.state == .authenticated {
+                                    path.append(event.eventId)
+                                } else {
+                                    authVM.pendingDestination = .eventDetail(event.eventId)
+                                    showLogin = true
+                                }
                             } label: {
                                 eventCard(event)
                             }
@@ -151,6 +183,9 @@ struct EventListView: View {
                 }
                 .refreshable {
                     await vm.refresh()
+                }
+                .sheet(isPresented: $showProfile) {
+                    ProfileSheetView()
                 }
             }
         }
@@ -272,7 +307,7 @@ struct EventListView: View {
                     .font(.system(size: 13))
                     .foregroundColor(BSColors.textSecondary)
             }
-            Text(formatEventDate(event.eventDate))
+            Text(event.eventDate.formatEventDate())
                 .font(.system(size: 13))
                 .foregroundColor(BSColors.textTertiary)
 
@@ -350,7 +385,7 @@ struct EventListView: View {
                             .foregroundColor(BSColors.textSecondary)
                     }
 
-                    Text(formatEventDate(event.eventDate))
+                    Text(event.eventDate.formatEventDate())
                         .font(.system(size: 11))
                         .foregroundColor(BSColors.textTertiary)
                 }
@@ -422,14 +457,5 @@ struct EventListView: View {
 
     private func isPPV(_ event: CachedEvent) -> Bool {
         event.name.range(of: #"^UFC \d+"#, options: .regularExpression) != nil
-    }
-    
-    private func formatEventDate(_ dateStr: String) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        guard let date = formatter.date(from: dateStr) else { return dateStr }
-        let output = DateFormatter()
-        output.dateFormat = "MMMM d, yyyy"
-        return output.string(from: date)
     }
 }

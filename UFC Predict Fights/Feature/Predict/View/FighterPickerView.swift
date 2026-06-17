@@ -91,8 +91,7 @@ struct FighterPickerView: View {
             }
             .navigationTitle("Select fighter")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(BSColors.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.clear, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }

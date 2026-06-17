@@ -40,7 +40,6 @@
 		07841B3E2FD0231D005EA7FD /* PredictionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B3D2FD0231D005EA7FD /* PredictionHistoryView.swift */; };
 		07841B432FD02598005EA7FD /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B422FD02598005EA7FD /* ThemeManager.swift */; };
 		07841B452FD025BB005EA7FD /* BSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B442FD025BB005EA7FD /* BSColor.swift */; };
-		07841B492FD02600005EA7FD /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B482FD02600005EA7FD /* SettingsSheet.swift */; };
 		07841B542FD2B341005EA7FD /* RankingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B532FD2B341005EA7FD /* RankingsViewModel.swift */; };
 		07841B572FD2B36A005EA7FD /* RankingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B562FD2B36A005EA7FD /* RankingsView.swift */; };
 		07841B5A2FD2C109005EA7FD /* CachedRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841B592FD2C109005EA7FD /* CachedRanking.swift */; };
@@ -57,7 +56,29 @@
 		0797F62A2FE0F18400B52A0C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6292FE0F18000B52A0C /* AuthService.swift */; };
 		0797F62D2FE0F19E00B52A0C /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F62C2FE0F19A00B52A0C /* AuthViewModel.swift */; };
 		0797F62F2FE0F1BA00B52A0C /* ProtectedDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F62E2FE0F1BA00B52A0C /* ProtectedDestination.swift */; };
-		8E929EA254E757754E990D8A /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1F7407C4ADB16C151BCF8E /* Pods_UFC_Predict_Fights.framework */; };
+		0797F6322FE0F85200B52A0C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6312FE0F85200B52A0C /* FirebaseAuth */; };
+		0797F6342FE0F85200B52A0C /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6332FE0F85200B52A0C /* FirebaseCore */; };
+		0797F6372FE0F9D500B52A0C /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6362FE0F9D500B52A0C /* GoogleSignIn */; };
+		0797F6392FE0F9D500B52A0C /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6382FE0F9D500B52A0C /* GoogleSignInSwift */; };
+		0797F63E2FE0FA9E00B52A0C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F63D2FE0FA9C00B52A0C /* LoginView.swift */; };
+		0797F6402FE0FAB400B52A0C /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F63F2FE0FAB300B52A0C /* SignUpView.swift */; };
+		0797F6422FE0FACD00B52A0C /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6412FE0FACC00B52A0C /* ForgotPasswordView.swift */; };
+		0797F6452FE0FAF600B52A0C /* AuthComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6442FE0FAF200B52A0C /* AuthComponents.swift */; };
+		0797F6482FE1001800B52A0C /* AuthGateModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6472FE1000900B52A0C /* AuthGateModifier.swift */; };
+		0797F64D2FE10A5C00B52A0C /* BiometricAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F64C2FE10A5B00B52A0C /* BiometricAuthService.swift */; };
+		0797F64F2FE10B6E00B52A0C /* BiometricUnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F64E2FE10B6E00B52A0C /* BiometricUnlockView.swift */; };
+		0797F6532FE10FCC00B52A0C /* ProfileSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6522FE10FCB00B52A0C /* ProfileSheetView.swift */; };
+		0797F6552FE1150400B52A0C /* ProfileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6542FE114FE00B52A0C /* ProfileButton.swift */; };
+		0797F6572FE19CEE00B52A0C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6562FE19CEE00B52A0C /* FirebaseFirestore */; };
+		0797F65B2FE19E0300B52A0C /* UserProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F65A2FE19E0100B52A0C /* UserProfileService.swift */; };
+		0797F65F2FE1A2B900B52A0C /* ProfileCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F65E2FE1A2B100B52A0C /* ProfileCompletionView.swift */; };
+		0797F6632FE212B200B52A0C /* GameAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6622FE212AD00B52A0C /* GameAPIClient.swift */; };
+		0797F6662FE212DB00B52A0C /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6652FE212D500B52A0C /* GameModels.swift */; };
+		0797F6682FE212F200B52A0C /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6672FE212EE00B52A0C /* GameViewModel.swift */; };
+		0797F66C2FE2131C00B52A0C /* GameHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F66B2FE2131B00B52A0C /* GameHomeView.swift */; };
+		0797F66F2FE2136D00B52A0C /* EventPicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F66E2FE2136B00B52A0C /* EventPicksView.swift */; };
+		0797F6722FE214F300B52A0C /* dateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6712FE214E400B52A0C /* dateFormatters.swift */; };
+		09F2543B1308625F3DAD10DF /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38F0F1ACE4D6C4EA5B5AABC /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,7 +117,6 @@
 		07841B3D2FD0231D005EA7FD /* PredictionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionHistoryView.swift; sourceTree = "<group>"; };
 		07841B422FD02598005EA7FD /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		07841B442FD025BB005EA7FD /* BSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSColor.swift; sourceTree = "<group>"; };
-		07841B482FD02600005EA7FD /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
 		07841B532FD2B341005EA7FD /* RankingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsViewModel.swift; sourceTree = "<group>"; };
 		07841B562FD2B36A005EA7FD /* RankingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingsView.swift; sourceTree = "<group>"; };
 		07841B592FD2C109005EA7FD /* CachedRanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedRanking.swift; sourceTree = "<group>"; };
@@ -113,9 +133,26 @@
 		0797F6292FE0F18000B52A0C /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		0797F62C2FE0F19A00B52A0C /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		0797F62E2FE0F1BA00B52A0C /* ProtectedDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedDestination.swift; sourceTree = "<group>"; };
-		2D178E230F67CF0AA65822E7 /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
-		DE1F7407C4ADB16C151BCF8E /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F23BFBA94236F790BCA0F56D /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
+		0797F63D2FE0FA9C00B52A0C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		0797F63F2FE0FAB300B52A0C /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		0797F6412FE0FACC00B52A0C /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
+		0797F6442FE0FAF200B52A0C /* AuthComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthComponents.swift; sourceTree = "<group>"; };
+		0797F6472FE1000900B52A0C /* AuthGateModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthGateModifier.swift; sourceTree = "<group>"; };
+		0797F64C2FE10A5B00B52A0C /* BiometricAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAuthService.swift; sourceTree = "<group>"; };
+		0797F64E2FE10B6E00B52A0C /* BiometricUnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricUnlockView.swift; sourceTree = "<group>"; };
+		0797F6522FE10FCB00B52A0C /* ProfileSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSheetView.swift; sourceTree = "<group>"; };
+		0797F6542FE114FE00B52A0C /* ProfileButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileButton.swift; sourceTree = "<group>"; };
+		0797F65A2FE19E0100B52A0C /* UserProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileService.swift; sourceTree = "<group>"; };
+		0797F65E2FE1A2B100B52A0C /* ProfileCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCompletionView.swift; sourceTree = "<group>"; };
+		0797F6622FE212AD00B52A0C /* GameAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameAPIClient.swift; sourceTree = "<group>"; };
+		0797F6652FE212D500B52A0C /* GameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
+		0797F6672FE212EE00B52A0C /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		0797F66B2FE2131B00B52A0C /* GameHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHomeView.swift; sourceTree = "<group>"; };
+		0797F66E2FE2136B00B52A0C /* EventPicksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPicksView.swift; sourceTree = "<group>"; };
+		0797F6712FE214E400B52A0C /* dateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dateFormatters.swift; sourceTree = "<group>"; };
+		B38F0F1ACE4D6C4EA5B5AABC /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E28E3B3FDA23FF861F6CADA0 /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
+		F5EE1FB64FB5DE75A5C39A8D /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +160,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E929EA254E757754E990D8A /* Pods_UFC_Predict_Fights.framework in Frameworks */,
+				0797F6392FE0F9D500B52A0C /* GoogleSignInSwift in Frameworks */,
+				09F2543B1308625F3DAD10DF /* Pods_UFC_Predict_Fights.framework in Frameworks */,
+				0797F6372FE0F9D500B52A0C /* GoogleSignIn in Frameworks */,
+				0797F6342FE0F85200B52A0C /* FirebaseCore in Frameworks */,
+				0797F6322FE0F85200B52A0C /* FirebaseAuth in Frameworks */,
+				0797F6572FE19CEE00B52A0C /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +178,7 @@
 				072C52752FCCE45A00FEEACD /* UFC Predict Fights */,
 				072C52742FCCE45A00FEEACD /* Products */,
 				36763802F7D1F014A868BFD9 /* Pods */,
-				6BC970B76256C82C49BC1FBD /* Frameworks */,
+				6F46B306FF10ABD17633BB39 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -153,6 +195,7 @@
 			children = (
 				0797F61A2FE0EF8200B52A0C /* GoogleService-Info.plist */,
 				07841B0F2FCEC20A005EA7FD /* UFC-Predict-Fights-Info.plist */,
+				0797F6602FE2129800B52A0C /* GameAPIClient */,
 				07841AF62FCD8AAB005EA7FD /* DesingSystem */,
 				07841AEB2FCD827E005EA7FD /* Constant */,
 				072C52C52FCD721B00FEEACD /* Feature */,
@@ -175,8 +218,10 @@
 		072C52C52FCD721B00FEEACD /* Feature */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6692FE2130F00B52A0C /* Game */,
+				0797F6502FE10FBE00B52A0C /* Profile */,
+				0797F63A2FE0FA7100B52A0C /* Login */,
 				07841B512FD2B328005EA7FD /* Rankings */,
-				07841B462FD025F0005EA7FD /* Settings */,
 				07841B342FD0195E005EA7FD /* Launch */,
 				07841B272FCEFCF5005EA7FD /* Predict */,
 				07841B172FCEE397005EA7FD /* Event */,
@@ -226,6 +271,7 @@
 		07841AF62FCD8AAB005EA7FD /* DesingSystem */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6702FE214DD00B52A0C /* Helpers */,
 				0797F6232FE0F13500B52A0C /* Auth */,
 				07841B3F2FD0257B005EA7FD /* Theme */,
 				07841B312FCFA785005EA7FD /* Coordinator */,
@@ -239,6 +285,7 @@
 		07841AF72FCD8ADB005EA7FD /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6542FE114FE00B52A0C /* ProfileButton.swift */,
 				0797F60E2FDB3EF400B52A0C /* MarkdownFile.swift */,
 				0797F60C2FDA812900B52A0C /* PerformanceChart.swift */,
 				0797F6092FDA7E4B00B52A0C /* SegmentedBar.swift */,
@@ -396,22 +443,6 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
-		07841B462FD025F0005EA7FD /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				07841B472FD025F8005EA7FD /* View */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		07841B472FD025F8005EA7FD /* View */ = {
-			isa = PBXGroup;
-			children = (
-				07841B482FD02600005EA7FD /* SettingsSheet.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		07841B512FD2B328005EA7FD /* Rankings */ = {
 			isa = PBXGroup;
 			children = (
@@ -461,6 +492,8 @@
 		0797F6232FE0F13500B52A0C /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				0797F64B2FE10A5300B52A0C /* Biometrics */,
+				0797F6462FE1000500B52A0C /* Gate */,
 				0797F62B2FE0F19500B52A0C /* ViewModel */,
 				0797F6282FE0F17A00B52A0C /* Service */,
 				0797F6252FE0F15200B52A0C /* Policy */,
@@ -494,19 +527,148 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		0797F63A2FE0FA7100B52A0C /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6592FE19DF900B52A0C /* Service */,
+				0797F6432FE0FAEB00B52A0C /* Components */,
+				0797F63C2FE0FA9800B52A0C /* View */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		0797F63C2FE0FA9800B52A0C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0797F64E2FE10B6E00B52A0C /* BiometricUnlockView.swift */,
+				0797F6412FE0FACC00B52A0C /* ForgotPasswordView.swift */,
+				0797F63F2FE0FAB300B52A0C /* SignUpView.swift */,
+				0797F63D2FE0FA9C00B52A0C /* LoginView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0797F6432FE0FAEB00B52A0C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6442FE0FAF200B52A0C /* AuthComponents.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		0797F6462FE1000500B52A0C /* Gate */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6472FE1000900B52A0C /* AuthGateModifier.swift */,
+			);
+			path = Gate;
+			sourceTree = "<group>";
+		};
+		0797F64B2FE10A5300B52A0C /* Biometrics */ = {
+			isa = PBXGroup;
+			children = (
+				0797F64C2FE10A5B00B52A0C /* BiometricAuthService.swift */,
+			);
+			path = Biometrics;
+			sourceTree = "<group>";
+		};
+		0797F6502FE10FBE00B52A0C /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6512FE10FC400B52A0C /* View */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		0797F6512FE10FC400B52A0C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0797F65E2FE1A2B100B52A0C /* ProfileCompletionView.swift */,
+				0797F6522FE10FCB00B52A0C /* ProfileSheetView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0797F6592FE19DF900B52A0C /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				0797F65A2FE19E0100B52A0C /* UserProfileService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		0797F6602FE2129800B52A0C /* GameAPIClient */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6642FE212D100B52A0C /* Models */,
+				0797F6612FE212A500B52A0C /* Client */,
+			);
+			path = GameAPIClient;
+			sourceTree = "<group>";
+		};
+		0797F6612FE212A500B52A0C /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6622FE212AD00B52A0C /* GameAPIClient.swift */,
+			);
+			path = Client;
+			sourceTree = "<group>";
+		};
+		0797F6642FE212D100B52A0C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6672FE212EE00B52A0C /* GameViewModel.swift */,
+				0797F6652FE212D500B52A0C /* GameModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0797F6692FE2130F00B52A0C /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				0797F66A2FE2131400B52A0C /* View */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		0797F66A2FE2131400B52A0C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0797F66D2FE2136300B52A0C /* Placehoders */,
+				0797F66B2FE2131B00B52A0C /* GameHomeView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0797F66D2FE2136300B52A0C /* Placehoders */ = {
+			isa = PBXGroup;
+			children = (
+				0797F66E2FE2136B00B52A0C /* EventPicksView.swift */,
+			);
+			path = Placehoders;
+			sourceTree = "<group>";
+		};
+		0797F6702FE214DD00B52A0C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0797F6712FE214E400B52A0C /* dateFormatters.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		36763802F7D1F014A868BFD9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F23BFBA94236F790BCA0F56D /* Pods-UFC Predict Fights.debug.xcconfig */,
-				2D178E230F67CF0AA65822E7 /* Pods-UFC Predict Fights.release.xcconfig */,
+				F5EE1FB64FB5DE75A5C39A8D /* Pods-UFC Predict Fights.debug.xcconfig */,
+				E28E3B3FDA23FF861F6CADA0 /* Pods-UFC Predict Fights.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		6BC970B76256C82C49BC1FBD /* Frameworks */ = {
+		6F46B306FF10ABD17633BB39 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DE1F7407C4ADB16C151BCF8E /* Pods_UFC_Predict_Fights.framework */,
+				B38F0F1ACE4D6C4EA5B5AABC /* Pods_UFC_Predict_Fights.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -518,12 +680,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 072C52812FCCE45A00FEEACD /* Build configuration list for PBXNativeTarget "UFC Predict Fights" */;
 			buildPhases = (
-				C717005F50718AE3CED1CC31 /* [CP] Check Pods Manifest.lock */,
+				8210EC369E1BEC75C4DD47DE /* [CP] Check Pods Manifest.lock */,
 				072C526F2FCCE45900FEEACD /* Sources */,
 				072C52702FCCE45900FEEACD /* Frameworks */,
 				072C52712FCCE45900FEEACD /* Resources */,
-				3D63C746BAA8BB17A7F5A9BD /* [CP] Embed Pods Frameworks */,
-				55B6FFF7DD5A67A88996DD8A /* [CP] Copy Pods Resources */,
+				3B30FD97E7B3C8F04C90E96E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -558,6 +719,10 @@
 				Base,
 			);
 			mainGroup = 072C526A2FCCE45900FEEACD;
+			packageReferences = (
+				0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0797F6352FE0F9D500B52A0C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			productRefGroup = 072C52742FCCE45A00FEEACD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -581,7 +746,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3D63C746BAA8BB17A7F5A9BD /* [CP] Embed Pods Frameworks */ = {
+		3B30FD97E7B3C8F04C90E96E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -602,28 +767,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		55B6FFF7DD5A67A88996DD8A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C717005F50718AE3CED1CC31 /* [CP] Check Pods Manifest.lock */ = {
+		8210EC369E1BEC75C4DD47DE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -655,42 +799,57 @@
 				07841B062FCEB80D005EA7FD /* DatabaseErrorView.swift in Sources */,
 				07841B572FD2B36A005EA7FD /* RankingsView.swift in Sources */,
 				07841B2E2FCEFD5A005EA7FD /* PredictionViewModel.swift in Sources */,
+				0797F6552FE1150400B52A0C /* ProfileButton.swift in Sources */,
 				07841B332FCFA796005EA7FD /* AppCoordinator.swift in Sources */,
+				0797F65B2FE19E0300B52A0C /* UserProfileService.swift in Sources */,
 				07841B1D2FCEE41F005EA7FD /* EventListView.swift in Sources */,
 				0797F6172FDF63B300B52A0C /* CachedEloRanking.swift in Sources */,
+				0797F6452FE0FAF600B52A0C /* AuthComponents.swift in Sources */,
 				07841B262FCEEA83005EA7FD /* EventRepository.swift in Sources */,
 				072C52792FCCE45A00FEEACD /* ContentView.swift in Sources */,
 				07841B242FCEE9D0005EA7FD /* CachedEvent.swift in Sources */,
 				07841AF12FCD88B0005EA7FD /* FighterRow.swift in Sources */,
+				0797F6632FE212B200B52A0C /* GameAPIClient.swift in Sources */,
+				0797F6402FE0FAB400B52A0C /* SignUpView.swift in Sources */,
 				07841B002FCEB5BB005EA7FD /* CachedFighter.swift in Sources */,
 				07841AF52FCD8A88005EA7FD /* FighterDetailView.swift in Sources */,
 				0797F62A2FE0F18400B52A0C /* AuthService.swift in Sources */,
+				0797F64F2FE10B6E00B52A0C /* BiometricUnlockView.swift in Sources */,
 				07841B302FCEFD9E005EA7FD /* PredictionView.swift in Sources */,
 				07841B3E2FD0231D005EA7FD /* PredictionHistoryView.swift in Sources */,
 				07841B0A2FCEBA8B005EA7FD /* SyncManager.swift in Sources */,
 				07841B1F2FCEE43E005EA7FD /* EventDetailViewModel.swift in Sources */,
+				0797F6422FE0FACD00B52A0C /* ForgotPasswordView.swift in Sources */,
+				0797F64D2FE10A5C00B52A0C /* BiometricAuthService.swift in Sources */,
 				0797F60F2FDB3F0500B52A0C /* MarkdownFile.swift in Sources */,
 				07841B2A2FCEFD1E005EA7FD /* FighterPickerView.swift in Sources */,
 				072C52772FCCE45A00FEEACD /* UFC_Predict_FightsApp.swift in Sources */,
 				07841B3C2FD021CC005EA7FD /* CachedPrediction.swift in Sources */,
 				072C52CC2FCD731F00FEEACD /* FighterListViewModel.swift in Sources */,
+				0797F6722FE214F300B52A0C /* dateFormatters.swift in Sources */,
 				07841B432FD02598005EA7FD /* ThemeManager.swift in Sources */,
 				072C52CE2FCD74DF00FEEACD /* FightersListView.swift in Sources */,
+				0797F6532FE10FCC00B52A0C /* ProfileSheetView.swift in Sources */,
 				07841B542FD2B341005EA7FD /* RankingsViewModel.swift in Sources */,
 				07841B392FD01A8E005EA7FD /* FighterAvatar.swift in Sources */,
+				0797F65F2FE1A2B900B52A0C /* ProfileCompletionView.swift in Sources */,
 				07841AED2FCD8297005EA7FD /* Config.swift in Sources */,
 				07841B5A2FD2C109005EA7FD /* CachedRanking.swift in Sources */,
 				0797F60D2FDA813500B52A0C /* PerformanceChart.swift in Sources */,
 				0797F6242FE0F13500B52A0C /* AuthState.swift in Sources */,
+				0797F63E2FE0FA9E00B52A0C /* LoginView.swift in Sources */,
 				07841B0C2FCEBBBE005EA7FD /* FighterRepository.swift in Sources */,
 				07841B1A2FCEE3C5005EA7FD /* EventListViewModel.swift in Sources */,
 				0797F62F2FE0F1BA00B52A0C /* ProtectedDestination.swift in Sources */,
-				07841B492FD02600005EA7FD /* SettingsSheet.swift in Sources */,
+				0797F6662FE212DB00B52A0C /* GameModels.swift in Sources */,
 				0797F6132FDF609700B52A0C /* EloRankingsViewModel.swift in Sources */,
 				07841B5C2FD2C21D005EA7FD /* RankingRepository.swift in Sources */,
 				0797F6272FE0F16100B52A0C /* SessionPolicy.swift in Sources */,
+				0797F6682FE212F200B52A0C /* GameViewModel.swift in Sources */,
 				07841AF92FCD8AF1005EA7FD /* DivisionPill.swift in Sources */,
 				0797F60A2FDA7E6800B52A0C /* SegmentedBar.swift in Sources */,
+				0797F6482FE1001800B52A0C /* AuthGateModifier.swift in Sources */,
+				0797F66F2FE2136D00B52A0C /* EventPicksView.swift in Sources */,
 				0797F6152FDF60D500B52A0C /* EloRankingsView.swift in Sources */,
 				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
 				0797F62D2FE0F19E00B52A0C /* AuthViewModel.swift in Sources */,
@@ -698,6 +857,7 @@
 				07841B452FD025BB005EA7FD /* BSColor.swift in Sources */,
 				07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */,
 				07841B372FD0198B005EA7FD /* LaunchView.swift in Sources */,
+				0797F66C2FE2131C00B52A0C /* GameHomeView.swift in Sources */,
 				07841AF32FCD88FB005EA7FD /* FigtherDetailViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -830,10 +990,11 @@
 		};
 		072C52822FCCE45A00FEEACD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F23BFBA94236F790BCA0F56D /* Pods-UFC Predict Fights.debug.xcconfig */;
+			baseConfigurationReference = F5EE1FB64FB5DE75A5C39A8D /* Pods-UFC Predict Fights.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"UFC Predict Fights/Preview Content\"";
@@ -842,6 +1003,7 @@
 				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OctAIQ;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "OctAIQ uses Face ID to quickly unlock your account";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -867,10 +1029,11 @@
 		};
 		072C52832FCCE45A00FEEACD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2D178E230F67CF0AA65822E7 /* Pods-UFC Predict Fights.release.xcconfig */;
+			baseConfigurationReference = E28E3B3FDA23FF861F6CADA0 /* Pods-UFC Predict Fights.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"UFC Predict Fights/Preview Content\"";
@@ -879,6 +1042,7 @@
 				INFOPLIST_FILE = "UFC-Predict-Fights-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OctAIQ;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "OctAIQ uses Face ID to quickly unlock your account";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -924,6 +1088,53 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.14.0;
+			};
+		};
+		0797F6352FE0F9D500B52A0C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0797F6312FE0F85200B52A0C /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		0797F6332FE0F85200B52A0C /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		0797F6362FE0F9D500B52A0C /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0797F6352FE0F9D500B52A0C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		0797F6382FE0F9D500B52A0C /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0797F6352FE0F9D500B52A0C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		0797F6562FE19CEE00B52A0C /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 072C526B2FCCE45900FEEACD /* Project object */;
 }

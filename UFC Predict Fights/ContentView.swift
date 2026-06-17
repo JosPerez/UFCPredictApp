@@ -10,13 +10,32 @@ import SwiftUI
 @MainActor
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(AuthViewModel.self) private var authVM
     @State private var coordinator = AppCoordinator()
     @State private var predictionViewModel: PredictionViewModel?
     @State private var themeManager = ThemeManager()
     @State private var showLaunch = true
-    @State private var showSettings = false
+    @State private var showLogin = false
+    @State private var showProfile = false
 
     var body: some View {
+        
+        Group {
+            switch authVM.state {
+            case .requiresBiometricUnlock:
+                BiometricUnlockView()
+            case .requiresProfileCompletion:
+                ProfileCompletionView()
+            default:
+                // Tu TabView existente
+                mainTabView
+            }
+        }
+        
+    }
+    
+    @ViewBuilder
+    private var mainTabView: some View {
         ZStack {
             if showLaunch {
                 LaunchView()
@@ -50,15 +69,27 @@ struct ContentView: View {
                         Text("Rankings")
                     }
                     .tag(2)
-
-                if let vm = predictionViewModel {
-                    PredictionView(viewModel: vm)
-                        .tabItem {
-                            Image(systemName: "bolt.fill")
-                            Text("Predict")
+                
+                Group {
+                    if authVM.state == .authenticated {
+                        if let vm = predictionViewModel {
+                            PredictionView(viewModel: vm)
                         }
-                        .tag(3)
+                    } else {
+                        lockedPredictView
+                    }
                 }
+                .tabItem {
+                    Image(systemName: "bolt.fill")
+                    Text("Predict")
+                }
+                .tag(3)
+                GameHomeView()
+                    .tabItem {
+                        Image(systemName: "gamecontroller.fill")
+                        Text("Game")
+                    }
+                    .tag(4)
             }
             .tint(BSColors.accent)
             .animation(.easeInOut(duration: 0.2), value: coordinator.selectedTab)
@@ -81,10 +112,53 @@ struct ContentView: View {
                 }
             }
         }
-        .sheet(isPresented: $showSettings) {
-            SettingsSheet()
-                .environment(themeManager)
-                .preferredColorScheme(themeManager.current.colorScheme)
+        .sheet(isPresented: $showLogin) {
+            LoginView()
+        }
+        .onChange(of: authVM.state) { _, newState in
+            if newState == .authenticated {
+                showLogin = false
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var lockedPredictView: some View {
+        ZStack {
+            BSColors.background.ignoresSafeArea()
+
+            VStack(spacing: 16) {
+                Image(systemName: "lock.shield.fill")
+                    .font(.system(size: 44))
+                    .foregroundColor(BSColors.textHint)
+
+                Text("Sign in to predict fights")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(BSColors.textPrimary)
+
+                Text("Get AI-powered predictions with winner probability, method, and duration forecasts")
+                    .font(.system(size: 13))
+                    .foregroundColor(BSColors.textTertiary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+
+                Button {
+                    showLogin = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 14))
+                        Text("Sign In")
+                            .font(.system(size: 15, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 12)
+                    .background(BSColors.accent)
+                    .cornerRadius(12)
+                }
+                .padding(.top, 8)
+            }
         }
     }
 }
