@@ -11,11 +11,13 @@ enum GameNavigation: Hashable {
     case eventLeaderboard(Int, String)
     case monthlyLeaderboard
     case postEventResults(Int)
+    case eventsList
 }
 
 struct GameHomeView: View {
     @Environment(AuthViewModel.self) private var authVM
     @State private var viewModel = GameViewModel()
+    @State private var topPlayers: [MonthlyLeaderboardRowDTO] = []
     @State private var showProfile = false
 
     var body: some View {
@@ -27,10 +29,6 @@ struct GameHomeView: View {
                     lockedGameView
                 } else if viewModel.isLoading && viewModel.events.isEmpty {
                     ProgressView().tint(BSColors.accent)
-                } else if let error = viewModel.errorMessage {
-                    ErrorStateView(message: error) {
-                        viewModel.fetchEvents()
-                    }
                 } else {
                     content
                 }
@@ -46,12 +44,17 @@ struct GameHomeView: View {
                     MonthlyLeaderboardView()
                 case .postEventResults(let id):
                     PostEventResultsView(eventId: id)
+                case .eventsList:
+                    GameEventsListView(events: viewModel.events)
                 }
             }
         }
         .onAppear {
+            GameLogger.screenOpened("GameHome")
+            
             if authVM.state == .authenticated && viewModel.events.isEmpty {
                 viewModel.fetchEvents()
+                fetchTopPlayers()
             }
         }
         .sheet(isPresented: $showProfile) {
@@ -64,282 +67,283 @@ struct GameHomeView: View {
     @ViewBuilder
     private var content: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 20) {
                 // Header
-                HStack {
-                    Text("Game")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(BSColors.textPrimary)
-                    Spacer()
-                    ProfileButton(showProfile: $showProfile)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 8)
+                header
 
-                // Next event to play
+                // Featured event card
                 if let next = viewModel.nextOpenEvent {
-                    nextEventCard(next)
+                    featuredEventCard(next)
+                } else if let recent = viewModel.recentScoredEvent {
+                    featuredEventCard(recent)
                 }
 
-                // Recent results
-                if let scored = viewModel.recentScoredEvent {
-                    recentResultCard(scored)
-                }
-                
-                // Monthly leaderboard link
-                NavigationLink(value: GameNavigation.monthlyLeaderboard) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "chart.bar.fill")
-                            .font(.system(size: 16))
-                            .foregroundColor(BSColors.accent)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Monthly leaderboard")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(BSColors.textPrimary)
-                            Text(MonthlyLeaderboardView.currentPeriodKey())
-                                .font(.system(size: 11))
-                                .foregroundColor(BSColors.textTertiary)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 11))
-                            .foregroundColor(BSColors.textHint)
-                    }
-                    .padding(14)
-                    .background(BSColors.surface)
-                    .cornerRadius(12)
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 16)
+                // Quick actions
+                quickActions
 
-                // All events
-                if !viewModel.events.isEmpty {
-                    eventsList
-                }
+                // Leaderboard preview
+                leaderboardPreview
             }
             .padding(.bottom, 32)
         }
         .refreshable {
             viewModel.fetchEvents()
+            fetchTopPlayers()
         }
     }
 
-    // MARK: - Next Event Card
+    // MARK: - Header
 
     @ViewBuilder
-    private func nextEventCard(_ event: GameEventDTO) -> some View {
-        NavigationLink(value: event.eventId) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    Text("Next event")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundColor(BSColors.accent)
-                        .textCase(.uppercase)
-                        .kerning(1)
-                    Spacer()
-                    gameStatusBadge(event.status)
-                }
-
-                Text(event.name)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(BSColors.textPrimary)
-                    .multilineTextAlignment(.leading)
-
-                if let loc = event.location {
-                    Text(loc)
-                        .font(.system(size: 12))
-                        .foregroundColor(BSColors.textSecondary)
-                }
-
-                Text(event.eventDate.formatEventDate())
-                    .font(.system(size: 12))
-                    .foregroundColor(BSColors.textTertiary)
-                
-                if event.isOpen {
-                    HStack(spacing: 4) {
-                        Image(systemName: "clock")
-                            .font(.system(size: 10))
-                        Text(countdownText(event.lockAt))
-                            .font(.system(size: 11, weight: .semibold))
-                    }
-                    .foregroundColor(BSColors.titleGold)
-                }
-
-                HStack(spacing: 12) {
-                    // Fights
-                    HStack(spacing: 4) {
-                        Image(systemName: "figure.martial.arts")
-                            .font(.system(size: 10))
-                        Text("\(event.fightCount) Fights")
-                            .font(.system(size: 11, weight: .semibold))
-                    }
-                    .foregroundColor(BSColors.textSecondary)
-
-                    // Picks progress
-                    HStack(spacing: 4) {
-                        Image(systemName: "checkmark.circle")
-                            .font(.system(size: 10))
-                        Text("\(event.picksProgress) picks")
-                            .font(.system(size: 11, weight: .semibold))
-                    }
-                    .foregroundColor(event.userCompletedPicks == event.fightCount
-                        ? BSColors.winGreen
-                        : BSColors.textTertiary
-                    )
-
-                    Spacer()
-
-                    // CTA
-                    HStack(spacing: 4) {
-                        Text(ctaLabel(event.cta))
-                            .font(.system(size: 11, weight: .bold))
-                        Image(systemName: "arrow.right")
-                            .font(.system(size: 10))
-                    }
-                    .foregroundColor(BSColors.accent)
-                }
-            }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                LinearGradient(
-                    colors: [BSColors.accent.opacity(0.12), BSColors.surface],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .cornerRadius(14)
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(BSColors.accent.opacity(0.3), lineWidth: 0.5)
-            )
-        }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 16)
-    }
-
-    // MARK: - Recent Result Card
-
-    @ViewBuilder
-    private func recentResultCard(_ event: GameEventDTO) -> some View {
-        NavigationLink(value: GameNavigation.postEventResults(event.eventId)) {
-            HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Recent results")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundColor(BSColors.winGreen)
-                        .textCase(.uppercase)
-                        .kerning(1)
-                    Text(event.name)
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(BSColors.textPrimary)
-                        .lineLimit(1)
-                }
-                Spacer()
-                if let points = event.userEventPoints {
-                    VStack(spacing: 2) {
-                        Text("\(points)")
-                            .font(.system(size: 22, weight: .bold))
-                            .foregroundColor(BSColors.winGreen)
-                        Text("pts")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundColor(BSColors.textHint)
-                    }
-                }
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12))
-                    .foregroundColor(BSColors.textHint)
-            }
-            .padding(14)
-            .background(BSColors.surface)
-            .cornerRadius(12)
-        }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 16)
-    }
-
-    // MARK: - Events List
-
-    @ViewBuilder
-    private var eventsList: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("All events")
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(BSColors.textHint)
-                .textCase(.uppercase)
-                .kerning(1)
-                .padding(.horizontal, 16)
-            
-            ForEach(viewModel.events) { event in
-                NavigationLink(value: event.eventId) {
-                    gameEventCard(event)
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 16)
-            }
-        }
-    }
-    
-    // MARK: - Event Card
-    
-    @ViewBuilder
-    private func gameEventCard(_ event: GameEventDTO) -> some View {
-        HStack(spacing: 12) {
+    private var header: some View {
+        HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(event.name)
-                    .font(.system(size: 14, weight: .semibold))
+                Text("Game")
+                    .font(.system(size: 34, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)
-                    .multilineTextAlignment(.leading)
-                
-                Text(event.eventDate.formatEventDate())
-                    .font(.system(size: 11))
+                Text("Make your picks. Climb the leaderboard.")
+                    .font(.system(size: 14))
                     .foregroundColor(BSColors.textTertiary)
             }
             Spacer()
-            VStack(spacing: 8) {
-                gameStatusBadge(event.status)
-                // Progress or points
-                if event.isScored, let points = event.userEventPoints {
-                    Text("\(points) pts")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(BSColors.winGreen)
-                } else {
-                    Text(event.picksProgress)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(event.userCompletedPicks == event.fightCount
-                                         ? BSColors.winGreen
-                                         : BSColors.textTertiary
-                        )
+            ProfileButton(showProfile: $showProfile)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+    }
+
+    // MARK: - Featured Event Card
+
+    @ViewBuilder
+    private func featuredEventCard(_ event: GameEventDTO) -> some View {
+        NavigationLink(value: event.eventId) {
+            VStack(alignment: .leading, spacing: 12) {
+                // Top row: status + fights + trophy
+                HStack {
+                    gameStatusBadge(event.status)
+
+                    Text("\(event.fightCount) Fights")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(BSColors.textSecondary)
+
+                    Spacer()
+
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 22))
+                        .foregroundColor(statusColor(event.status).opacity(0.6))
+                }
+
+                // Event name
+                Text(event.name)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                    .multilineTextAlignment(.leading)
+
+                // Date
+                Text(formatDate(event.eventDate))
+                    .font(.system(size: 13))
+                    .foregroundColor(BSColors.textTertiary)
+
+                // Progress
+                HStack {
+                    Text("\(event.userCompletedPicks) / \(event.fightCount) picks completed")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(BSColors.textSecondary)
+                    Spacer()
+                    let pct = event.fightCount > 0
+                        ? Int((Double(event.userCompletedPicks) / Double(event.fightCount)) * 100)
+                        : 0
+                    Text("\(pct)%")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                }
+
+                // Gradient progress bar
+                gradientProgressBar(
+                    progress: event.fightCount > 0
+                        ? Double(event.userCompletedPicks) / Double(event.fightCount)
+                        : 0
+                )
+
+                // CTA button
+                Text(ctaLabel(event.cta))
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(ctaColor(event.cta))
+                    .cornerRadius(10)
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(BSColors.surface)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(statusColor(event.status).opacity(0.3), lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 16)
+    }
+
+    // MARK: - Quick Actions
+
+    @ViewBuilder
+    private var quickActions: some View {
+        HStack(spacing: 10) {
+            NavigationLink(value: GameNavigation.eventsList) {
+                quickActionButton(
+                    icon: "calendar",
+                    label: "Events to Play"
+                )
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink(value: GameNavigation.monthlyLeaderboard) {
+                quickActionButton(
+                    icon: "trophy",
+                    label: "Monthly Leaderboard"
+                )
+            }
+            .buttonStyle(.plain)
+
+            if let scored = viewModel.recentScoredEvent {
+                NavigationLink(value: GameNavigation.postEventResults(scored.eventId)) {
+                    quickActionButton(
+                        icon: "checkmark.circle",
+                        label: "Latest Results"
+                    )
+                }
+                .buttonStyle(.plain)
+            } else {
+                quickActionButton(
+                    icon: "checkmark.circle",
+                    label: "Latest Results"
+                )
+                .opacity(0.4)
+            }
+        }
+        .padding(.horizontal, 16)
+    }
+
+    @ViewBuilder
+    private func quickActionButton(icon: String, label: String) -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(BSColors.textSecondary)
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundColor(BSColors.textSecondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(BSColors.surface)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(BSColors.border, lineWidth: 0.5)
+        )
+    }
+
+    // MARK: - Leaderboard Preview
+
+    @ViewBuilder
+    private var leaderboardPreview: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Header
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("TOP PLAYERS THIS MONTH")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(BSColors.textHint)
+                        .kerning(1.5)
+                    Text("Leaderboard Preview")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                }
+                Spacer()
+                NavigationLink(value: GameNavigation.monthlyLeaderboard) {
+                    Image(systemName: "chart.bar.fill")
+                        .font(.system(size: 18))
+                        .foregroundColor(BSColors.textSecondary)
                 }
             }
-            
-            Image(systemName: "chevron.right")
-                .font(.system(size: 11))
-                .foregroundColor(BSColors.textHint)
+
+            if topPlayers.isEmpty {
+                HStack {
+                    Spacer()
+                    VStack(spacing: 6) {
+                        Image(systemName: "trophy")
+                            .font(.system(size: 20))
+                            .foregroundColor(BSColors.textHint)
+                        Text("No scores yet this month")
+                            .font(.system(size: 12))
+                            .foregroundColor(BSColors.textHint)
+                    }
+                    .padding(.vertical, 16)
+                    Spacer()
+                }
+            } else {
+                VStack(spacing: 6) {
+                    ForEach(topPlayers.prefix(3)) { player in
+                        topPlayerRow(player)
+                    }
+                }
+            }
         }
-        .padding(12)
+        .padding(16)
         .background(BSColors.surface)
-        .cornerRadius(10)
+        .cornerRadius(14)
+        .padding(.horizontal, 16)
     }
-    
+
+    @ViewBuilder
+    private func topPlayerRow(_ player: MonthlyLeaderboardRowDTO) -> some View {
+        HStack(spacing: 12) {
+            Text("#\(player.rank ?? 0)")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(rankColor(player.rank))
+                .frame(width: 28)
+
+            Text(player.nickname)
+                .font(.system(size: 15, weight: player.isCurrentUser ? .bold : .semibold))
+                .foregroundColor(player.isCurrentUser ? BSColors.accent : BSColors.textPrimary)
+                .lineLimit(1)
+
+            if player.isCurrentUser {
+                Text("YOU")
+                    .font(.system(size: 7, weight: .bold))
+                    .foregroundColor(BSColors.accent)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 2)
+                    .background(BSColors.accent.opacity(0.12))
+                    .cornerRadius(3)
+            }
+
+            Spacer()
+
+            Text("\(player.totalPoints) pts")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(BSColors.textPrimary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(BSColors.surfaceSecondary)
+        .cornerRadius(8)
+    }
+
     // MARK: - Locked View
-    
+
     @ViewBuilder
     private var lockedGameView: some View {
         VStack(spacing: 16) {
-            // Header
-            HStack {
-                Text("Game")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundColor(BSColors.textPrimary)
-                Spacer()
-                ProfileButton(showProfile: $showProfile)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
-
+            header
             Spacer()
-
             Image(systemName: "gamecontroller.fill")
                 .font(.system(size: 44))
                 .foregroundColor(BSColors.textHint)
@@ -351,7 +355,6 @@ struct GameHomeView: View {
                 .foregroundColor(BSColors.textTertiary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
-
             Spacer()
         }
     }
@@ -359,49 +362,91 @@ struct GameHomeView: View {
     // MARK: - Components
 
     @ViewBuilder
-    private func gameStatusBadge(_ status: String) -> some View {
-        let (text, color): (String, Color) = {
-            switch status {
-            case "open":      return ("Open", BSColors.winGreen)
-            case "locked":    return ("Locked", BSColors.titleGold)
-            case "completed": return ("Completed", BSColors.textTertiary)
-            case "scored":    return ("Scored", BSColors.accentBlue)
-            default:          return (status, BSColors.textHint)
+    private func gradientProgressBar(progress: Double) -> some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(BSColors.surfaceSecondary)
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(
+                        LinearGradient(
+                            colors: [BSColors.accent, BSColors.accentBlue],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .frame(width: geo.size.width * CGFloat(progress))
             }
-        }()
+        }
+        .frame(height: 6)
+    }
 
-        Text(text.uppercased())
-            .font(.system(size: 8, weight: .bold))
-            .foregroundColor(color)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 3)
-            .background(color.opacity(0.12))
-            .cornerRadius(4)
+    @ViewBuilder
+    private func gameStatusBadge(_ status: String) -> some View {
+        Text(status.uppercased())
+            .font(.system(size: 9, weight: .bold))
+            .foregroundColor(statusColor(status))
+            .kerning(1)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(statusColor(status).opacity(0.15))
+            .cornerRadius(6)
+    }
+
+    private func statusColor(_ status: String) -> Color {
+        switch status {
+        case "open":      return BSColors.winGreen
+        case "locked":    return BSColors.textTertiary
+        case "completed": return BSColors.titleGold
+        case "scored":    return BSColors.accentBlue
+        default:          return BSColors.textHint
+        }
     }
 
     private func ctaLabel(_ cta: String) -> String {
         switch cta {
-        case "make_picks":   return "Make picks"
-        case "edit_picks":   return "Edit picks"
-        case "view_picks":   return "View picks"
-        case "view_results": return "View results"
+        case "make_picks":   return "Make Picks"
+        case "edit_picks":   return "Edit Picks"
+        case "view_picks":   return "View Picks"
+        case "view_results": return "View Results"
         default:             return "Open"
         }
     }
-    
-    private func countdownText(_ lockAt: Date) -> String {
-        let remaining = lockAt.timeIntervalSince(Date())
-        if remaining <= 0 { return "Locked" }
 
-        let hours = Int(remaining) / 3600
-        let minutes = (Int(remaining) % 3600) / 60
+    private func ctaColor(_ cta: String) -> Color {
+        switch cta {
+        case "view_results": return BSColors.accentBlue
+        case "view_picks":   return BSColors.textTertiary
+        default:             return BSColors.accent
+        }
+    }
 
-        if hours > 24 {
-            return "\(hours / 24)d \(hours % 24)h left"
-        } else if hours > 0 {
-            return "\(hours)h \(minutes)m left"
-        } else {
-            return "\(minutes)m left"
+    private func rankColor(_ rank: Int?) -> Color {
+        switch rank {
+        case 1:    return BSColors.titleGold
+        case 2, 3: return BSColors.accent
+        default:   return BSColors.textTertiary
+        }
+    }
+
+    private func formatDate(_ dateStr: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        guard let date = formatter.date(from: dateStr) else { return dateStr }
+        let output = DateFormatter()
+        output.dateFormat = "EEE, MMM d, yyyy"
+        return output.string(from: date)
+    }
+
+    // MARK: - Fetch Top Players
+
+    private func fetchTopPlayers() {
+        Task {
+            do {
+                topPlayers = try await GameAPIClient.shared.getMonthlyLeaderboard()
+            } catch {
+                topPlayers = []
+            }
         }
     }
 }

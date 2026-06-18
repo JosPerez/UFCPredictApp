@@ -20,8 +20,13 @@ struct UFC_Predict_FightsApp: App {
     @State private var authViewModel: AuthViewModel
 
     init() {
+        // Image Cached TTL 7 days
+        ImageCacheManager.shared.clearExpired()
+        // Start network monitoring
         BSNetworkManager.shared.start()
+        // Start FirebaseApp
         FirebaseApp.configure()
+        // Create auth view model
         authViewModel = AuthViewModel()
         do {
             modelContainer = try SwiftDataContainer.create()

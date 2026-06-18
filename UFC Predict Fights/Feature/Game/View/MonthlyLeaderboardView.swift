@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct MonthlyLeaderboardView: View {
+    //
+    private static let minPeriodKey = "2026-05"
+    // State
     @State private var rows: [MonthlyLeaderboardRowDTO] = []
     @State private var selectedMonth: String = currentPeriodKey()
     @State private var isLoading = false
-    @State private var errorMessage: String? = nil
 
     var body: some View {
         ZStack {
             BSColors.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Month selector
+                // Month carousel
                 monthSelector
+                    .padding(.top, 8)
 
                 if isLoading && rows.isEmpty {
                     Spacer()
@@ -28,7 +31,7 @@ struct MonthlyLeaderboardView: View {
                 } else if rows.isEmpty {
                     Spacer()
                     VStack(spacing: 8) {
-                        Image(systemName: "calendar.badge.clock")
+                        Image(systemName: "trophy")
                             .font(.system(size: 32))
                             .foregroundColor(BSColors.textHint)
                         Text("No scores for this month")
@@ -38,20 +41,52 @@ struct MonthlyLeaderboardView: View {
                     Spacer()
                 } else {
                     ScrollView {
-                        VStack(spacing: 6) {
-                            columnHeader
-
-                            ForEach(rows) { row in
-                                monthlyRow(row)
+                        VStack(spacing: 16) {
+                            // Your rank card
+                            if let me = rows.first(where: { $0.isCurrentUser }) {
+                                yourRankCard(me)
                             }
+
+                            // Rankings header
+                            HStack {
+                                Text("TOP PLAYERS — \(formatPeriodKeyUpper(selectedMonth))")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundColor(BSColors.textHint)
+                                    .kerning(1.5)
+                                Spacer()
+                                Text("Monthly ranking")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(BSColors.textHint)
+                            }
+                            .padding(.horizontal, 16)
+
+                            // Player rows
+                            VStack(spacing: 8) {
+                                ForEach(rows) { row in
+                                    playerCard(row)
+                                }
+                            }
+                            .padding(.horizontal, 16)
                         }
                         .padding(.bottom, 32)
                     }
                 }
             }
         }
-        .navigationTitle("Monthly Rankings")
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack(spacing: 1) {
+                    Text("Monthly Leaderboard")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                    Text(formatPeriodKey(selectedMonth))
+                        .font(.system(size: 12))
+                        .foregroundColor(BSColors.textTertiary)
+                }
+            }
+        }
         .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .onAppear { fetch() }
@@ -67,13 +102,21 @@ struct MonthlyLeaderboardView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(BSColors.accent)
+                    .foregroundColor(
+                        selectedMonth == Self.minPeriodKey
+                            ? BSColors.textHint
+                            : BSColors.accent
+                    )
+                    .frame(width: 36, height: 36)
+                    .background(BSColors.surface)
+                    .cornerRadius(8)
             }
+            .disabled(selectedMonth == Self.minPeriodKey)
 
             Text(formatPeriodKey(selectedMonth))
-                .font(.system(size: 15, weight: .bold))
+                .font(.system(size: 16, weight: .bold))
                 .foregroundColor(BSColors.textPrimary)
-                .frame(width: 140)
+                .frame(maxWidth: .infinity)
 
             Button {
                 changeMonth(1)
@@ -85,86 +128,169 @@ struct MonthlyLeaderboardView: View {
                             ? BSColors.textHint
                             : BSColors.accent
                     )
+                    .frame(width: 36, height: 36)
+                    .background(BSColors.surface)
+                    .cornerRadius(8)
             }
             .disabled(selectedMonth == Self.currentPeriodKey())
         }
-        .padding(.vertical, 12)
-    }
-
-    // MARK: - Column Header
-
-    @ViewBuilder
-    private var columnHeader: some View {
-        HStack(spacing: 0) {
-            Text("#")
-                .frame(width: 30)
-            Text("Player")
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("EVT")
-                .frame(width: 32)
-            Text("PP")
-                .frame(width: 32)
-            Text("PTS")
-                .frame(width: 44)
-        }
-        .font(.system(size: 9, weight: .bold))
-        .foregroundColor(BSColors.textHint)
         .padding(.horizontal, 16)
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
     }
 
-    // MARK: - Row
+    // MARK: - Your Rank Card
 
     @ViewBuilder
-    private func monthlyRow(_ row: MonthlyLeaderboardRowDTO) -> some View {
-        HStack(spacing: 0) {
-            // Rank
-            Text(row.rank != nil ? "#\(row.rank!)" : "—")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(rankColor(row.rank))
-                .frame(width: 30)
+    private func yourRankCard(_ me: MonthlyLeaderboardRowDTO) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("YOUR RANK")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(BSColors.textHint)
+                    .kerning(1.5)
 
-            // Nickname
-            HStack(spacing: 6) {
-                Text(row.nickname)
-                    .font(.system(size: 14, weight: row.isCurrentUser ? .bold : .medium))
-                    .foregroundColor(row.isCurrentUser ? BSColors.accent : BSColors.textPrimary)
-                    .lineLimit(1)
-                if row.isCurrentUser {
-                    Text("YOU")
-                        .font(.system(size: 7, weight: .bold))
-                        .foregroundColor(BSColors.accent)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 2)
-                        .background(BSColors.accent.opacity(0.12))
-                        .cornerRadius(3)
+                HStack(spacing: 8) {
+                    Text("#\(me.rank ?? 0)")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                    Text(me.nickname)
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
                 }
+
+                Text("\(me.eventsPlayed) Events")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textTertiary)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Events played
-            Text("\(row.eventsPlayed)")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(BSColors.textTertiary)
-                .frame(width: 32)
+            Spacer()
 
-            // Perfect picks
-            Text("\(row.perfectPicks)")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(row.perfectPicks > 0 ? BSColors.titleGold : BSColors.textTertiary)
-                .frame(width: 32)
-
-            // Total points
-            Text("\(row.totalPoints)")
-                .font(.system(size: 15, weight: .bold))
-                .foregroundColor(row.isCurrentUser ? BSColors.accent : BSColors.textPrimary)
-                .frame(width: 44, alignment: .trailing)
+            Text("\(me.totalPoints) pts")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(BSColors.accent.opacity(0.15))
+                .cornerRadius(8)
         }
+        .padding(16)
+        .background(BSColors.surface)
+        .cornerRadius(14)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(BSColors.accent.opacity(0.4), lineWidth: 1)
+        )
         .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(row.isCurrentUser ? BSColors.accent.opacity(0.06) : BSColors.surface)
-        .cornerRadius(8)
-        .padding(.horizontal, 16)
+    }
+
+    // MARK: - Player Card
+
+    @ViewBuilder
+    private func playerCard(_ row: MonthlyLeaderboardRowDTO) -> some View {
+        HStack(spacing: 12) {
+            // Rank icon
+            rankIcon(row.rank)
+
+            // Info
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    if let rank = row.rank {
+                        Text("#\(rank)")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(BSColors.textTertiary)
+                    }
+                    Text(row.nickname)
+                        .font(.system(size: 16, weight: row.isCurrentUser ? .bold : .semibold))
+                        .foregroundColor(row.isCurrentUser ? BSColors.accent : BSColors.textPrimary)
+                        .lineLimit(1)
+                }
+                Text("\(row.eventsPlayed) Events")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textTertiary)
+            }
+
+            Spacer()
+
+            // Points
+            Text("\(row.totalPoints) pts")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundColor(BSColors.textPrimary)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 14)
+        .background(BSColors.surface)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(
+                    row.isCurrentUser
+                        ? BSColors.accent.opacity(0.5)
+                        : (isTopThree(row.rank) ? rankBorderColor(row.rank).opacity(0.3) : Color.clear),
+                    lineWidth: row.isCurrentUser ? 1.5 : 1
+                )
+        )
+    }
+
+    // MARK: - Rank Icon
+
+    @ViewBuilder
+    private func rankIcon(_ rank: Int?) -> some View {
+        ZStack {
+            Circle()
+                .fill(rankIconBackground(rank))
+                .frame(width: 40, height: 40)
+
+            if isTopThree(rank) {
+                Image(systemName: rankIconName(rank))
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(rankIconColor(rank))
+            } else {
+                Text("\(rank ?? 0)")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(BSColors.textTertiary)
+            }
+        }
+    }
+
+    private func isTopThree(_ rank: Int?) -> Bool {
+        guard let rank else { return false }
+        return rank <= 3
+    }
+
+    private func rankIconName(_ rank: Int?) -> String {
+        switch rank {
+        case 1:  return "trophy.fill"
+        case 2:  return "medal.fill"
+        case 3:  return "medal"
+        default: return "number"
+        }
+    }
+
+    private func rankIconColor(_ rank: Int?) -> Color {
+        switch rank {
+        case 1:  return BSColors.titleGold
+        case 2:  return Color(hex: "C0C0C0")
+        case 3:  return Color(hex: "CD7F32")
+        default: return BSColors.textTertiary
+        }
+    }
+
+    private func rankIconBackground(_ rank: Int?) -> Color {
+        switch rank {
+        case 1:  return BSColors.titleGold.opacity(0.15)
+        case 2:  return Color(hex: "C0C0C0").opacity(0.12)
+        case 3:  return Color(hex: "CD7F32").opacity(0.12)
+        default: return BSColors.surfaceSecondary
+        }
+    }
+
+    private func rankBorderColor(_ rank: Int?) -> Color {
+        switch rank {
+        case 1:  return BSColors.titleGold
+        case 2:  return Color(hex: "C0C0C0")
+        case 3:  return Color(hex: "CD7F32")
+        default: return Color.clear
+        }
     }
 
     // MARK: - Helpers
@@ -175,7 +301,7 @@ struct MonthlyLeaderboardView: View {
             do {
                 rows = try await GameAPIClient.shared.getMonthlyLeaderboard(periodKey: selectedMonth)
             } catch {
-                errorMessage = "Failed to load leaderboard"
+                rows = []
             }
             isLoading = false
         }
@@ -184,10 +310,10 @@ struct MonthlyLeaderboardView: View {
     private func changeMonth(_ delta: Int) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM"
-        guard let date = formatter.date(from: selectedMonth) else { return }
-        guard let newDate = Calendar.current.date(byAdding: .month, value: delta, to: date) else { return }
+        guard let date = formatter.date(from: selectedMonth),
+              let newDate = Calendar.current.date(byAdding: .month, value: delta, to: date) else { return }
         let newKey = formatter.string(from: newDate)
-        if newKey <= Self.currentPeriodKey() {
+        if newKey >= Self.minPeriodKey && newKey <= Self.currentPeriodKey() {
             selectedMonth = newKey
             fetch()
         }
@@ -195,7 +321,7 @@ struct MonthlyLeaderboardView: View {
 
     static func currentPeriodKey() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM, yyyy"
+        formatter.dateFormat = "yyyy-MM"
         return formatter.string(from: Date())
     }
 
@@ -208,11 +334,7 @@ struct MonthlyLeaderboardView: View {
         return output.string(from: date)
     }
 
-    private func rankColor(_ rank: Int?) -> Color {
-        switch rank {
-        case 1:    return BSColors.titleGold
-        case 2, 3: return BSColors.accent
-        default:   return BSColors.textTertiary
-        }
+    private func formatPeriodKeyUpper(_ key: String) -> String {
+        formatPeriodKey(key).uppercased()
     }
 }

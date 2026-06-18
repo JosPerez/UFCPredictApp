@@ -61,12 +61,15 @@ final class GameAPIClient {
             encoder.keyEncodingStrategy = .convertToSnakeCase
             req.httpBody = try encoder.encode(body)
         }
+        // LOG api request
+        GameLogger.apiRequest(method, endpoint)
+        // Send api request
         let (data, response) = try await URLSession.shared.data(for: req)
 
         guard let http = response as? HTTPURLResponse else {
             throw APIError.networkError
         }
-
+        GameLogger.apiResponse(endpoint, status: http.statusCode)
         switch http.statusCode {
         case 200..<300:
             return data

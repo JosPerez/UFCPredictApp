@@ -100,4 +100,10 @@ final class UserProfileService {
 
         try await db.collection(collection).document(uid).updateData(data)
     }
+    
+    // MARK: - Delete profile
+    
+    func deleteProfile(uid: String) async throws {
+        try await db.collection(collection).document(uid).delete()
+    }
 }

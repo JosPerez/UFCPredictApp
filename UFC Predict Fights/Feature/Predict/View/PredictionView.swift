@@ -222,11 +222,11 @@ struct PredictionView: View {
 
             // Names header
             HStack {
-                Text(lastName(profileA.fullName))
+                Text(profileA.fullName.shortName)
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(BSColors.accent)
                 Spacer()
-                Text(lastName(profileB.fullName))
+                Text(profileB.fullName.shortName)
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(BSColors.accentBlue)
             }
@@ -508,7 +508,7 @@ struct PredictionView: View {
                         size: 52,
                         accentColor: BSColors.accent
                     )
-                    Text(lastName(prediction.fighterAName))
+                    Text(prediction.fighterAName.shortName)
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(BSColors.textPrimary)
                     cornerDot("Red corner", color: BSColors.accent)
@@ -531,7 +531,7 @@ struct PredictionView: View {
                         size: 52,
                         accentColor: BSColors.accentBlue
                     )
-                    Text(lastName(prediction.fighterBName))
+                    Text(prediction.fighterBName.shortName)
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(BSColors.textPrimary)
                     cornerDot("Blue corner", color: BSColors.accentBlue)
@@ -786,8 +786,8 @@ struct PredictionView: View {
             ForEach(prediction.topFactors) { factor in
                 FactorRow(
                     factor: factor,
-                    fighterAName: lastName(prediction.fighterAName),
-                    fighterBName: lastName(prediction.fighterBName)
+                    fighterAName: prediction.fighterAName.shortName,
+                    fighterBName: prediction.fighterBName.shortName
                 )
             }
         }
@@ -953,11 +953,6 @@ struct PredictionView: View {
         let f = parts.first?.prefix(1) ?? ""
         let l = parts.last?.prefix(1) ?? ""
         return "\(f)\(l)"
-    }
-
-    private func lastName(_ fullName: String) -> String {
-        let parts = fullName.split(separator: " ")
-        return parts.count > 1 ? String(parts.last ?? "") : fullName
     }
 }
 

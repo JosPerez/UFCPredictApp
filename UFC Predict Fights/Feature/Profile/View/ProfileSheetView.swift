@@ -13,6 +13,7 @@ struct ProfileSheetView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showLogoutConfirm = false
     @State private var showLogin = false
+    @State private var showLegal = false
 
     private let biometric = BiometricAuthService.shared
 
@@ -45,8 +46,11 @@ struct ProfileSheetView: View {
 
                         // 5. About
                         aboutSection
+                        
+                        // 6. Legal (agregar)
+                        legalSection
 
-                        // 6. Logout (only if signed in)
+                        // 7. Logout (only if signed in)
                         if authVM.state == .authenticated {
                             logoutButton
                         }
@@ -315,6 +319,36 @@ struct ProfileSheetView: View {
             .padding(.vertical, 14)
             .background(BSColors.lossRed.opacity(0.1))
             .cornerRadius(12)
+        }
+    }
+    
+    // ═══════════════════════════════════════════════
+    // MARK: - 6. Legal
+    // ═══════════════════════════════════════════════
+    @ViewBuilder
+    private var legalSection: some View {
+        Button {
+            showLegal = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "doc.text.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(BSColors.textSecondary)
+                    .frame(width: 24)
+                Text("Legal & Privacy")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(BSColors.textPrimary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12))
+                    .foregroundColor(BSColors.textHint)
+            }
+            .padding(14)
+            .background(BSColors.surface)
+            .cornerRadius(14)
+        }
+        .sheet(isPresented: $showLegal) {
+            LegalView()
         }
     }
 

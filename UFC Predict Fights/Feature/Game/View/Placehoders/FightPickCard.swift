@@ -9,36 +9,29 @@ import SwiftUI
 
 struct FightPickCard: View {
     let fight: GameFightDTO
-    let pick: FightPickDTO?
+    let draft: EventPicksViewModel.DraftPick
     let score: FightScoreDTO?
-    let saveState: EventPicksViewModel.SaveState
     let isLocked: Bool
     let isScored: Bool
-    let onPickChanged: (Int, String?, Int?) -> Void
-
-    @State private var selectedWinner: Int? = nil
-    @State private var selectedMethod: String? = nil
-    @State private var selectedRound: Int? = nil
-    @State private var initialized = false
+    let onDraftChanged: (Int?, String?, Int?) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Header: names + badge
+            // Header
             header
 
-            // Winner selection
+            // Winner picker
             winnerPicker
 
             // Method (visible after winner selected)
-            if selectedWinner != nil {
+            if draft.winnerFighterId != nil {
                 methodPicker
             }
 
             // Round (visible if method is KO_TKO or SUBMISSION)
-            if let method = selectedMethod, method != "DECISION", selectedWinner != nil {
+            if let method = draft.methodPick, method != "DECISION", draft.winnerFighterId != nil {
                 roundPicker
-            } else if selectedMethod == "DECISION" && selectedWinner != nil {
-                // Decision hint
+            } else if draft.methodPick == "DECISION" && draft.winnerFighterId != nil {
                 HStack(spacing: 6) {
                     Image(systemName: "info.circle")
                         .font(.system(size: 10))
@@ -47,9 +40,6 @@ struct FightPickCard: View {
                 }
                 .foregroundColor(BSColors.textHint)
             }
-
-            // Save status
-            saveIndicator
 
             // Score breakdown (if scored)
             if let score, isScored {
@@ -64,14 +54,6 @@ struct FightPickCard: View {
                 .stroke(cardBorder, lineWidth: isScored ? 1 : 0)
         )
         .padding(.horizontal, 16)
-        .onAppear {
-            if !initialized {
-                selectedWinner = pick?.winnerFighterId
-                selectedMethod = pick?.methodPick
-                selectedRound = pick?.roundPick
-                initialized = true
-            }
-        }
     }
 
     // ═══════════════════════════════════════════════
@@ -82,7 +64,7 @@ struct FightPickCard: View {
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(lastName(fight.fighterRName)) vs \(lastName(fight.fighterBName))")
+                Text("\(fight.fighterRName.shortName) vs \(fight.fighterBName.shortName)")
                     .font(.system(size: 17, weight: .bold))
                     .foregroundColor(BSColors.textPrimary)
 
@@ -107,7 +89,6 @@ struct FightPickCard: View {
                     }
                 }
             }
-
             Spacer()
             statusBadge
         }
@@ -122,50 +103,50 @@ struct FightPickCard: View {
         HStack(spacing: 8) {
             fighterButton(
                 id: fight.fighterRId,
-                name: lastName(fight.fighterRName),
-                isSelected: selectedWinner == fight.fighterRId,
+                name: fight.fighterRName.shortName,
+                img: fight.fighterRImg,
+                isSelected: draft.winnerFighterId == fight.fighterRId,
                 cornerColor: BSColors.accent
             )
-
             fighterButton(
                 id: fight.fighterBId,
-                name: lastName(fight.fighterBName),
-                isSelected: selectedWinner == fight.fighterBId,
+                name: fight.fighterBName.shortName,
+                img: fight.fighterBImg,
+                isSelected: draft.winnerFighterId == fight.fighterBId,
                 cornerColor: BSColors.accentBlue
             )
         }
     }
 
     @ViewBuilder
-    private func fighterButton(id: Int, name: String, isSelected: Bool, cornerColor: Color) -> some View {
+    private func fighterButton(id: Int, name: String, img: String?, isSelected: Bool, cornerColor: Color) -> some View {
         Button {
             guard !isLocked else { return }
-            selectedWinner = id
-            sendPick()
+            onDraftChanged(id, draft.methodPick, draft.roundPick)
         } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "figure.martial.arts")
-                    .font(.system(size: 14))
-                    .foregroundColor(isSelected ? .white : BSColors.textHint)
-
+            HStack(spacing: 10) {
+                FighterAvatar(
+                    imageUrl: img,
+                    initials: String(name.prefix(2)).uppercased(),
+                    size: 36,
+                    accentColor: isSelected ? .white : cornerColor
+                )
                 VStack(alignment: .leading, spacing: 2) {
                     Text(name)
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(isSelected ? .white : BSColors.textPrimary)
-
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
+                        .frame(height: 36, alignment: .topLeading)
                     Text(fighterSubtext(id: id, isSelected: isSelected))
                         .font(.system(size: 10))
                         .foregroundColor(isSelected ? .white.opacity(0.7) : BSColors.textHint)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .background(
-                isSelected
-                    ? cornerColor
-                    : BSColors.surfaceSecondary
-            )
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(isSelected ? cornerColor : BSColors.surfaceSecondary)
             .cornerRadius(10)
         }
         .buttonStyle(.plain)
@@ -173,15 +154,9 @@ struct FightPickCard: View {
     }
 
     private func fighterSubtext(id: Int, isSelected: Bool) -> String {
-        if isLocked {
-            return isSelected ? "Locked selection" : "Locked selection"
-        }
-        if isSelected {
-            return "Winner selected"
-        }
-        if selectedWinner != nil {
-            return "Tap to switch"
-        }
+        if isLocked { return "Locked selection" }
+        if isSelected { return "Winner selected" }
+        if draft.winnerFighterId != nil { return "Tap to switch" }
         return "Tap to select"
     }
 
@@ -207,15 +182,12 @@ struct FightPickCard: View {
 
     @ViewBuilder
     private func methodPill(_ label: String, value: String) -> some View {
-        let isSelected = selectedMethod == value
+        let isSelected = draft.methodPick == value
 
         Button {
             guard !isLocked else { return }
-            selectedMethod = value
-            if value == "DECISION" {
-                selectedRound = nil
-            }
-            sendPick()
+            let newRound = value == "DECISION" ? nil : draft.roundPick
+            onDraftChanged(draft.winnerFighterId, value, newRound)
         } label: {
             Text(label)
                 .font(.system(size: 13, weight: .semibold))
@@ -243,30 +215,24 @@ struct FightPickCard: View {
 
             HStack(spacing: 8) {
                 ForEach(1...fight.scheduledRounds, id: \.self) { round in
-                    roundPill(round)
+                    let isSelected = draft.roundPick == round
+
+                    Button {
+                        guard !isLocked else { return }
+                        onDraftChanged(draft.winnerFighterId, draft.methodPick, round)
+                    } label: {
+                        Text("R\(round)")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundColor(isSelected ? .white : BSColors.textSecondary)
+                            .frame(width: 44, height: 36)
+                            .background(isSelected ? BSColors.accent.opacity(0.8) : BSColors.surfaceSecondary)
+                            .cornerRadius(8)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(isLocked)
                 }
             }
         }
-    }
-
-    @ViewBuilder
-    private func roundPill(_ round: Int) -> some View {
-        let isSelected = selectedRound == round
-
-        Button {
-            guard !isLocked else { return }
-            selectedRound = round
-            sendPick()
-        } label: {
-            Text("R\(round)")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(isSelected ? .white : BSColors.textSecondary)
-                .frame(width: 44, height: 36)
-                .background(isSelected ? BSColors.accent.opacity(0.8) : BSColors.surfaceSecondary)
-                .cornerRadius(8)
-        }
-        .buttonStyle(.plain)
-        .disabled(isLocked)
     }
 
     // ═══════════════════════════════════════════════
@@ -278,10 +244,10 @@ struct FightPickCard: View {
         if isLocked && !isScored {
             HStack(spacing: 4) {
                 Text("Locked")
-                    .font(.system(size: 11, weight: .semibold))
                 Image(systemName: "lock.fill")
                     .font(.system(size: 9))
             }
+            .font(.system(size: 11, weight: .semibold))
             .foregroundColor(BSColors.textHint)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
@@ -297,19 +263,19 @@ struct FightPickCard: View {
             } else {
                 badgeView("0 pts", color: BSColors.lossRed)
             }
-        } else if isComplete {
+        } else if draft.isComplete {
             HStack(spacing: 4) {
                 Text("Complete")
-                    .font(.system(size: 11, weight: .semibold))
                 Image(systemName: "checkmark")
                     .font(.system(size: 9, weight: .bold))
             }
+            .font(.system(size: 11, weight: .semibold))
             .foregroundColor(BSColors.winGreen)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(BSColors.winGreen.opacity(0.12))
             .cornerRadius(8)
-        } else if selectedWinner != nil {
+        } else if draft.winnerFighterId != nil {
             badgeView("Incomplete", color: BSColors.titleGold)
         }
     }
@@ -323,42 +289,6 @@ struct FightPickCard: View {
             .padding(.vertical, 5)
             .background(color.opacity(0.12))
             .cornerRadius(8)
-    }
-
-    // ═══════════════════════════════════════════════
-    // MARK: - Save Indicator
-    // ═══════════════════════════════════════════════
-
-    @ViewBuilder
-    private var saveIndicator: some View {
-        switch saveState {
-        case .saving:
-            HStack(spacing: 6) {
-                ProgressView().scaleEffect(0.6).tint(BSColors.textHint)
-                Text("Saving...")
-                    .font(.system(size: 11))
-                    .foregroundColor(BSColors.textHint)
-            }
-        case .saved:
-            HStack(spacing: 4) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 11))
-                Text("Saved")
-                    .font(.system(size: 11, weight: .medium))
-            }
-            .foregroundColor(BSColors.winGreen)
-        case .failed(let msg):
-            HStack(spacing: 4) {
-                Image(systemName: "exclamationmark.circle.fill")
-                    .font(.system(size: 11))
-                Text(msg)
-                    .font(.system(size: 11))
-                    .lineLimit(1)
-            }
-            .foregroundColor(BSColors.lossRed)
-        default:
-            EmptyView()
-        }
     }
 
     // ═══════════════════════════════════════════════
@@ -410,27 +340,11 @@ struct FightPickCard: View {
     // MARK: - Helpers
     // ═══════════════════════════════════════════════
 
-    private var isComplete: Bool {
-        guard selectedWinner != nil, let method = selectedMethod else { return false }
-        if method == "DECISION" { return true }
-        return selectedRound != nil
-    }
-
-    private func sendPick() {
-        guard let winner = selectedWinner else { return }
-        onPickChanged(winner, selectedMethod, selectedRound)
-    }
-
     private var cardBorder: Color {
         guard let score else { return Color.clear }
         if score.isVoid { return BSColors.textHint.opacity(0.3) }
         if score.bonusPoints > 0 { return BSColors.titleGold.opacity(0.5) }
         if score.totalPoints > 0 { return BSColors.winGreen.opacity(0.3) }
         return BSColors.lossRed.opacity(0.3)
-    }
-
-    private func lastName(_ name: String) -> String {
-        let parts = name.split(separator: " ")
-        return parts.count > 1 ? String(parts.last ?? "") : name
     }
 }

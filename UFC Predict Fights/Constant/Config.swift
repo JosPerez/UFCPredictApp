@@ -10,10 +10,12 @@ import Foundation
 // Config.swift
 enum Config {
     #if DEBUG
-    static let baseURL = "http://192.168.100.15:8000"  // tu IP local
+    static let baseURL = "http://192.168.1.249:8000"  // tu IP local
     #else
     static let baseURL = "https://ufc-predictor-production-a513.up.railway.app"
     #endif
     
     static let apiKey = "ufc-predictor-secret-key-2024"
+    static let privacyPolicyURL = "\(baseURL)/legal/privacy"
+    static let termsOfServiceURL = "\(baseURL)/legal/terms"
 }

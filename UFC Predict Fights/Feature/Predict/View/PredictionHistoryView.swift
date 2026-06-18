@@ -71,7 +71,7 @@ struct PredictionHistoryRow: View {
                         size: 36,
                         accentColor: BSColors.accent
                     )
-                    Text(lastName(prediction.fighterAName))
+                    Text(prediction.fighterAName.shortName)
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             prediction.fighterAProb > prediction.fighterBProb
@@ -114,7 +114,7 @@ struct PredictionHistoryRow: View {
                         size: 36,
                         accentColor: BSColors.accentBlue
                     )
-                    Text(lastName(prediction.fighterBName))
+                    Text(prediction.fighterBName.shortName)
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             prediction.fighterBProb > prediction.fighterAProb
@@ -192,11 +192,6 @@ struct PredictionHistoryRow: View {
         let f = parts.first?.prefix(1) ?? ""
         let l = parts.last?.prefix(1) ?? ""
         return "\(f)\(l)"
-    }
-
-    private func lastName(_ name: String) -> String {
-        let parts = name.split(separator: " ")
-        return parts.count > 1 ? String(parts.last ?? "") : name
     }
 
     private func confidenceColor(_ confidence: String) -> Color {

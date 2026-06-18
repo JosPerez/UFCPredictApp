@@ -151,7 +151,7 @@ struct PostEventResultsView: View {
                         size: 36,
                         accentColor: BSColors.accent
                     )
-                    Text(lastName(fight.fighterRName))
+                    Text(fight.fighterRName.shortName)
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             fight.winnerFighterId == fight.fighterRId
@@ -183,7 +183,7 @@ struct PostEventResultsView: View {
                         size: 36,
                         accentColor: BSColors.accentBlue
                     )
-                    Text(lastName(fight.fighterBName))
+                    Text(fight.fighterBName.shortName)
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(
                             fight.winnerFighterId == fight.fighterBId
@@ -364,17 +364,17 @@ struct PostEventResultsView: View {
 
     private func pickedFighterName(fight: GameFightDTO, pick: FightPickDTO) -> String {
         if pick.winnerFighterId == fight.fighterRId {
-            return lastName(fight.fighterRName)
+            return fight.fighterRName.shortName
         }
-        return lastName(fight.fighterBName)
+        return fight.fighterBName.shortName
     }
 
     private func actualWinnerName(_ fight: GameFightDTO) -> String {
         if fight.winnerFighterId == fight.fighterRId {
-            return lastName(fight.fighterRName)
+            return fight.fighterRName.shortName
         }
         if fight.winnerFighterId == fight.fighterBId {
-            return lastName(fight.fighterBName)
+            return fight.fighterBName.shortName
         }
         return "—"
     }
@@ -406,11 +406,6 @@ struct PostEventResultsView: View {
         case 2, 3: return BSColors.accent
         default:   return BSColors.textPrimary
         }
-    }
-
-    private func lastName(_ name: String) -> String {
-        let parts = name.split(separator: " ")
-        return parts.count > 1 ? String(parts.last ?? "") : name
     }
 
     private func initials(_ name: String) -> String {

@@ -13,16 +13,31 @@ import Observation
 final class EventPicksViewModel {
 
     var eventDetail: GameEventDetailDTO? = nil
-    var picks: [Int: FightPickDTO] = [:]  // fight_id → pick
-    var scores: [Int: FightScoreDTO] = [:] // fight_id → score
-    var saveStates: [Int: SaveState] = [:] // fight_id → save state
+    var savedPicks: [Int: FightPickDTO] = [:]
+    var drafts: [Int: DraftPick] = [:]
+    var scores: [Int: FightScoreDTO] = [:]
+    var saveState: BatchSaveState = .idle
     var isLoading = false
     var errorMessage: String? = nil
 
     private let api = GameAPIClient.shared
     private var saveTasks: [Int: Task<Void, Never>] = [:]
 
-    enum SaveState: Equatable {
+    // MARK: - Draft Pick
+
+    struct DraftPick: Equatable {
+        var winnerFighterId: Int?
+        var methodPick: String?
+        var roundPick: Int?
+
+        var isComplete: Bool {
+            guard winnerFighterId != nil, let method = methodPick else { return false }
+            if method == "DECISION" { return true }
+            return roundPick != nil
+        }
+    }
+
+    enum BatchSaveState: Equatable {
         case idle
         case saving
         case saved
@@ -40,11 +55,23 @@ final class EventPicksViewModel {
                 let detail = try await api.getGameEventDetail(eventId: eventId)
                 eventDetail = detail
 
-                // Index picks by fight_id
-                picks = Dictionary(uniqueKeysWithValues: detail.picks.map { ($0.fightId, $0) })
+                // Index saved picks
+                savedPicks = Dictionary(uniqueKeysWithValues: detail.picks.map { ($0.fightId, $0) })
 
-                // Index scores by fight_id
+                // Initialize drafts from saved picks
+                drafts = [:]
+                for pick in detail.picks {
+                    drafts[pick.fightId] = DraftPick(
+                        winnerFighterId: pick.winnerFighterId,
+                        methodPick: pick.methodPick,
+                        roundPick: pick.roundPick
+                    )
+                }
+
+                // Index scores
                 scores = Dictionary(uniqueKeysWithValues: detail.scores.map { ($0.fightId, $0) })
+                // LOG Score from response
+                GameLogger.eventLoaded(eventId: eventId, fights: detail.fightCount, picks: detail.picks.count)
 
             } catch let error as GameAPIClient.APIError {
                 errorMessage = error.errorDescription
@@ -55,45 +82,100 @@ final class EventPicksViewModel {
         }
     }
 
-    // MARK: - Submit Pick
+    // MARK: - Draft Management
 
-    func submitPick(fightId: Int, winnerFighterId: Int, methodPick: String?, roundPick: Int?) {
-        // Cancel previous save for this fight
-        saveTasks[fightId]?.cancel()
+    func updateDraft(fightId: Int, winnerFighterId: Int?, methodPick: String?, roundPick: Int?) {
+        var draft = drafts[fightId] ?? DraftPick()
+        draft.winnerFighterId = winnerFighterId
+        draft.methodPick = methodPick
+        draft.roundPick = roundPick
+        drafts[fightId] = draft
+        // LOG drafts
+        GameLogger.pickUpdated(fightId: fightId, winnerId: winnerFighterId, method: methodPick, round: roundPick)
+    }
 
-        saveStates[fightId] = .saving
+    func resetDraft(fightId: Int) {
+        if let saved = savedPicks[fightId] {
+            drafts[fightId] = DraftPick(
+                winnerFighterId: saved.winnerFighterId,
+                methodPick: saved.methodPick,
+                roundPick: saved.roundPick
+            )
+        } else {
+            drafts.removeValue(forKey: fightId)
+        }
+    }
 
-        saveTasks[fightId] = Task {
-            // Debounce 300ms
-            try? await Task.sleep(nanoseconds: 300_000_000)
-            guard !Task.isCancelled else { return }
+    func resetAllDrafts() {
+        drafts = [:]
+        for pick in savedPicks.values {
+            drafts[pick.fightId] = DraftPick(
+                winnerFighterId: pick.winnerFighterId,
+                methodPick: pick.methodPick,
+                roundPick: pick.roundPick
+            )
+        }
+    }
 
-            do {
-                let request = UpsertFightPickRequest(
-                    winnerFighterId: winnerFighterId,
-                    methodPick: methodPick,
-                    roundPick: roundPick
-                )
-                let result = try await api.submitPick(fightId: fightId, pick: request)
+    // MARK: - Save
 
-                guard !Task.isCancelled else { return }
+    func saveAllDirtyPicks() {
+        // Start
+        let dirty = dirtyPicks
+        
+        // LOG save all dirty picks
+        GameLogger.batchSaveStarted(count: dirty.count)
+        
+        guard !dirty.isEmpty else {
+            saveState = .saved
+            clearSavedStateAfterDelay()
+            return
+        }
 
-                picks[fightId] = result
-                saveStates[fightId] = .saved
+        saveState = .saving
 
-                // Clear saved state after 2s
-                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                guard !Task.isCancelled else { return }
-                if saveStates[fightId] == .saved {
-                    saveStates[fightId] = .idle
+        Task {
+            var failedCount = 0
+            var lastError = ""
+
+            for (fightId, draft) in dirty {
+                guard let winnerId = draft.winnerFighterId else { continue }
+
+                do {
+                    let request = UpsertFightPickRequest(
+                        winnerFighterId: winnerId,
+                        methodPick: draft.methodPick,
+                        roundPick: draft.roundPick
+                    )
+                    let result = try await api.submitPick(fightId: fightId, pick: request)
+
+                    // Update saved state
+                    savedPicks[fightId] = result
+
+                } catch let error as GameAPIClient.APIError {
+                    failedCount += 1
+                    lastError = error.errorDescription ?? "Save failed"
+                } catch {
+                    failedCount += 1
+                    lastError = "Save failed"
                 }
+            }
 
-            } catch let error as GameAPIClient.APIError {
-                guard !Task.isCancelled else { return }
-                saveStates[fightId] = .failed(error.errorDescription ?? "Save failed")
-            } catch {
-                guard !Task.isCancelled else { return }
-                saveStates[fightId] = .failed("Save failed")
+            if failedCount > 0 {
+                saveState = .failed("\(failedCount) pick\(failedCount > 1 ? "s" : "") failed: \(lastError)")
+            } else {
+                saveState = .saved
+                clearSavedStateAfterDelay()
+            }
+            GameLogger.batchSaveCompleted(saved: dirty.count - failedCount, failed: failedCount)
+        }
+    }
+
+    private func clearSavedStateAfterDelay() {
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            if saveState == .saved {
+                saveState = .idle
             }
         }
     }
@@ -109,12 +191,12 @@ final class EventPicksViewModel {
         eventDetail?.status == "scored"
     }
 
-    var completedPicks: Int {
-        picks.values.filter { $0.isComplete }.count
-    }
-
     var totalFights: Int {
         eventDetail?.fightCount ?? 0
+    }
+
+    var completedPicks: Int {
+        drafts.values.filter { $0.isComplete }.count
     }
 
     var allComplete: Bool {
@@ -125,15 +207,40 @@ final class EventPicksViewModel {
         scores.values.reduce(0) { $0 + $1.totalPoints }
     }
 
-    func pickFor(fightId: Int) -> FightPickDTO? {
-        picks[fightId]
+    var hasDirtyPicks: Bool {
+        !dirtyPicks.isEmpty
+    }
+
+    var dirtyPicks: [Int: DraftPick] {
+        var dirty: [Int: DraftPick] = [:]
+        for (fightId, draft) in drafts {
+            guard draft.winnerFighterId != nil else { continue }
+
+            if let saved = savedPicks[fightId] {
+                let savedDraft = DraftPick(
+                    winnerFighterId: saved.winnerFighterId,
+                    methodPick: saved.methodPick,
+                    roundPick: saved.roundPick
+                )
+                if draft != savedDraft {
+                    dirty[fightId] = draft
+                }
+            } else {
+                dirty[fightId] = draft
+            }
+        }
+        return dirty
+    }
+
+    var dirtyCount: Int {
+        dirtyPicks.count
+    }
+
+    func draftFor(fightId: Int) -> DraftPick {
+        drafts[fightId] ?? DraftPick()
     }
 
     func scoreFor(fightId: Int) -> FightScoreDTO? {
         scores[fightId]
-    }
-
-    func saveStateFor(fightId: Int) -> SaveState {
-        saveStates[fightId] ?? .idle
     }
 }

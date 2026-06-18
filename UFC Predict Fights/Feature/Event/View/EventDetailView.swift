@@ -167,12 +167,12 @@ struct EventDetailView: View {
                         } label: {
                             VStack(spacing: 3) {
                                 HStack(spacing: 4) {
-                                    Text(lastName(fight.fighterRName))
+                                    Text(fight.fighterRName.lastName)
                                         .font(.system(size: 10, weight: selectedFightIndex == index ? .bold : .regular))
                                     Text("vs")
                                         .font(.system(size: 8))
                                         .foregroundColor(BSColors.textHint)
-                                    Text(lastName(fight.fighterBName))
+                                    Text(fight.fighterBName.lastName)
                                         .font(.system(size: 10, weight: selectedFightIndex == index ? .bold : .regular))
                                 }
                                 .foregroundColor(selectedFightIndex == index ? .white : BSColors.textTertiary)
@@ -430,11 +430,11 @@ struct EventDetailView: View {
                     .foregroundColor(BSColors.textPrimary)
 
                 HStack {
-                    Text(lastName(fight.fighterRName))
+                    Text(fight.fighterRName.shortName)
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(BSColors.accent)
                     Spacer()
-                    Text(lastName(fight.fighterBName))
+                    Text(fight.fighterBName.shortName)
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(BSColors.accentBlue)
                 }
@@ -594,11 +594,11 @@ struct EventDetailView: View {
                 }
 
                 HStack {
-                    Text(lastName(fight.fighterRName))
+                    Text(fight.fighterRName.shortName)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(BSColors.accent)
                     Spacer()
-                    Text(lastName(fight.fighterBName))
+                    Text(fight.fighterBName.shortName)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(BSColors.accentBlue)
                 }
@@ -863,8 +863,8 @@ struct EventDetailView: View {
 
     private func generateInsights(_ fight: BSEventFight) -> [String] {
         var insights: [String] = []
-        let rName = lastName(fight.fighterRName)
-        let bName = lastName(fight.fighterBName)
+        let rName = fight.fighterRName.shortName
+        let bName = fight.fighterBName.shortName
         let winnerName = fight.fighterRWinner == true ? rName : bName
         let loserName = fight.fighterRWinner == true ? bName : rName
 
@@ -955,12 +955,6 @@ struct EventDetailView: View {
     // ═══════════════════════════════════════════════
     // MARK: - Helpers
     // ═══════════════════════════════════════════════
-
-    private func lastName(_ name: String) -> String {
-        let parts = name.split(separator: " ")
-        return parts.count > 1 ? String(parts.last ?? "") : name
-    }
-
     private func initials(_ name: String) -> String {
         let parts = name.split(separator: " ")
         let f = parts.first?.prefix(1) ?? ""
