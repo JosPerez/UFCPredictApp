@@ -91,7 +91,6 @@
 		0797F68C2FE3940300B52A0C /* LegalDocView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F68B2FE393FE00B52A0C /* LegalDocView.swift */; };
 		0797F68F2FE3944300B52A0C /* DataPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F68E2FE3943E00B52A0C /* DataPrivacyView.swift */; };
 		0797F6912FE3945F00B52A0C /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6902FE3945D00B52A0C /* DeleteAccountView.swift */; };
-		0797F6932FE4BAAD00B52A0C /* PredictRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6922FE4BAA900B52A0C /* PredictRequest.swift */; };
 		0797F6962FE4BFE600B52A0C /* JSONDecoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6952FE4BFDE00B52A0C /* JSONDecoderExtension.swift */; };
 		0797F6982FE4C45900B52A0C /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6972FE4C45900B52A0C /* FirebaseCrashlytics */; };
 		0797F69D2FE4C60F00B52A0C /* CrashReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F69C2FE4C60B00B52A0C /* CrashReporter.swift */; };
@@ -180,7 +179,6 @@
 		0797F68B2FE393FE00B52A0C /* LegalDocView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDocView.swift; sourceTree = "<group>"; };
 		0797F68E2FE3943E00B52A0C /* DataPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPrivacyView.swift; sourceTree = "<group>"; };
 		0797F6902FE3945D00B52A0C /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
-		0797F6922FE4BAA900B52A0C /* PredictRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictRequest.swift; sourceTree = "<group>"; };
 		0797F6952FE4BFDE00B52A0C /* JSONDecoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderExtension.swift; sourceTree = "<group>"; };
 		0797F69C2FE4C60B00B52A0C /* CrashReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporter.swift; sourceTree = "<group>"; };
 		B38F0F1ACE4D6C4EA5B5AABC /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -655,7 +653,6 @@
 		0797F6642FE212D100B52A0C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				0797F6922FE4BAA900B52A0C /* PredictRequest.swift */,
 				0797F6672FE212EE00B52A0C /* GameViewModel.swift */,
 				0797F6652FE212D500B52A0C /* GameModels.swift */,
 			);
@@ -981,7 +978,6 @@
 				0797F6482FE1001800B52A0C /* AuthGateModifier.swift in Sources */,
 				0797F66F2FE2136D00B52A0C /* EventPicksView.swift in Sources */,
 				0797F6152FDF60D500B52A0C /* EloRankingsView.swift in Sources */,
-				0797F6932FE4BAAD00B52A0C /* PredictRequest.swift in Sources */,
 				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
 				0797F62D2FE0F19E00B52A0C /* AuthViewModel.swift in Sources */,
 				0797F68C2FE3940300B52A0C /* LegalDocView.swift in Sources */,

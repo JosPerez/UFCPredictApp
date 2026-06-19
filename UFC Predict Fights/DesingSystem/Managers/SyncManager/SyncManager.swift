@@ -15,43 +15,98 @@ import BlackSpartan
 @MainActor
 @Observable
 final class SyncManager {
-
+    
     // MARK: - State
-
     var isSyncingFighters: Bool = false
     var isSyncingEvents: Bool = false
     var isSyncingRankings: Bool = false
     var isSyncing: Bool { isSyncingFighters || isSyncingEvents }
     var syncProgress: String? = nil
     var syncError: String? = nil
-
+    
     // MARK: - Config
-
-    private let ttlDays: Int = 8
     private let blockSize: Int = 100
     private let baseDelay: Double = 1.5
     private let maxJitter: Double = 1.0
-
+    
     // MARK: - Dependencies
-
     private let fighterService: BSFighterService
     private let eventService: BSEventService
     private let rankingService: BSRankingService
     private let modelContext: ModelContext
-
+    
     // MARK: - Internal state
-
     private var fighterContinuation: CheckedContinuation<[BSFighter], Error>?
     private var eventContinuation: CheckedContinuation<[BSEvent], Error>?
     private var rankingContinuation: CheckedContinuation<[BSRankingDivision], Error>?
     private var activeRequestType: String? = nil
-
+    
     // MARK: - UserDefaults keys
-
+    
     private enum Keys {
         static let lastFighterSyncAt = "sync_fighters_last_at"
         static let lastEventSyncAt   = "sync_events_last_at"
         static let lastRankingSyncAt  = "sync_rankings_last_at"
+    }
+    
+    // MARK: - TTL Strategy
+    
+    enum SyncTTL {
+        case nextSunday      // Expira domingo 6:00 AM más cercano
+        case midMonth        // Expira día 15 del mes a las 6:00 AM
+        
+        func isExpired(since lastSync: Date) -> Bool {
+            let now = Date()
+            let nextExpiry = self.nextExpiry(after: lastSync)
+            return now >= nextExpiry
+        }
+        
+        func nextExpiry(after date: Date) -> Date {
+            let calendar = Calendar.current
+            
+            switch self {
+            case .nextSunday:
+                // Próximo domingo 6:00 AM después del lastSync
+                var components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+                components.weekday = 1  // Sunday
+                components.hour = 6
+                components.minute = 0
+                components.second = 0
+                
+                guard let sunday = calendar.date(from: components) else { return date }
+                
+                // Si el domingo calculado es antes o igual al lastSync, avanzar una semana
+                if sunday <= date {
+                    return calendar.date(byAdding: .weekOfYear, value: 1, to: sunday) ?? date
+                }
+                return sunday
+                
+            case .midMonth:
+                // Día 15 del mes a las 6:00 AM
+                var components = calendar.dateComponents([.year, .month], from: date)
+                components.day = 15
+                components.hour = 6
+                components.minute = 0
+                components.second = 0
+                
+                guard let midMonth = calendar.date(from: components) else { return date }
+                
+                // Si el 15 ya pasó, usar el 15 del siguiente mes
+                if midMonth <= date {
+                    return calendar.date(byAdding: .month, value: 1, to: midMonth) ?? date
+                }
+                return midMonth
+            }
+        }
+    }
+    
+    // MARK: - TTL Check
+    
+    private func isSyncRequired(key: String, ttl: SyncTTL) -> Bool {
+        guard let lastSync = UserDefaults.standard.object(forKey: key) as? Date else {
+            return true  // Never synced
+        }
+        return ttl.isExpired(since: lastSync)
     }
 
     // MARK: - Init
@@ -64,41 +119,29 @@ final class SyncManager {
     }
 
     // MARK: - Public API: Fighters
-
+    
     func syncFightersIfNeeded() async {
         guard !isSyncingFighters else { return }
-        guard isSyncRequired(key: Keys.lastFighterSyncAt) else { return }
+        guard isSyncRequired(key: Keys.lastFighterSyncAt, ttl: .nextSunday) else { return }
         await syncAllFighters()
     }
-
+    
     func forceSyncFighters() async {
         guard !isSyncingFighters else { return }
         await syncAllFighters()
     }
 
     // MARK: - Public API: Events
-
+    
     func syncEventsIfNeeded() async {
         guard !isSyncingEvents else { return }
-        guard isSyncRequired(key: Keys.lastEventSyncAt) else { return }
+        guard isSyncRequired(key: Keys.lastEventSyncAt, ttl: .nextSunday) else { return }
         await syncAllEvents()
     }
 
     func forceSyncEvents() async {
         guard !isSyncingEvents else { return }
         await syncAllEvents()
-    }
-
-    // MARK: - TTL Check
-
-    private func isSyncRequired(key: String) -> Bool {
-        guard let lastSync = UserDefaults.standard.object(forKey: key) as? Date else {
-            return true
-        }
-        let daysSinceSync = Calendar.current.dateComponents(
-            [.day], from: lastSync, to: .now
-        ).day ?? 0
-        return daysSinceSync >= ttlDays
     }
 
     // MARK: - Fighters Sync
@@ -274,12 +317,13 @@ final class SyncManager {
     }
     
     // MARK: - Public API: Rankings
-
+    
     func syncRankingsIfNeeded() async {
         guard !isSyncingRankings else { return }
-        guard isSyncRequired(key: Keys.lastRankingSyncAt) else { return }
+        guard isSyncRequired(key: Keys.lastRankingSyncAt, ttl: .midMonth) else { return }
         await syncAllRankings()
     }
+    
 
     func forceSyncRankings() async {
         guard !isSyncingRankings else { return }

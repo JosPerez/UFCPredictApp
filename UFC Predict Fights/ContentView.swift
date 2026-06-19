@@ -16,8 +16,12 @@ struct ContentView: View {
     @State private var themeManager = ThemeManager()
     @State private var showLaunch = true
     @State private var showLogin = false
-    @State private var showProfile = false
-
+    // Repos — initialized once
+    @State private var syncManager: SyncManager?
+    @State private var fighterRepo: FighterRepository?
+    @State private var eventRepo: EventRepository?
+    @State private var rankingRepo: RankingRepository?
+    
     var body: some View {
         
         Group {
@@ -42,33 +46,34 @@ struct ContentView: View {
                     .transition(.opacity)
                     .zIndex(1)
             }
-
-            let syncManager = SyncManager(modelContext: modelContext)
-            let fighterRepo = FighterRepository(modelContext: modelContext, syncManager: syncManager)
-            let eventRepo   = EventRepository(modelContext: modelContext, syncManager: syncManager)
-            let rankingRepo = RankingRepository(modelContext: modelContext, syncManager: syncManager)
-
+            
             TabView(selection: $coordinator.selectedTab) {
-                FighterListView(repository: fighterRepo)
-                    .tabItem {
-                        Image(systemName: "figure.mixed.cardio")
-                        Text("Fighters")
-                    }
-                    .tag(0)
-
-                EventListView(repository: eventRepo)
-                    .tabItem {
-                        Image(systemName: "calendar")
-                        Text("Events")
-                    }
-                    .tag(1)
-
-                RankingsView(repository: rankingRepo)
-                    .tabItem {
-                        Image(systemName: "trophy")
-                        Text("Rankings")
-                    }
-                    .tag(2)
+                if let fighterRepo {
+                    FighterListView(repository: fighterRepo)
+                        .tabItem {
+                            Image(systemName: "figure.mixed.cardio")
+                            Text("Fighters")
+                        }
+                        .tag(0)
+                }
+                
+                if let eventRepo {
+                    EventListView(repository: eventRepo)
+                        .tabItem {
+                            Image(systemName: "calendar")
+                            Text("Events")
+                        }
+                        .tag(1)
+                }
+                
+                if let rankingRepo {
+                    RankingsView(repository: rankingRepo)
+                        .tabItem {
+                            Image(systemName: "trophy")
+                            Text("Rankings")
+                        }
+                        .tag(2)
+                }
                 
                 Group {
                     if authVM.state == .authenticated {
@@ -99,6 +104,13 @@ struct ContentView: View {
         }
         .preferredColorScheme(themeManager.current.colorScheme)
         .onAppear {
+            if syncManager == nil {
+                let sm = SyncManager(modelContext: modelContext)
+                syncManager = sm
+                fighterRepo = FighterRepository(modelContext: modelContext, syncManager: sm)
+                eventRepo = EventRepository(modelContext: modelContext, syncManager: sm)
+                rankingRepo = RankingRepository(modelContext: modelContext, syncManager: sm)
+            }
             if predictionViewModel == nil {
                 predictionViewModel = PredictionViewModel(modelContext: modelContext)
             }
@@ -118,6 +130,12 @@ struct ContentView: View {
         .onChange(of: authVM.state) { _, newState in
             if newState == .authenticated {
                 showLogin = false
+            }
+        }
+        .onChange(of: coordinator.selectedTab) { _, newTab in
+            let screens = ["Fighters", "Events", "Rankings", "Predict", "Game"]
+            if newTab < screens.count {
+                CrashReporter.setScreen(screens[newTab])
             }
         }
     }
@@ -165,4 +183,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(AuthViewModel())
 }

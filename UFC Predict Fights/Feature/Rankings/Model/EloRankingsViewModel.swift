@@ -18,7 +18,6 @@ final class EloRankingsViewModel {
     
     private let service = BSRankingService(url: Config.baseURL)
     private var modelContext: ModelContext?
-    private let cacheTTL: TimeInterval = 8 * 24 * 60 * 60
     
     let divisions: [String] = [
         "All",
@@ -35,8 +34,8 @@ final class EloRankingsViewModel {
     func fetch() {
         if let cached = loadFromCache(division: selectedDivision), !cached.isEmpty {
             rankings = cached
-            if let oldest = cached.map(\.lastUpdated).min(),
-               Date().timeIntervalSince(oldest) > cacheTTL {
+            // Refresh if expired
+            if isCacheExpired() {
                 fetchFromAPI()
             }
             return
@@ -67,17 +66,17 @@ final class EloRankingsViewModel {
         }
         return results
     }
-
+    
     private func saveToCache(_ rankings: [BSEloRanking]) {
         guard let context = modelContext else { return }
         let division = selectedDivision
-
+        
         let predicate = #Predicate<CachedEloRanking> { $0.division == division }
         let descriptor = FetchDescriptor(predicate: predicate)
         if let existing = try? context.fetch(descriptor) {
             for item in existing { context.delete(item) }
         }
-
+        
         var cached: [CachedEloRanking] = []
         for entry in rankings {
             let item = CachedEloRanking(
@@ -93,9 +92,33 @@ final class EloRankingsViewModel {
             context.insert(item)
             cached.append(item)
         }
-
+        
         try? context.save()
         self.rankings = cached  // ← actualiza con CachedEloRanking
+    }
+    
+    private func isCacheExpired() -> Bool {
+        guard let context = modelContext else { return true }
+        let division = selectedDivision
+        let predicate = #Predicate<CachedEloRanking> { $0.division == division }
+        var descriptor = FetchDescriptor(predicate: predicate)
+        descriptor.sortBy = [SortDescriptor(\.lastUpdated, order: .reverse)]
+        descriptor.fetchLimit = 1
+        
+        guard let latest = try? context.fetch(descriptor).first else { return true }
+        
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: latest.lastUpdated)
+        components.weekday = 1
+        components.hour = 6
+        components.minute = 0
+        guard let nextSunday = calendar.date(from: components) else { return true }
+        
+        let expiry = nextSunday <= latest.lastUpdated
+        ? calendar.date(byAdding: .weekOfYear, value: 1, to: nextSunday) ?? latest.lastUpdated
+        : nextSunday
+        
+        return Date() >= expiry
     }
 }
 
