@@ -125,7 +125,8 @@ final class EventPicksViewModel {
         
         // LOG save all dirty picks
         GameLogger.batchSaveStarted(count: dirty.count)
-        
+        CrashReporter.log("Saving \(dirty.count) picks for event \(eventDetail?.eventId ?? 0)")
+        //
         guard !dirty.isEmpty else {
             saveState = .saved
             clearSavedStateAfterDelay()
@@ -160,10 +161,16 @@ final class EventPicksViewModel {
                     lastError = "Save failed"
                 }
             }
-
+            
             if failedCount > 0 {
+                CrashReporter.recordAPIError(
+                    endpoint: "/game/fights/pick",
+                    statusCode: 0,
+                    message: "\(failedCount) picks failed"
+                )
                 saveState = .failed("\(failedCount) pick\(failedCount > 1 ? "s" : "") failed: \(lastError)")
             } else {
+                CrashReporter.log("All \(dirty.count) picks saved")
                 saveState = .saved
                 clearSavedStateAfterDelay()
             }

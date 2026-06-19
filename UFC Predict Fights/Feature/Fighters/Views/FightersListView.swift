@@ -40,6 +40,10 @@ struct FighterListView: View {
             LoginView()
         }
         .onChange(of: authVM.state) { _, newState in
+            if newState == .unauthenticated {
+                path = NavigationPath()
+                showLogin = false
+            }
             if newState == .authenticated {
                 showLogin = false
                 if let dest = authVM.completePendingNavigation() {
@@ -55,7 +59,7 @@ struct FighterListView: View {
             }
         }
     }
-
+    
     @ViewBuilder
     private func content(_ vm: FighterListViewModel) -> some View {
         VStack(spacing: 0) {

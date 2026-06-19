@@ -9,6 +9,7 @@ import Foundation
 import Observation
 import BlackSpartan
 
+@MainActor
 @Observable
 final class EventDetailViewModel {
 
@@ -16,40 +17,31 @@ final class EventDetailViewModel {
     var isLoading: Bool = true
     var errorMessage: String? = nil
 
-    private let service = BSEventService(url: Config.baseURL)
+    private let api = GameAPIClient.shared
+    private let eventId: Int
 
     init(eventId: Int) {
-        setupService()
-        service.getEventDetail(id: eventId)
+        self.eventId = eventId
+        loadEvent()
     }
 
-    private func setupService() {
-        service.delegate = self
-    }
-
-    func retry(eventId: Int) {
+    func loadEvent() {
         isLoading = true
         errorMessage = nil
-        service.getEventDetail(id: eventId)
-    }
-}
 
-extension EventDetailViewModel: BSResponseDelegate {
-    enum RequestName: String {
-        case detail = "getEventDetail"
-    }
-
-    func recievedEntity<T>(entity: T, requestName: String) {
-        switch RequestName(rawValue: requestName) {
-        case .detail:
-            if let response = entity as? BSEventDetail {
-                self.event = response
-                self.isLoading = false
-            } else if let error = entity as? BSErrorBase {
-                self.errorMessage = error.message
-                self.isLoading = false
+        Task {
+            do {
+                event = try await api.getEventDetail(id: eventId)
+            } catch let error as GameAPIClient.APIError {
+                errorMessage = error.errorDescription
+            } catch {
+                errorMessage = "Failed to load event details"
             }
-        default: break
+            isLoading = false
         }
+    }
+
+    func retry() {
+        loadEvent()
     }
 }

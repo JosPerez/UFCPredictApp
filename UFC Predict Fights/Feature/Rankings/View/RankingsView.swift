@@ -96,6 +96,10 @@ struct RankingsView: View {
                 ProfileSheetView()
             }
             .onChange(of: authVM.state) { _, newState in
+                if newState == .unauthenticated {
+                    path = NavigationPath()
+                    showLogin = false
+                }
                 if newState == .authenticated {
                     showLogin = false
                     if let dest = authVM.completePendingNavigation() {

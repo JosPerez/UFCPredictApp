@@ -32,6 +32,10 @@ struct EventPicksView: View {
         .toolbarBackground(BSColors.background, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .onAppear {
+            // Logger
+            CrashReporter.setScreen("EventPicks")
+            CrashReporter.setEvent(eventId)
+            // Logic
             if viewModel.eventDetail == nil {
                 viewModel.loadEvent(eventId: eventId)
             }

@@ -91,6 +91,10 @@
 		0797F68C2FE3940300B52A0C /* LegalDocView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F68B2FE393FE00B52A0C /* LegalDocView.swift */; };
 		0797F68F2FE3944300B52A0C /* DataPrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F68E2FE3943E00B52A0C /* DataPrivacyView.swift */; };
 		0797F6912FE3945F00B52A0C /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6902FE3945D00B52A0C /* DeleteAccountView.swift */; };
+		0797F6932FE4BAAD00B52A0C /* PredictRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6922FE4BAA900B52A0C /* PredictRequest.swift */; };
+		0797F6962FE4BFE600B52A0C /* JSONDecoderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F6952FE4BFDE00B52A0C /* JSONDecoderExtension.swift */; };
+		0797F6982FE4C45900B52A0C /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0797F6972FE4C45900B52A0C /* FirebaseCrashlytics */; };
+		0797F69D2FE4C60F00B52A0C /* CrashReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0797F69C2FE4C60B00B52A0C /* CrashReporter.swift */; };
 		09F2543B1308625F3DAD10DF /* Pods_UFC_Predict_Fights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38F0F1ACE4D6C4EA5B5AABC /* Pods_UFC_Predict_Fights.framework */; };
 /* End PBXBuildFile section */
 
@@ -176,6 +180,9 @@
 		0797F68B2FE393FE00B52A0C /* LegalDocView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDocView.swift; sourceTree = "<group>"; };
 		0797F68E2FE3943E00B52A0C /* DataPrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPrivacyView.swift; sourceTree = "<group>"; };
 		0797F6902FE3945D00B52A0C /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
+		0797F6922FE4BAA900B52A0C /* PredictRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictRequest.swift; sourceTree = "<group>"; };
+		0797F6952FE4BFDE00B52A0C /* JSONDecoderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderExtension.swift; sourceTree = "<group>"; };
+		0797F69C2FE4C60B00B52A0C /* CrashReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReporter.swift; sourceTree = "<group>"; };
 		B38F0F1ACE4D6C4EA5B5AABC /* Pods_UFC_Predict_Fights.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UFC_Predict_Fights.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E28E3B3FDA23FF861F6CADA0 /* Pods-UFC Predict Fights.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.release.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.release.xcconfig"; sourceTree = "<group>"; };
 		F5EE1FB64FB5DE75A5C39A8D /* Pods-UFC Predict Fights.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UFC Predict Fights.debug.xcconfig"; path = "Target Support Files/Pods-UFC Predict Fights/Pods-UFC Predict Fights.debug.xcconfig"; sourceTree = "<group>"; };
@@ -189,6 +196,7 @@
 				0797F6392FE0F9D500B52A0C /* GoogleSignInSwift in Frameworks */,
 				09F2543B1308625F3DAD10DF /* Pods_UFC_Predict_Fights.framework in Frameworks */,
 				0797F6372FE0F9D500B52A0C /* GoogleSignIn in Frameworks */,
+				0797F6982FE4C45900B52A0C /* FirebaseCrashlytics in Frameworks */,
 				0797F6342FE0F85200B52A0C /* FirebaseCore in Frameworks */,
 				0797F6322FE0F85200B52A0C /* FirebaseAuth in Frameworks */,
 				0797F6572FE19CEE00B52A0C /* FirebaseFirestore in Frameworks */,
@@ -297,6 +305,7 @@
 		07841AF62FCD8AAB005EA7FD /* DesingSystem */ = {
 			isa = PBXGroup;
 			children = (
+				0797F69A2FE4C5F200B52A0C /* Analytics */,
 				0797F6832FE3894900B52A0C /* CachedImage */,
 				0797F6702FE214DD00B52A0C /* Helpers */,
 				0797F6232FE0F13500B52A0C /* Auth */,
@@ -646,6 +655,7 @@
 		0797F6642FE212D100B52A0C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6922FE4BAA900B52A0C /* PredictRequest.swift */,
 				0797F6672FE212EE00B52A0C /* GameViewModel.swift */,
 				0797F6652FE212D500B52A0C /* GameModels.swift */,
 			);
@@ -686,6 +696,7 @@
 		0797F6702FE214DD00B52A0C /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0797F6952FE4BFDE00B52A0C /* JSONDecoderExtension.swift */,
 				0797F6712FE214E400B52A0C /* StringExtension.swift */,
 			);
 			path = Helpers;
@@ -727,6 +738,22 @@
 			path = Legal;
 			sourceTree = "<group>";
 		};
+		0797F69A2FE4C5F200B52A0C /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				0797F69B2FE4C60000B52A0C /* Crashlytics */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		0797F69B2FE4C60000B52A0C /* Crashlytics */ = {
+			isa = PBXGroup;
+			children = (
+				0797F69C2FE4C60B00B52A0C /* CrashReporter.swift */,
+			);
+			path = Crashlytics;
+			sourceTree = "<group>";
+		};
 		36763802F7D1F014A868BFD9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -756,6 +783,7 @@
 				072C52702FCCE45900FEEACD /* Frameworks */,
 				072C52712FCCE45900FEEACD /* Resources */,
 				3B30FD97E7B3C8F04C90E96E /* [CP] Embed Pods Frameworks */,
+				0797F6992FE4C53A00B52A0C /* Upload dSYMs to Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -817,6 +845,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0797F6992FE4C53A00B52A0C /* Upload dSYMs to Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+			);
+			name = "Upload dSYMs to Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
 		3B30FD97E7B3C8F04C90E96E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -931,10 +981,13 @@
 				0797F6482FE1001800B52A0C /* AuthGateModifier.swift in Sources */,
 				0797F66F2FE2136D00B52A0C /* EventPicksView.swift in Sources */,
 				0797F6152FDF60D500B52A0C /* EloRankingsView.swift in Sources */,
+				0797F6932FE4BAAD00B52A0C /* PredictRequest.swift in Sources */,
 				07841B212FCEE465005EA7FD /* EventDetailView.swift in Sources */,
 				0797F62D2FE0F19E00B52A0C /* AuthViewModel.swift in Sources */,
 				0797F68C2FE3940300B52A0C /* LegalDocView.swift in Sources */,
+				0797F6962FE4BFE600B52A0C /* JSONDecoderExtension.swift in Sources */,
 				07841B032FCEB75F005EA7FD /* SwiftDataContainer.swift in Sources */,
+				0797F69D2FE4C60F00B52A0C /* CrashReporter.swift in Sources */,
 				07841B452FD025BB005EA7FD /* BSColor.swift in Sources */,
 				07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */,
 				0797F6752FE243E700B52A0C /* EventPicksViewModel.swift in Sources */,
@@ -983,7 +1036,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Z444V52N8H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1217,6 +1270,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		0797F6972FE4C45900B52A0C /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0797F6302FE0F85200B52A0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

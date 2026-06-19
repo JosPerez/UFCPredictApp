@@ -50,8 +50,10 @@ struct GameHomeView: View {
             }
         }
         .onAppear {
+            // Logger
             GameLogger.screenOpened("GameHome")
-            
+            CrashReporter.setScreen("GameHome")
+            // Logic
             if authVM.state == .authenticated && viewModel.events.isEmpty {
                 viewModel.fetchEvents()
                 fetchTopPlayers()

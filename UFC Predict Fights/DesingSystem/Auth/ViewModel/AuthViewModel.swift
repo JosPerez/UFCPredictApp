@@ -109,7 +109,7 @@ final class AuthViewModel {
             }
 
             userProfile = try await profileService.getProfile(uid: user.uid)
-
+            
             // Sync to backend on login
             if let nickname = userProfile?.nickname {
                 await syncProfileToBackend(nickname: nickname)
@@ -229,6 +229,7 @@ final class AuthViewModel {
             userProfile = nil
             clearForm()
             pendingDestination = nil
+            CrashReporter.clearUser()
         } catch {
             errorMessage = "Failed to sign out"
         }
@@ -269,6 +270,11 @@ final class AuthViewModel {
                 // Load profile
                 userProfile = try await profileService.getProfile(uid: user.uid)
                 state = .authenticated
+                
+                if let profile = userProfile {
+                    CrashReporter.setUser(uid: user.uid, nickname: profile.nickname)
+                }
+                
                 // Sync with firebase
                 await syncProfileToBackend(nickname: nickname)
             } catch {

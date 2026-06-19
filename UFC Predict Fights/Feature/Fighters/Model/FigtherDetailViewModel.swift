@@ -9,6 +9,7 @@ import Foundation
 import Observation
 import BlackSpartan
 
+@MainActor
 @Observable
 final class FighterDetailViewModel {
 
@@ -16,40 +17,31 @@ final class FighterDetailViewModel {
     var isLoading: Bool = true
     var errorMessage: String? = nil
 
-    private let service = BSFighterService(url: Config.baseURL)
+    private let api = GameAPIClient.shared
+    private let fighterId: Int
 
     init(fighterId: Int) {
-        setupService()
-        service.getFighterProfile(id: fighterId)
+        self.fighterId = fighterId
+        loadProfile()
     }
 
-    private func setupService() {
-        service.delegate = self
-    }
-
-    func retry(fighterId: Int) {
+    func loadProfile() {
         isLoading = true
         errorMessage = nil
-        service.getFighterProfile(id: fighterId)
-    }
-}
 
-extension FighterDetailViewModel: BSResponseDelegate {
-    enum RequestName: String {
-        case profile = "getFighterProfile"
-    }
-
-    func recievedEntity<T>(entity: T, requestName: String) {
-        switch RequestName(rawValue: requestName) {
-        case .profile:
-            if let response = entity as? BSFighterProfile {
-                self.profile = response
-                self.isLoading = false
-            } else if let error = entity as? BSErrorBase {
-                self.errorMessage = error.message
-                self.isLoading = false
+        Task {
+            do {
+                profile = try await api.getFighterProfile(id: fighterId)
+            } catch let error as GameAPIClient.APIError {
+                errorMessage = error.errorDescription
+            } catch {
+                errorMessage = "Failed to load fighter profile"
             }
-        default: break
+            isLoading = false
         }
+    }
+
+    func retry() {
+        loadProfile()
     }
 }

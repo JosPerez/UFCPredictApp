@@ -102,7 +102,7 @@ final class EloRankingsViewModel {
 extension EloRankingsViewModel: BSResponseDelegate {
     func recievedEntity<T>(entity: T, requestName: String) {
         if let results = entity as? [BSEloRanking] {
-            saveToCache(results)      // convierte BSEloRanking → CachedEloRanking
+            saveToCache(results)
             self.isLoading = false
         } else if entity is BSErrorBase {
             self.isLoading = false

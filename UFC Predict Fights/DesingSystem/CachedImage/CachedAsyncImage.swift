@@ -43,7 +43,7 @@ struct CachedAsyncImage<Placeholder: View>: View {
     }
     
     private func loadImage() {
-        guard let urlString = url, !urlString.isEmpty else { return }
+        guard let urlString = url, !urlString.isEmpty, urlString.hasPrefix("http") else { return }
         guard urlString != loadedURL, !isLoading else { return }
         
         // Check cache

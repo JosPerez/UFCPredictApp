@@ -38,7 +38,7 @@ struct FighterDetailView: View {
                 ProgressView().tint(BSColors.accent)
             } else if let error = viewModel.errorMessage {
                 ErrorStateView(message: error) {
-                    viewModel.retry(fighterId: fighterId)
+                    viewModel.retry()
                 }
             } else if let profile = viewModel.profile {
                 VStack(spacing: 0) {
@@ -68,6 +68,10 @@ struct FighterDetailView: View {
         .toolbarColorScheme(.dark, for: .navigationBar)
         .navigationDestination(for: EventNavigation.self) { nav in
             EventDetailView(eventId: nav.eventId, preselectedFightId: nav.fightId)
+        }
+        .onAppear {
+            // Logger
+            CrashReporter.setScreen("FighterDetail")
         }
     }
 

@@ -30,7 +30,7 @@ struct EventDetailView: View {
                 ProgressView().tint(BSColors.accent)
             } else if let error = viewModel.errorMessage {
                 ErrorStateView(message: error) {
-                    viewModel.retry(eventId: eventId)
+                    viewModel.retry()
                 }
             } else if let event = viewModel.event {
                 let fights = Array(event.fights.reversed())
