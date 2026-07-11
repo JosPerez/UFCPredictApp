@@ -25,7 +25,8 @@ final class SyncManager {
     var syncError: String? = nil
     
     // MARK: - Config
-    private let blockSize: Int = 100
+    private let blockSize: Int = 350
+    private let fightBloclSize: Int = 100
     private let baseDelay: Double = 1.5
     private let maxJitter: Double = 1.0
     
@@ -225,8 +226,8 @@ final class SyncManager {
                 saveEventsToCache(events)
 
                 totalLoaded += events.count
-                currentOffset += blockSize
-                hasMore = events.count == blockSize
+                currentOffset += fightBloclSize
+                hasMore = events.count == fightBloclSize
 
                 if hasMore {
                     let delay = baseDelay + Double.random(in: 0...maxJitter)
@@ -249,7 +250,7 @@ final class SyncManager {
             self.eventContinuation = continuation
             self.activeRequestType = "events"
             self.eventService.delegate = self
-            self.eventService.getEvents(limit: blockSize, offset: offset)
+            self.eventService.getEvents(limit: fightBloclSize, offset: offset)
         }
     }
 

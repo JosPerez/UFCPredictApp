@@ -20,6 +20,8 @@ struct UFC_Predict_FightsApp: App {
     @State private var authViewModel: AuthViewModel
 
     init() {
+        // Inyecta la API key al pod antes de cualquier request
+        BlackSpartanConfig.apiKey = Config.apiKey
         // Image Cached TTL 7 days
         ImageCacheManager.shared.clearExpired()
         // Start network monitoring

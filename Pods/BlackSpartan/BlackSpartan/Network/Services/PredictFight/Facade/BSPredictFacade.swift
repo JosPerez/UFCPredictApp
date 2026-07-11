@@ -4,13 +4,15 @@
 //
 //  Created by Jose Perez on 31/05/26.
 //
+/// Deprecated: Use GameAPIClient.predictFight() instead.
+/// Kept for backward compatibility.
 
 import Foundation
 
 final public class BSPredictService: BSBaseFacade {
     
     enum RequestName {
-        static let predictFight   = "predcit"
+        static let predictFight   = "predict"
     }
     
     public func predictFight(request: PredictionRequest) {

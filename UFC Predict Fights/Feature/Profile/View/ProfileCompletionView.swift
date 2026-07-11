@@ -124,12 +124,22 @@ struct ProfileCompletionView: View {
                     }
                     .disabled(!canContinue || authVM.isProcessing)
                     .padding(.horizontal, 24)
-
+                    
                     // Skip hint
                     Text("You can update this later in settings")
                         .font(.system(size: 11))
                         .foregroundColor(BSColors.textHint)
-
+                    
+                    // Sign out escape
+                    Button {
+                        authVM.signOut()
+                    } label: {
+                        Text("Sign out or use a different account")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundColor(BSColors.textTertiary)
+                    }
+                    .padding(.top, 4)
+                    
                     Spacer(minLength: 40)
                 }
             }
