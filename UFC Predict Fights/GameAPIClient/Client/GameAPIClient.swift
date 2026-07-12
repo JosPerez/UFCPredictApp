@@ -167,6 +167,7 @@ final class GameAPIClient {
         return try JSONDecoder.bsDecoder.decode(BSEventDetail.self, from: data)
     }
     
+    
     func predictFight(fighterAId: Int, fighterBId: Int) async throws -> Prediction {
         let body = PredictionRequest(fighterAId: fighterAId, fighterBId: fighterBId)
         let data = try await request("/predict/", method: "POST", body: body)

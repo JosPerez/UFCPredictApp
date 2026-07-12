@@ -389,12 +389,26 @@ struct EventDetailView: View {
                 // Method breakdown (si viene)
                 if let m = ai.method {
                     Divider().background(BSColors.textTertiary.opacity(0.2))
-                    Text("Method")
-                        .font(.system(size: 11, weight: .semibold))
+                    Text("HOW DOES IT END?")
+                        .font(.system(size: 10, weight: .heavy))
                         .foregroundColor(BSColors.textTertiary)
-                    methodChip(label: "Decision", prob: m.decisionProb)
-                    methodChip(label: "KO / TKO", prob: m.koTkoProb)
-                    methodChip(label: "Submission", prob: m.submissionProb)
+                        .tracking(1.0)
+                    let maxProb = max(m.decisionProb, m.koTkoProb, m.submissionProb)
+                    methodRow(icon: "list.clipboard.fill",
+                              label: "Decision",
+                              prob: m.decisionProb,
+                              color: BSColors.textSecondary,
+                              isTop: m.decisionProb == maxProb)
+                    methodRow(icon: "bolt.fill",
+                              label: "KO / TKO",
+                              prob: m.koTkoProb,
+                              color: BSColors.accent,
+                              isTop: m.koTkoProb == maxProb)
+                    methodRow(icon: "figure.wrestling",
+                              label: "Submission",
+                              prob: m.submissionProb,
+                              color: BSColors.winGreen,
+                              isTop: m.submissionProb == maxProb)
                 }
             }
             .padding(16)
@@ -429,15 +443,32 @@ struct EventDetailView: View {
     }
 
     @ViewBuilder
-    private func methodChip(label: String, prob: Double) -> some View {
-        HStack {
+    private func methodRow(icon: String, label: String, prob: Double, color: Color, isTop: Bool) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(color)
+                .frame(width: 18)
             Text(label)
-                .font(.system(size: 12))
-                .foregroundColor(BSColors.textSecondary)
-            Spacer()
+                .font(.system(size: 12, weight: isTop ? .bold : .medium))
+                .foregroundColor(isTop ? BSColors.textPrimary : BSColors.textSecondary)
+                .frame(width: 96, alignment: .leading)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(BSColors.textTertiary.opacity(0.15))
+                        .frame(height: 6)
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(color)
+                        .frame(width: max(4, geo.size.width * CGFloat(prob)), height: 6)
+                }
+            }
+            .frame(height: 6)
             Text("\(Int(prob * 100))%")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundColor(BSColors.textPrimary)
+                .font(.system(size: 13, weight: isTop ? .black : .bold))
+                .foregroundColor(isTop ? color : BSColors.textPrimary)
+                .frame(width: 42, alignment: .trailing)
+                .lineLimit(1)
         }
     }
 
@@ -517,26 +548,14 @@ struct EventDetailView: View {
         return "\(feet)'\(inch)\""
     }
 
-    @ViewBuilder
-    private func aiChip(_ fight: BSEventFight) -> some View {
-        if let ai = fight.aiPrediction {
-            let redWins = ai.fighterRWinProb >= ai.fighterBWinProb
-            let prob = redWins ? ai.fighterRWinProb : ai.fighterBWinProb
-            let color = redWins ? BSColors.accent : BSColors.accentBlue
-            VStack(spacing: 2) {
-                Text("AI PICK")
-                    .font(.system(size: 8, weight: .heavy))
-                    .foregroundColor(BSColors.textTertiary)
-                Text("\(Int(prob * 100))%")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(color)
-            }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(color.opacity(0.15))
-            .cornerRadius(6)
-            .padding(.top, 4)
-        }
+    /// Prob de AI para el corner indicado. `nil` si no hay predicción o si el corner
+    /// no es el favorecido (así solo el ganador probable ve el chip).
+    private func aiProbFor(_ fight: BSEventFight, isRed: Bool) -> Double? {
+        guard let ai = fight.aiPrediction else { return nil }
+        let redWins = ai.fighterRWinProb >= ai.fighterBWinProb
+        if isRed && redWins { return ai.fighterRWinProb }
+        if !isRed && !redWins { return ai.fighterBWinProb }
+        return nil
     }
 
     @ViewBuilder
@@ -559,6 +578,8 @@ struct EventDetailView: View {
             .padding(.bottom, 16)
 
             // Fighters
+            let aiRedProb = aiProbFor(fight, isRed: true)
+            let aiBlueProb = aiProbFor(fight, isRed: false)
             HStack(spacing: 0) {
                 fighterColumn(
                     name: fight.fighterRName,
@@ -568,6 +589,7 @@ struct EventDetailView: View {
                     cornerColor: BSColors.accent,
                     cornerLabel: "Red corner",
                     rank: fight.fighterRRank,
+                    aiPickProb: aiRedProb,
                     isUpcoming: true
                 )
 
@@ -580,7 +602,6 @@ struct EventDetailView: View {
                             .font(.system(size: 9))
                             .foregroundColor(BSColors.textTertiary)
                     }
-                    aiChip(fight)
                 }
                 .frame(width: 80)
 
@@ -592,6 +613,7 @@ struct EventDetailView: View {
                     cornerColor: BSColors.accentBlue,
                     cornerLabel: "Blue corner",
                     rank: fight.fighterBRank,
+                    aiPickProb: aiBlueProb,
                     isUpcoming: true
                 )
             }
@@ -910,7 +932,7 @@ struct EventDetailView: View {
     // ═══════════════════════════════════════════════
 
     @ViewBuilder
-    private func fighterColumn(name: String, img: String?, record: String?, isWinner: Bool, cornerColor: Color, cornerLabel: String, rank: Int?, isUpcoming: Bool) -> some View {
+    private func fighterColumn(name: String, img: String?, record: String?, isWinner: Bool, cornerColor: Color, cornerLabel: String, rank: Int?, aiPickProb: Double? = nil, isUpcoming: Bool) -> some View {
         VStack(spacing: 6) {
             FighterAvatar(
                 imageUrl: img,
@@ -967,6 +989,21 @@ struct EventDetailView: View {
                 Text(cornerLabel)
                     .font(.system(size: 9, weight: .medium))
                     .foregroundColor(cornerColor)
+            }
+
+            if let prob = aiPickProb {
+                HStack(spacing: 4) {
+                    Text("AI PICK")
+                        .font(.system(size: 8, weight: .heavy))
+                        .tracking(0.5)
+                    Text("\(Int(prob * 100))%")
+                        .font(.system(size: 10, weight: .black))
+                }
+                .foregroundColor(cornerColor)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 3)
+                .background(cornerColor.opacity(0.12))
+                .cornerRadius(4)
             }
         }
         .frame(maxWidth: .infinity)
