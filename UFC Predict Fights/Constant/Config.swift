@@ -10,7 +10,7 @@ import Foundation
 // Config.swift
 enum Config {
     #if DEBUG
-    static let baseURL = "http://192.168.100.19:8000"  // tu IP local
+    static let baseURL = "http://192.168.2.98:8000"  // tu IP local
     #else
     static let baseURL = "https://ufc-predictor-production-a513.up.railway.app"
     #endif

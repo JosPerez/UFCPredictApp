@@ -51,6 +51,36 @@ public struct BSEventDetail: Codable, Identifiable {
     }
 }
 
+public struct BSAIPredictionMethod: Codable {
+    public let decisionProb: Double
+    public let koTkoProb: Double
+    public let submissionProb: Double
+
+    enum CodingKeys: String, CodingKey {
+        case decisionProb   = "decision_prob"
+        case koTkoProb      = "ko_tko_prob"
+        case submissionProb = "submission_prob"
+    }
+}
+
+public struct BSAIPrediction: Codable {
+    /// Prob de que gane el peleador del corner rojo (fighter_a en el backend).
+    public let fighterRWinProb: Double
+    /// Prob del corner azul.
+    public let fighterBWinProb: Double
+    public let confidence: String
+    public let modelUsed: String
+    public let method: BSAIPredictionMethod?
+
+    enum CodingKeys: String, CodingKey {
+        case fighterRWinProb = "fighter_a_win_prob"
+        case fighterBWinProb = "fighter_b_win_prob"
+        case confidence
+        case modelUsed       = "model_used"
+        case method
+    }
+}
+
 public struct BSEventFight: Codable, Identifiable {
     public let fightId: Int
     public let method: String?
@@ -107,6 +137,28 @@ public struct BSEventFight: Codable, Identifiable {
     public let fighterBSapm: Double?
     public let fighterBKdAvg: Double?
     public let fighterBTdDef: Double?
+    public let fighterRTdAvg: Double?
+    public let fighterRAvgFightTime: Int?
+    public let fighterBTdAvg: Double?
+    public let fighterBAvgFightTime: Int?
+    // Tale of the tape (red)
+    public let fighterRHeight: Double?
+    public let fighterRReach: Double?
+    public let fighterRLegReach: Double?
+    public let fighterRAge: Int?
+    public let fighterRWeight: Double?
+    public let fighterRRank: Int?
+    public let fighterRElo: Double?
+    // Tale of the tape (blue)
+    public let fighterBHeight: Double?
+    public let fighterBReach: Double?
+    public let fighterBLegReach: Double?
+    public let fighterBAge: Int?
+    public let fighterBWeight: Double?
+    public let fighterBRank: Int?
+    public let fighterBElo: Double?
+    // AI cached prediction
+    public let aiPrediction: BSAIPrediction?
 
     public var id: Int { fightId }
 
@@ -174,5 +226,24 @@ public struct BSEventFight: Codable, Identifiable {
         case fighterBSapm    = "fighter_b_sapm"
         case fighterBKdAvg   = "fighter_b_kd_avg"
         case fighterBTdDef   = "fighter_b_td_def"
+        case fighterRTdAvg   = "fighter_r_td_avg"
+        case fighterRAvgFightTime = "fighter_r_avg_fight_time"
+        case fighterBTdAvg   = "fighter_b_td_avg"
+        case fighterBAvgFightTime = "fighter_b_avg_fight_time"
+        case fighterRHeight    = "fighter_r_height"
+        case fighterRReach     = "fighter_r_reach"
+        case fighterRLegReach  = "fighter_r_leg_reach"
+        case fighterRAge       = "fighter_r_age"
+        case fighterRWeight    = "fighter_r_weight"
+        case fighterRRank      = "fighter_r_rank"
+        case fighterRElo       = "fighter_r_elo"
+        case fighterBHeight    = "fighter_b_height"
+        case fighterBReach     = "fighter_b_reach"
+        case fighterBLegReach  = "fighter_b_leg_reach"
+        case fighterBAge       = "fighter_b_age"
+        case fighterBWeight    = "fighter_b_weight"
+        case fighterBRank      = "fighter_b_rank"
+        case fighterBElo       = "fighter_b_elo"
+        case aiPrediction      = "ai_prediction"
     }
 }

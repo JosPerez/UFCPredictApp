@@ -311,13 +311,22 @@ struct EventDetailView: View {
                     .foregroundColor(BSColors.textPrimary)
 
                 if fight.fighterRSigStr > 0 || fight.fighterBSigStr > 0 {
-                    comparisonBarInt(label: "Sig. strikes", valA: fight.fighterRSigStr, valB: fight.fighterBSigStr)
+                    // "landed/attempted" en cada lado — reemplaza dos barras (sig strikes + attempted) por una más rica.
+                    comparisonBarFraction(
+                        label: "Sig. strikes",
+                        aNum: fight.fighterRSigStr, aDen: fight.fighterRSigStrAttempted,
+                        bNum: fight.fighterBSigStr, bDen: fight.fighterBSigStrAttempted
+                    )
                 }
-                if fight.fighterRSigStrAttempted > 0 || fight.fighterBSigStrAttempted > 0 {
-                    comparisonBarInt(label: "Str. attempted", valA: fight.fighterRSigStrAttempted, valB: fight.fighterBSigStrAttempted)
+                if let ra = fight.fighterRSigStrPct, let rb = fight.fighterBSigStrPct {
+                    comparisonBar(label: "Accuracy", valA: ra * 100, valB: rb * 100, suffix: "%")
                 }
-                if fight.fighterRTdLanded > 0 || fight.fighterBTdLanded > 0 {
-                    comparisonBarInt(label: "Takedowns", valA: fight.fighterRTdLanded, valB: fight.fighterBTdLanded)
+                if fight.fighterRTdLanded > 0 || fight.fighterBTdLanded > 0 || fight.fighterRTdAttempted > 0 || fight.fighterBTdAttempted > 0 {
+                    comparisonBarFraction(
+                        label: "Takedowns",
+                        aNum: fight.fighterRTdLanded, aDen: fight.fighterRTdAttempted,
+                        bNum: fight.fighterBTdLanded, bDen: fight.fighterBTdAttempted
+                    )
                 }
                 if fight.fighterRCtrlSecs > 0 || fight.fighterBCtrlSecs > 0 {
                     comparisonBarTime(label: "Control time", secsA: fight.fighterRCtrlSecs, secsB: fight.fighterBCtrlSecs)
@@ -344,12 +353,189 @@ struct EventDetailView: View {
     private func upcomingFightContent(_ fight: BSEventFight, event: BSEventDetail) -> some View {
         VStack(spacing: 12) {
             upcomingFightCard(fight)
-            upcomingCareerStats(fight)
+            taleOfTheTape(fight)
+            CareerStatsSection(fight: fight)
+            aiBreakdown(fight)
             strengthsWeaknesses(fight)
             if fight.oddsFighterRProb != nil {
                 marketConsensus(fight)
             }
             predictButton(fight, label: "Predict this fight")
+        }
+    }
+
+    @ViewBuilder
+    private func aiBreakdown(_ fight: BSEventFight) -> some View {
+        if let ai = fight.aiPrediction {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 6) {
+                    Text("AI prediction")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
+                    Text(ai.confidence)
+                        .font(.system(size: 9, weight: .heavy))
+                        .foregroundColor(BSColors.textTertiary)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(BSColors.textTertiary.opacity(0.15))
+                        .cornerRadius(4)
+                    Spacer()
+                }
+
+                // Winner split
+                probSplitRow(labelA: fight.fighterRName.shortName, probA: ai.fighterRWinProb,
+                             labelB: fight.fighterBName.shortName, probB: ai.fighterBWinProb)
+
+                // Method breakdown (si viene)
+                if let m = ai.method {
+                    Divider().background(BSColors.textTertiary.opacity(0.2))
+                    Text("Method")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(BSColors.textTertiary)
+                    methodChip(label: "Decision", prob: m.decisionProb)
+                    methodChip(label: "KO / TKO", prob: m.koTkoProb)
+                    methodChip(label: "Submission", prob: m.submissionProb)
+                }
+            }
+            .padding(16)
+            .background(BSColors.surface)
+            .cornerRadius(14)
+            .padding(.horizontal, 16)
+        }
+    }
+
+    @ViewBuilder
+    private func probSplitRow(labelA: String, probA: Double, labelB: String, probB: Double) -> some View {
+        HStack(spacing: 6) {
+            Text("\(Int(probA * 100))%")
+                .font(.system(size: 16, weight: .heavy))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 46, alignment: .trailing)
+            GeometryReader { geo in
+                HStack(spacing: 0) {
+                    Rectangle().fill(BSColors.accent)
+                        .frame(width: geo.size.width * CGFloat(probA))
+                    Rectangle().fill(BSColors.accentBlue)
+                }
+                .frame(height: 8)
+                .cornerRadius(2)
+            }
+            .frame(height: 8)
+            Text("\(Int(probB * 100))%")
+                .font(.system(size: 16, weight: .heavy))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 46, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    private func methodChip(label: String, prob: Double) -> some View {
+        HStack {
+            Text(label)
+                .font(.system(size: 12))
+                .foregroundColor(BSColors.textSecondary)
+            Spacer()
+            Text("\(Int(prob * 100))%")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(BSColors.textPrimary)
+        }
+    }
+
+    @ViewBuilder
+    private func taleOfTheTape(_ fight: BSEventFight) -> some View {
+        // Genera filas dinámicamente y solo pinta si al menos una tiene dato en algún lado.
+        let rows: [(String, String?, String?, Bool, Double?, Double?)] = [
+            ("AGE",       fight.fighterRAge.map { "\($0)" },              fight.fighterBAge.map { "\($0)" },
+                          false,
+                          fight.fighterRAge.map(Double.init),              fight.fighterBAge.map(Double.init)),
+            ("HEIGHT",    fight.fighterRHeight.map(formatHeight),          fight.fighterBHeight.map(formatHeight),
+                          true,
+                          fight.fighterRHeight,                            fight.fighterBHeight),
+            ("REACH",     fight.fighterRReach.map { "\(Int($0))\"" },      fight.fighterBReach.map { "\(Int($0))\"" },
+                          true,
+                          fight.fighterRReach,                             fight.fighterBReach),
+            ("LEG REACH", fight.fighterRLegReach.map { "\(Int($0))\"" },   fight.fighterBLegReach.map { "\(Int($0))\"" },
+                          true,
+                          fight.fighterRLegReach,                          fight.fighterBLegReach),
+            ("WEIGHT",    fight.fighterRWeight.map { "\(Int($0)) lb" },    fight.fighterBWeight.map { "\(Int($0)) lb" },
+                          false, nil, nil),
+            ("AVG FIGHT", fight.fighterRAvgFightTime.map(formatSecs),      fight.fighterBAvgFightTime.map(formatSecs),
+                          true,
+                          fight.fighterRAvgFightTime.map(Double.init),     fight.fighterBAvgFightTime.map(Double.init)),
+            ("ELO",       fight.fighterRElo.map { "\(Int($0))" },          fight.fighterBElo.map { "\(Int($0))" },
+                          true,
+                          fight.fighterRElo,                               fight.fighterBElo),
+        ]
+        let visible = rows.filter { $0.1 != nil || $0.2 != nil }
+        if !visible.isEmpty {
+            VStack(spacing: 10) {
+                Text("Tale of the tape")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundColor(BSColors.textPrimary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                ForEach(0..<visible.count, id: \.self) { i in
+                    let r = visible[i]
+                    taleRow(label: r.0, a: r.1, b: r.2, higherIsBetter: r.3, aVal: r.4, bVal: r.5)
+                }
+            }
+            .padding(16)
+            .background(BSColors.surface)
+            .cornerRadius(14)
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func formatSecs(_ secs: Int) -> String {
+        let m = secs / 60
+        let s = secs % 60
+        return String(format: "%d:%02d", m, s)
+    }
+
+    @ViewBuilder
+    private func taleRow(label: String, a: String?, b: String?, higherIsBetter: Bool, aVal: Double?, bVal: Double?) -> some View {
+        let aWins = aVal != nil && bVal != nil && (higherIsBetter ? aVal! > bVal! : aVal! < bVal!)
+        let bWins = aVal != nil && bVal != nil && (higherIsBetter ? bVal! > aVal! : bVal! < aVal!)
+        HStack(spacing: 8) {
+            Text(a ?? "—")
+                .font(.system(size: 14, weight: aWins ? .bold : .regular))
+                .foregroundColor(aWins ? BSColors.accent : BSColors.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(label)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(BSColors.textTertiary)
+                .frame(width: 90)
+            Text(b ?? "—")
+                .font(.system(size: 14, weight: bWins ? .bold : .regular))
+                .foregroundColor(bWins ? BSColors.accentBlue : BSColors.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+
+    private func formatHeight(_ inches: Double) -> String {
+        let feet = Int(inches) / 12
+        let inch = Int(inches) % 12
+        return "\(feet)'\(inch)\""
+    }
+
+    @ViewBuilder
+    private func aiChip(_ fight: BSEventFight) -> some View {
+        if let ai = fight.aiPrediction {
+            let redWins = ai.fighterRWinProb >= ai.fighterBWinProb
+            let prob = redWins ? ai.fighterRWinProb : ai.fighterBWinProb
+            let color = redWins ? BSColors.accent : BSColors.accentBlue
+            VStack(spacing: 2) {
+                Text("AI PICK")
+                    .font(.system(size: 8, weight: .heavy))
+                    .foregroundColor(BSColors.textTertiary)
+                Text("\(Int(prob * 100))%")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(color)
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(color.opacity(0.15))
+            .cornerRadius(6)
+            .padding(.top, 4)
         }
     }
 
@@ -381,7 +567,7 @@ struct EventDetailView: View {
                     isWinner: false,
                     cornerColor: BSColors.accent,
                     cornerLabel: "Red corner",
-                    rank: nil,
+                    rank: fight.fighterRRank,
                     isUpcoming: true
                 )
 
@@ -394,6 +580,7 @@ struct EventDetailView: View {
                             .font(.system(size: 9))
                             .foregroundColor(BSColors.textTertiary)
                     }
+                    aiChip(fight)
                 }
                 .frame(width: 80)
 
@@ -404,7 +591,7 @@ struct EventDetailView: View {
                     isWinner: false,
                     cornerColor: BSColors.accentBlue,
                     cornerLabel: "Blue corner",
-                    rank: nil,
+                    rank: fight.fighterBRank,
                     isUpcoming: true
                 )
             }
@@ -419,49 +606,64 @@ struct EventDetailView: View {
         .padding(.horizontal, 16)
     }
 
-    @ViewBuilder
-    private func upcomingCareerStats(_ fight: BSEventFight) -> some View {
-        let hasCareerStats = fight.fighterRSlpm != nil || fight.fighterBSlpm != nil
+    // ponytail: extraído a subView con @State propio para tener tabs independientes por pelea.
+    private struct CareerStatsSection: View {
+        let fight: BSEventFight
+        enum Tab: String, CaseIterable { case striking = "Striking", grappling = "Grappling" }
+        @State private var tab: Tab = .striking
 
-        if hasCareerStats {
-            VStack(alignment: .leading, spacing: 14) {
-                Text("Career comparison")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(BSColors.textPrimary)
+        var body: some View {
+            let hasStats = fight.fighterRSlpm != nil || fight.fighterBSlpm != nil
+                        || fight.fighterRTdAvg != nil || fight.fighterBTdAvg != nil
+            if hasStats {
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("Career comparison")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(BSColors.textPrimary)
 
-                HStack {
-                    Text(fight.fighterRName.shortName)
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(BSColors.accent)
-                    Spacer()
-                    Text(fight.fighterBName.shortName)
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(BSColors.accentBlue)
-                }
+                    HStack {
+                        Text(fight.fighterRName.shortName)
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(BSColors.accent)
+                        Spacer()
+                        Text(fight.fighterBName.shortName)
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(BSColors.accentBlue)
+                    }
 
-                if let a = fight.fighterRSlpm, let b = fight.fighterBSlpm {
-                    comparisonBar(label: "Str. / min", valA: a, valB: b)
+                    Picker("", selection: $tab) {
+                        ForEach(Tab.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+
+                    if tab == .striking {
+                        strikingBars
+                    } else {
+                        grapplingBars
+                    }
                 }
-                if let a = fight.fighterRSapm, let b = fight.fighterBSapm {
-                    comparisonBar(label: "Str. absorbed", valA: a, valB: b)
-                }
-                if let a = fight.fighterRStrDef, let b = fight.fighterBStrDef {
-                    comparisonBar(label: "Str. defense", valA: a * 100, valB: b * 100, suffix: "%")
-                }
-                if let a = fight.fighterRKdAvg, let b = fight.fighterBKdAvg {
-                    comparisonBar(label: "KD avg", valA: a, valB: b)
-                }
-                if let a = fight.fighterRSubAvg, let b = fight.fighterBSubAvg {
-                    comparisonBar(label: "Sub avg", valA: a, valB: b)
-                }
-                if let a = fight.fighterRTdDef, let b = fight.fighterBTdDef {
-                    comparisonBar(label: "TD defense", valA: a * 100, valB: b * 100, suffix: "%")
-                }
+                .padding(16)
+                .background(BSColors.surface)
+                .cornerRadius(14)
+                .padding(.horizontal, 16)
             }
-            .padding(16)
-            .background(BSColors.surface)
-            .cornerRadius(14)
-            .padding(.horizontal, 16)
+        }
+
+        // ponytail: aparecer aunque un solo lado tenga el dato. Con "—" en el hueco
+        // el user ve la barra unilateral en vez de perder el stat entero.
+        @ViewBuilder
+        private var strikingBars: some View {
+            EventDetailView.barOpt(label: "Str. / min", valA: fight.fighterRSlpm, valB: fight.fighterBSlpm)
+            EventDetailView.barOpt(label: "Str. absorbed", valA: fight.fighterRSapm, valB: fight.fighterBSapm)
+            EventDetailView.barOpt(label: "Str. defense", valA: fight.fighterRStrDef.map { $0 * 100 }, valB: fight.fighterBStrDef.map { $0 * 100 }, suffix: "%")
+            EventDetailView.barOpt(label: "KD avg", valA: fight.fighterRKdAvg, valB: fight.fighterBKdAvg)
+        }
+
+        @ViewBuilder
+        private var grapplingBars: some View {
+            EventDetailView.barOpt(label: "TD avg (per 15m)", valA: fight.fighterRTdAvg, valB: fight.fighterBTdAvg)
+            EventDetailView.barOpt(label: "TD defense", valA: fight.fighterRTdDef.map { $0 * 100 }, valB: fight.fighterBTdDef.map { $0 * 100 }, suffix: "%")
+            EventDetailView.barOpt(label: "Sub avg", valA: fight.fighterRSubAvg, valB: fight.fighterBSubAvg)
         }
     }
 
@@ -723,7 +925,18 @@ struct EventDetailView: View {
                 .foregroundColor(BSColors.textPrimary)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
-            
+
+            // Rank badge (rank=0 → C, 1-15 → #N)
+            if let rank = rank {
+                Text(rank == 0 ? "C" : "#\(rank)")
+                    .font(.system(size: 10, weight: .heavy))
+                    .foregroundColor(BSColors.titleGold)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(BSColors.titleGold.opacity(0.15))
+                    .cornerRadius(4)
+            }
+
             // Record
             if let record = record {
                 Text(record)
@@ -762,6 +975,27 @@ struct EventDetailView: View {
     // ═══════════════════════════════════════════════
     // MARK: - Comparison Bars
     // ═══════════════════════════════════════════════
+
+    @ViewBuilder
+    private func comparisonBarFraction(label: String, aNum: Int, aDen: Int, bNum: Int, bDen: Int) -> some View {
+        // Barra por landed, texto muestra "landed/attempted".
+        let maxVal = max(aNum, bNum, 1)
+        HStack(spacing: 6) {
+            Text("\(aNum)/\(aDen)")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 52, alignment: .trailing)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+            barCenter(label: label, ratioA: CGFloat(aNum) / CGFloat(maxVal), ratioB: CGFloat(bNum) / CGFloat(maxVal))
+            Text("\(bNum)/\(bDen)")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 52, alignment: .leading)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+        }
+    }
 
     @ViewBuilder
     private func comparisonBarInt(label: String, valA: Int, valB: Int) -> some View {
@@ -813,6 +1047,83 @@ struct EventDetailView: View {
                 .foregroundColor(BSColors.accentBlue)
                 .frame(width: 36, alignment: .leading)
         }
+    }
+
+    /// Muestra la barra si al menos un lado tiene dato — falta = "—" en el label.
+    @ViewBuilder
+    static func barOpt(label: String, valA: Double?, valB: Double?, suffix: String = "") -> some View {
+        if valA != nil || valB != nil {
+            let a = valA ?? 0
+            let b = valB ?? 0
+            let maxVal = max(a, b, 0.01)
+            HStack(spacing: 6) {
+                Text(valA.map { String(format: "%.1f", $0) + suffix } ?? "—")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(valA == nil ? BSColors.textHint : BSColors.accent)
+                    .frame(width: 42, alignment: .trailing)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                barCenterStatic(label: label,
+                                ratioA: valA == nil ? 0 : CGFloat(a / maxVal),
+                                ratioB: valB == nil ? 0 : CGFloat(b / maxVal))
+                Text(valB.map { String(format: "%.1f", $0) + suffix } ?? "—")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(valB == nil ? BSColors.textHint : BSColors.accentBlue)
+                    .frame(width: 42, alignment: .leading)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+        }
+    }
+
+    // ponytail: versión estática del comparisonBar para que subViews (CareerStatsSection)
+    // puedan usarla sin dependencias de instancia.
+    @ViewBuilder
+    static func bar(label: String, valA: Double, valB: Double, suffix: String = "") -> some View {
+        let maxVal = max(valA, valB, 0.01)
+        HStack(spacing: 6) {
+            Text(String(format: "%.1f", valA) + suffix)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(BSColors.accent)
+                .frame(width: 42, alignment: .trailing)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            barCenterStatic(label: label, ratioA: CGFloat(valA / maxVal), ratioB: CGFloat(valB / maxVal))
+            Text(String(format: "%.1f", valB) + suffix)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(BSColors.accentBlue)
+                .frame(width: 42, alignment: .leading)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+    }
+
+    @ViewBuilder
+    static func barCenterStatic(label: String, ratioA: CGFloat, ratioB: CGFloat) -> some View {
+        GeometryReader { geo in
+            let half = (geo.size.width - 70) / 2
+            HStack(spacing: 0) {
+                HStack {
+                    Spacer()
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(BSColors.accent)
+                        .frame(width: max(half * ratioA, 2), height: 5)
+                }
+                .frame(width: half)
+                Text(label)
+                    .font(.system(size: 9))
+                    .foregroundColor(BSColors.textTertiary)
+                    .frame(width: 70)
+                HStack {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(BSColors.accentBlue)
+                        .frame(width: max(half * ratioB, 2), height: 5)
+                    Spacer()
+                }
+                .frame(width: half)
+            }
+        }
+        .frame(height: 16)
     }
 
     @ViewBuilder

@@ -6,6 +6,10 @@
 //
 
 import Foundation
-final class Keys {
-    let apiKey = "ufc-predictor-secret-key-2024"
+
+/// Configuración pública del pod. El consumidor debe setear `apiKey` una vez
+/// al arranque de la app (ej. en `@main App.init` o `AppDelegate`).
+/// El valor nunca se compila en el pod.
+public enum BlackSpartanConfig {
+    public static var apiKey: String = ""
 }

@@ -13,6 +13,7 @@
 		072C527E2FCCE45A00FEEACD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 072C527D2FCCE45A00FEEACD /* Preview Assets.xcassets */; };
 		072C52CC2FCD731F00FEEACD /* FighterListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072C52CB2FCD731F00FEEACD /* FighterListViewModel.swift */; };
 		072C52CE2FCD74DF00FEEACD /* FightersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072C52CD2FCD74DF00FEEACD /* FightersListView.swift */; };
+		077E91CE300234300023E6C0 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 077E91CD300234300023E6C0 /* Secrets.xcconfig */; };
 		07841AED2FCD8297005EA7FD /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AEC2FCD8297005EA7FD /* Config.swift */; };
 		07841AEF2FCD87B6005EA7FD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AEE2FCD87B6005EA7FD /* Constants.swift */; };
 		07841AF12FCD88B0005EA7FD /* FighterRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07841AF02FCD88B0005EA7FD /* FighterRow.swift */; };
@@ -105,6 +106,7 @@
 		072C527D2FCCE45A00FEEACD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		072C52CB2FCD731F00FEEACD /* FighterListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterListViewModel.swift; sourceTree = "<group>"; };
 		072C52CD2FCD74DF00FEEACD /* FightersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FightersListView.swift; sourceTree = "<group>"; };
+		077E91CD300234300023E6C0 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		07841AEC2FCD8297005EA7FD /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		07841AEE2FCD87B6005EA7FD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		07841AF02FCD88B0005EA7FD /* FighterRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterRow.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 		072C526A2FCCE45900FEEACD = {
 			isa = PBXGroup;
 			children = (
+				077E91CD300234300023E6C0 /* Secrets.xcconfig */,
 				072C52752FCCE45A00FEEACD /* UFC Predict Fights */,
 				072C52742FCCE45A00FEEACD /* Products */,
 				36763802F7D1F014A868BFD9 /* Pods */,
@@ -833,6 +836,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				077E91CE300234300023E6C0 /* Secrets.xcconfig in Resources */,
 				072C527E2FCCE45A00FEEACD /* Preview Assets.xcassets in Resources */,
 				0797F61B2FE0EF8200B52A0C /* GoogleService-Info.plist in Resources */,
 				072C527B2FCCE45A00FEEACD /* Assets.xcassets in Resources */,
@@ -996,6 +1000,7 @@
 /* Begin XCBuildConfiguration section */
 		072C527F2FCCE45A00FEEACD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 077E91CD300234300023E6C0 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1061,6 +1066,7 @@
 		};
 		072C52802FCCE45A00FEEACD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 077E91CD300234300023E6C0 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
